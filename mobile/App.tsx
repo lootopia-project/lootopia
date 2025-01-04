@@ -29,7 +29,7 @@ function App(): React.JSX.Element {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.text}></Text>
+            <Text style={styles.text}>Hello</Text>
         </View>
     );
 }
