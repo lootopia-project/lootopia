@@ -29,7 +29,7 @@ function App(): React.JSX.Element {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.text}>NIQUE TES GROSSES FESSES</Text>
+            <Text style={styles.text}></Text>
         </View>
     );
 }
