@@ -1,61 +1,60 @@
-# backend - adonis.js
+# Backend - Adonis.js
 
-- [backend - adonis.js](#backend---adonisjs)
-  - [Useful commands for the backend :](#useful-commands-for-the-backend-)
-  - [Backend directory structure](#backend-directory-structure)
+- [Backend - Adonis.js](#backend---adonisjs)
+  - [Commandes utiles pour le backend :](#commandes-utiles-pour-le-backend-)
+  - [Structure du répertoire backend](#structure-du-répertoire-backend)
     - [app](#app)
     - [config](#config)
     - [database](#database)
     - [resources](#resources)
     - [start](#start)
-  - [Backend skeleton](#backend-skeleton)
+  - [Structure du backend](#structure-du-backend)
 
+## Commandes utiles pour le backend :
 
-## Useful commands for the backend :
+Avant d'exécuter les commandes, démarrez la base de données avec `docker-compose up -d` à la racine du projet.
 
-Before running the commands lunch the database with `docker-compose up -d` at the root of the project.
+- `npm run dev` : pour démarrer le serveur backend.
+- `node ace migration:run` : pour exécuter les migrations.
+- `node ace migration:reset` : pour réinitialiser les migrations.
+- `node ace migration:refresh --seed` : pour rafraîchir les migrations et peupler la base de données.
+- `nplint` : pour vérifier et corriger les erreurs de linting dans le code.
 
-- `npm run dev` : to start the backend server
-- `node ace migration:run` : to run the migrations
-- `node ace migration:reset` : to reset the migrations
-- `node ace migration:refresh --seed` : to refresh the migrations and seed the database
-- `nplint` : to lint the code
+## Structure du répertoire backend
 
-## Backend directory structure
+Le backend est construit avec le framework Adonis.js. Il est chargé de gérer les requêtes API et d'interagir avec la base de données.
 
-The backend is built using the Adonis.js framework. The backend is responsible for handling the API requests and interacting with the database.
-
-The backend is structured as follows:
+Le backend est structuré comme suit :
 
 ### app
 
-This directory contains the main codebase of the backend. The app directory is further divided into the following directories:
+Ce répertoire contient le cœur du code backend. Il est subdivisé comme suit :
 
-- **Controllers**: This directory contains the controllers for the backend. The controllers are responsible for handling the API requests and interacting with the services.
-- **Middleware**: This directory contains the middleware for the backend. The middleware is responsible for intercepting the API requests and performing actions before the request reaches the controller.
-- **Models**: This directory contains the models for the backend. The models are responsible for interacting with the database.
+- **Controllers** : contient les contrôleurs du backend. Ils sont responsables de gérer les requêtes API et d'interagir avec les services.
+- **Middleware** : contient les middlewares du backend. Les middlewares interceptent les requêtes API et effectuent des actions avant qu'elles n'atteignent le contrôleur.
+- **Models** : contient les modèles du backend. Les modèles interagissent directement avec la base de données.
 
 ### config
 
-This directory contains the configuration files for the backend.
+Ce répertoire contient les fichiers de configuration pour le backend.
 
 ### database
 
-This directory contains the database migrations and seeds for the backend.
+Ce répertoire contient les migrations et les seeds pour la base de données du backend.
 
 ### resources
 
-This directory contains the views for the backend. Since the backend is an API, just templates are used for mailers.
+Ce répertoire contient les vues pour le backend. Étant donné que le backend est une API, seules des templates pour les mailers y sont incluses.
 
 ### start
 
-The start directory is further divided into the following files:
+Le répertoire `start` est divisé en plusieurs fichiers :
 
-- **kernel.ts**: This file contains all the middleware that should be executed for each request.
-- **routes.ts**: This file contains the routes for the backend.
-- **env.ts**: This file contains the environment variables for the backend.
+- **kernel.ts** : contient tous les middlewares à exécuter pour chaque requête.
+- **routes.ts** : contient les routes définies pour le backend.
+- **env.ts** : contient les variables d'environnement utilisées par le backend.
 
-## Backend skeleton
+## Structure du backend
 
 ```
 backend/

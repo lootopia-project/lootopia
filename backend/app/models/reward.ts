@@ -13,16 +13,16 @@ export default class Reward extends BaseModel {
   declare name: string
 
   @column()
-  declare rarity_id: number
+  declare rarityId: number
 
   @column()
-  declare type_id: number
+  declare typeId: number
 
   @column()
-  declare user_id: number
+  declare userId: number
 
   @column()
-  declare hunting_id: number
+  declare huntingId: number
 
   @belongsTo(() => User)
   declare user: BelongsTo<typeof User>

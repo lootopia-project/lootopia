@@ -8,10 +8,10 @@ export default class Whitelist extends BaseModel {
   declare id: number
 
   @column()
-  declare user_id: number
+  declare userId: number
 
   @column()
-  declare hunting_id: number
+  declare huntingId: number
 
   @belongsTo(() => User)
   declare user: BelongsTo<typeof User>

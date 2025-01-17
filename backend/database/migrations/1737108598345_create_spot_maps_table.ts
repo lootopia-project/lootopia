@@ -1,15 +1,13 @@
 import { BaseSchema } from '@adonisjs/lucid/schema'
 
 export default class extends BaseSchema {
-  protected tableName = 'spots'
+  protected tableName = 'spot_maps'
 
   async up() {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id')
-      table.decimal('lat').notNullable()
-      table.decimal('long').notNullable()
-      table.string('description').notNullable()
-      table.integer('type_id').unsigned().references('id').inTable('type_spots').onDelete('CASCADE')
+      table.integer('spot_id').unsigned().references('id').inTable('spots').onDelete('CASCADE')
+      table.integer('map_id').unsigned().references('id').inTable('maps').onDelete('CASCADE')
     })
   }
 

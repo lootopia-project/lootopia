@@ -18,8 +18,8 @@ export default class extends BaseSchema {
       table.string('background').notNullable()
       table.string('text_color').notNullable()
       table.string('header_img').notNullable()
-      table.integer('organizer').unsigned().references('id').inTable('users').onDelete('CASCADE')
-      table.integer('world').unsigned().references('id').inTable('worlds').onDelete('CASCADE')
+      table.integer('user_id').unsigned().references('id').inTable('users').onDelete('CASCADE')
+      table.integer('world_id').unsigned().references('id').inTable('worlds').onDelete('CASCADE')
     })
   }
 

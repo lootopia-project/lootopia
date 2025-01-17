@@ -49,7 +49,10 @@ export default class Hunting extends BaseModel {
   declare headerImg: string
 
   @column()
-  declare organizer: number
+  declare userId: number
+
+  @column()
+  declare worldId: number
 
   @belongsTo(() => User)
   declare user: BelongsTo<typeof User>

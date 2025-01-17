@@ -9,7 +9,6 @@ export default class extends BaseSchema {
       table.string('img').notNullable()
       table.string('message').notNullable()
       table.boolean('visibility').notNullable()
-      table.integer('map').unsigned().references('id').inTable('maps').onDelete('CASCADE')
     })
   }
 
