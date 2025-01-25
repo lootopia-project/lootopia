@@ -5,20 +5,20 @@ export default class extends BaseSchema {
 
   async up() {
     this.schema.createTable(this.tableName, (table) => {
-      table.increments('id').notNullable()
+      table.increments('id').primary()
       table.string('email', 254).notNullable().unique()
       table.string('password').notNullable()
-      table.string('name').notNullable()
-      table.string('surname').notNullable()
-      table.boolean('is_partner').notNullable()
-      table.string('img').notNullable()
-      table.string('nickname').notNullable()
+      table.string('name').nullable()
+      table.string('surname').nullable()
+      table.boolean('is_partner').nullable().defaultTo(false)
+      table.string('img').nullable()
+      table.string('nickname').nullable()
       table.string('two_factor_secret', 500).nullable()
       table.string('two_factor_recovery_codes', 500).nullable()
       table.boolean('is_two_factor_enabled').defaultTo(false)
-      table.integer('phone').notNullable()
-      table.integer('crowns').notNullable().defaultTo(0)
-      table.integer('ranking')
+      table.integer('phone').nullable()
+      table.integer('crowns').nullable().defaultTo(0)
+      table.integer('ranking').nullable()
     })
   }
 
