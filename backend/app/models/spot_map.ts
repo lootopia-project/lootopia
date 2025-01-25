@@ -18,5 +18,4 @@ export default class SpotMap extends BaseModel {
 
   @belongsTo(() => Map)
   declare map: BelongsTo<typeof Map>
-
 }

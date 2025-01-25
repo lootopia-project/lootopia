@@ -35,5 +35,4 @@ export default class Reward extends BaseModel {
 
   @belongsTo(() => Hunting)
   declare hunting: BelongsTo<typeof Hunting>
-
 }

@@ -18,5 +18,4 @@ export default class Notification extends BaseModel {
 
   @belongsTo(() => User)
   declare user: BelongsTo<typeof User>
-
 }

@@ -11,5 +11,4 @@ export default class TypeReward extends BaseModel {
 
   @hasMany(() => Reward)
   declare rewards: HasMany<typeof Reward>
-
 }

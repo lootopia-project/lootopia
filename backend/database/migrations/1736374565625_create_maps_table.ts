@@ -11,7 +11,12 @@ export default class extends BaseSchema {
       table.string('zone').notNullable()
       table.integer('scale_min').notNullable()
       table.integer('scale_max').notNullable()
-      table.integer('hunting_id').unsigned().references('id').inTable('huntings').onDelete('CASCADE')
+      table
+        .integer('hunting_id')
+        .unsigned()
+        .references('id')
+        .inTable('huntings')
+        .onDelete('CASCADE')
     })
   }
 

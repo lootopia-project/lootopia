@@ -19,7 +19,6 @@ export default class extends BaseSchema {
       table.integer('phone').notNullable()
       table.integer('crowns').notNullable().defaultTo(0)
       table.integer('ranking')
-      
     })
   }
 

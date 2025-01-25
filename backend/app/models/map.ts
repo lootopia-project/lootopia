@@ -37,5 +37,4 @@ export default class Map extends BaseModel {
 
   @hasMany(() => SpotMap)
   declare spotMap: HasMany<typeof SpotMap>
-
 }
