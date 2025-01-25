@@ -32,5 +32,4 @@ export default class Spot extends BaseModel {
 
   @hasMany(() => SpotMap)
   declare spot_map: HasMany<typeof SpotMap>
-
 }

@@ -1,16 +1,16 @@
 # Backend - Adonis.js
 
 - [Backend - Adonis.js](#backend---adonisjs)
-  - [Commandes utiles pour le backend :](#commandes-utiles-pour-le-backend-)
-  - [Structure du répertoire backend](#structure-du-répertoire-backend)
+  - [Commandes utiles :](#commandes-utiles-)
+  - [Structure](#structure)
     - [app](#app)
     - [config](#config)
     - [database](#database)
     - [resources](#resources)
     - [start](#start)
-  - [Structure du backend](#structure-du-backend)
+  - [Squelette](#squelette)
 
-## Commandes utiles pour le backend :
+## Commandes utiles :
 
 Avant d'exécuter les commandes, démarrez la base de données avec `docker-compose up -d` à la racine du projet.
 
@@ -20,7 +20,7 @@ Avant d'exécuter les commandes, démarrez la base de données avec `docker-comp
 - `node ace migration:refresh --seed` : pour rafraîchir les migrations et peupler la base de données.
 - `nplint` : pour vérifier et corriger les erreurs de linting dans le code.
 
-## Structure du répertoire backend
+## Structure
 
 Le backend est construit avec le framework Adonis.js. Il est chargé de gérer les requêtes API et d'interagir avec la base de données.
 
@@ -54,7 +54,7 @@ Le répertoire `start` est divisé en plusieurs fichiers :
 - **routes.ts** : contient les routes définies pour le backend.
 - **env.ts** : contient les variables d'environnement utilisées par le backend.
 
-## Structure du backend
+## Squelette
 
 ```
 backend/

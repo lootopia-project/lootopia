@@ -59,19 +59,19 @@ export default class User extends compose(BaseModel, AuthFinder) {
   declare ranking: number
 
   @hasMany(() => Notification)
-  declare notifications:HasMany<typeof Notification>
+  declare notifications: HasMany<typeof Notification>
 
   @hasMany(() => UsersHunting)
-  declare usersHunting:HasMany<typeof UsersHunting>
+  declare usersHunting: HasMany<typeof UsersHunting>
 
   @hasMany(() => Whitelist)
-  declare whitelist:HasMany<typeof Whitelist>
+  declare whitelist: HasMany<typeof Whitelist>
 
   @hasMany(() => Reward)
-  declare reward:HasMany<typeof Reward>
+  declare reward: HasMany<typeof Reward>
 
   @hasMany(() => Hunting)
-  declare hunting:HasMany<typeof Hunting>
+  declare hunting: HasMany<typeof Hunting>
 
   static accessTokens = DbAccessTokensProvider.forModel(User)
 }

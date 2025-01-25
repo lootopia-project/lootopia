@@ -18,5 +18,4 @@ export default class SpotCache extends BaseModel {
 
   @belongsTo(() => Cache)
   declare cache: BelongsTo<typeof Cache>
-
 }
