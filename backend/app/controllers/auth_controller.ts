@@ -41,4 +41,12 @@ export default class AuthController {
     return response.status(401).json({ message: 'Unauthorized' })
   }
 
+  async checkIsLogin({auth, response}: HttpContext) {
+    const user = auth.use('api').user
+    if (user) {
+        return response.status(200).json({ message: true })
+    }
+    return response.status(200).json({ message: false})
+  }
+
 }

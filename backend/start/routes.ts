@@ -16,6 +16,7 @@ router.post('/register', [AuthController, "register"])
 
 router.group(() => {
   router.post('/logout', [AuthController, "logout"])
+    router.post('/checkIsLogin', [AuthController, "checkIsLogin"])
 }).use([middleware.auth({
   guards: ['api']
 })])

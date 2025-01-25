@@ -12,7 +12,7 @@ export default class extends BaseSeeder {
         isPartner: true,
         crowns: 100,
         phone: 1234567891,
-        img: '',
+        img: 'https://lootopia.blob.core.windows.net/lootopia-photos/user.png',
         ranking: 1,
       },
       {
@@ -24,7 +24,7 @@ export default class extends BaseSeeder {
         isPartner: true,
         crowns: 100,
         phone: 1234567891,
-        img: '',
+        img: 'https://lootopia.blob.core.windows.net/lootopia-photos/user.png',
         ranking: 1,
       },
       {
@@ -36,7 +36,7 @@ export default class extends BaseSeeder {
         isPartner: true,
         crowns: 100,
         phone: 1234567891,
-        img: '',
+        img: 'https://lootopia.blob.core.windows.net/lootopia-photos/user.png',
         ranking: 1,
       },
     ])
