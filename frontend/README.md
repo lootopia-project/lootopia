@@ -48,10 +48,21 @@ Le frontend de notre application est construit avec **Expo**, et se présente so
 ```
 frontend/
 ├── app/
+│   ├── (tabs)/
+│   ├── _layouts
+│   └── +not-found
 ├── assets/
+│   ├── fonts/
+│   └── images/
 ├── components/
 ├── constants/
 ├── hooks/
+│   ├── providers/
+│   └── etc
+├── services/
+│   ├── AuthService.ts
+│   └── etc
+├── .eslintrc.js
 ├── package.json
 ├── README.md
 └── .gitignore

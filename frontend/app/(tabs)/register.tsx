@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, Button, StyleSheet } from "react-native";
 import { useRouter, Link } from "expo-router";
-import { registerUser } from "@/app/service/AuthService";
+import { registerUser } from "@/services/AuthService";
 export default function LoginPage() {
   
   const [email, setEmail] = useState("");
