@@ -62,6 +62,10 @@ frontend/
 ├── services/
 │   ├── AuthService.ts
 │   └── etc
+├── type/
+│   ├── feature/
+│   ├── request/
+│   └── env.d.ts
 ├── .eslintrc.js
 ├── package.json
 ├── README.md
