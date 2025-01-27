@@ -1,34 +1,28 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, Button, StyleSheet } from "react-native";
 import { useAuth } from "@/hooks/providers/AuthProvider";
-
+import { useRouter, Link } from "expo-router";
 export default function LoginPage() {
-  const { login, logout, isAuthenticated } = useAuth();
-  console.log(isAuthenticated);
+  const { login } = useAuth();
   
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const router = useRouter();
 
   const handleLogin = async () => {
     try {
-      await login({ email, password });
+      
+      const check = await login({ email, password });      
+      if (check) {
+        router.push("/");
+      }
     } catch (error) {
       console.error("Error in handleLogin:", error);
     }
   };
-  const handleLogout = async () => {
-    try {
-      await logout();
-    } catch (error) {
-      console.error("Error in handleLogin:", error);
-    }
-  };
-
   return (
     <View style={styles.container}>
-      <Button title="deco" onPress={handleLogout} />
-
-      <Text style={styles.title}>Connexion</Text>
+      <Text style={styles.title}>Sign in</Text>
       <TextInput
         style={styles.input}
         placeholder="Email"
@@ -39,14 +33,14 @@ export default function LoginPage() {
       />
       <TextInput
         style={styles.input}
-        placeholder="Mot de passe"
+        placeholder="Password"
         value={password}
         onChangeText={setPassword}
         secureTextEntry
         autoCapitalize="none"
       />
-      <Button title="Se connecter" onPress={handleLogin} />
-
+      <Button title="Login" onPress={handleLogin} />
+      <Link href={"/register"}>Sign up</Link>
     </View>
   );
 }

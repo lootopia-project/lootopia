@@ -22,8 +22,7 @@ const loginUser = async (userData: LOGIN): Promise<RETURN> => {
         },
         config
       );
-      const token = response.data.headers.authorization;      
-      
+
       return response.data;
     } catch (err: unknown) {
       if ((err as AXIOS_ERROR).message) {
@@ -56,9 +55,7 @@ const logoutUser = async () : Promise<RETURN> =>{
 
 const checkIsLogin = async () : Promise<RETURN> =>{
   try {
-    const token = await AsyncStorage.getItem('token');  
-    console.log(token);
-    
+    const token = await AsyncStorage.getItem('token');      
     const config = {
         headers: {
             "Content-Type": "application/json",
@@ -79,4 +76,27 @@ const checkIsLogin = async () : Promise<RETURN> =>{
   }
 }
 
-export { loginUser, logoutUser , checkIsLogin};
+const registerUser = async (userData: LOGIN): Promise<RETURN> => {
+  try {
+    const { email, password } = userData;  
+    const response = await axios.post<RETURN>(
+      `${API_URL}/register`,
+      {
+        email,
+        password,
+      },
+      config
+    );
+    
+    return response.data;
+  } catch (err: unknown) {
+    if ((err as AXIOS_ERROR).message) {
+      throw new Error('Error connecting');
+    } else {
+      throw new Error('Error connecting to server');
+    }
+  }
+};
+
+
+export { loginUser, logoutUser , checkIsLogin, registerUser };

@@ -3,21 +3,19 @@ import db from '@adonisjs/lucid/services/db'
 import User from '#models/user'
 
 export default class AuthController {
-
   async login({ request, auth, response }: HttpContext) {
     const { email, password } = request.all()
 
     const verifyCredentials = await User.verifyCredentials(email, password)
-    console.log(verifyCredentials);
 
     if (verifyCredentials) {
       const head = await auth
-      .use('api')
-      .authenticateAsClient(verifyCredentials, [], { expiresIn: '1day' })
+        .use('api')
+        .authenticateAsClient(verifyCredentials, [], { expiresIn: '1day' })
       return response.json(head)
     }
   }
-  async register({ request, auth, response }: HttpContext) {
+  async register({ request, response }: HttpContext) {
     const { email, password } = request.all()
 
     const USER_VERIFY = await User.findBy('email', email)
@@ -26,13 +24,13 @@ export default class AuthController {
     }
     const newUser = await User.create({
       email: email,
-      password: password
+      password: password,
     })
 
     return response.json(newUser)
   }
 
-  async logout({auth, response}: HttpContext) {
+  async logout({ auth, response }: HttpContext) {
     const user = auth.use('api').user
     if (user) {
       db.from('auth_access_tokens').where('tokenable_id', user.id).delete().exec()
@@ -41,12 +39,11 @@ export default class AuthController {
     return response.status(401).json({ message: 'Unauthorized' })
   }
 
-  async checkIsLogin({auth, response}: HttpContext) {
+  async checkIsLogin({ auth, response }: HttpContext) {
     const user = auth.use('api').user
     if (user) {
-        return response.status(200).json({ message: true })
+      return response.status(200).json({ message: true })
     }
-    return response.status(200).json({ message: false})
+    return response.status(200).json({ message: false })
   }
-
 }

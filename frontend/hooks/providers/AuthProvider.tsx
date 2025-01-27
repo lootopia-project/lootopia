@@ -1,9 +1,10 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import  { loginUser, logoutUser, checkIsLogin } from "@/app/service/AuthService";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import LOGIN from "@/type/feature/auth/login";
 import RETURN from "@/type/request/return";
 import AUTH_CONTEXT_TYPE from "@/type/feature/auth/auth_context_type";
-import  { loginUser, logoutUser, checkIsLogin } from "@/app/(tabs)/auth/service/AuthService";
+import { useRouter, usePathname } from "expo-router";
 const defaultContextValue: AUTH_CONTEXT_TYPE = {
     isAuthenticated: false,
     login: async (): Promise<RETURN> => {
@@ -17,38 +18,44 @@ const defaultContextValue: AUTH_CONTEXT_TYPE = {
 
 };
 
+const publicRoutes = ["/+not-found", "/login", "/register"];
 const AUTH_CONTEXT = createContext(defaultContextValue);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const pathName = usePathname();
+    const router = useRouter();
 
     useEffect(() => {
-        const initializeAuthState = async () => {
+        const initializeAuthState = async () => {            
             try {
                 const data = await checkIsLogin();
-                console.log(data);
                 
                 if (data.message === true) {
                     setIsAuthenticated(true);
                 } else {
                     setIsAuthenticated(false);
                     await AsyncStorage.removeItem("token");
+                    if (!publicRoutes.includes(pathName)) {
+                        router.push("/+not-found");
+                    }
                 }                
             } catch (error) {
                 setIsAuthenticated(false);
                 await AsyncStorage.removeItem("token");
+                if (!publicRoutes.includes(pathName)) {
+                    router.push("/+not-found");
+                }
             }
-            console.log(isAuthenticated);
-
         };
 
         initializeAuthState();
-    });
+    }, [pathName]);
 
     const login = async (userData: LOGIN): Promise<RETURN> => {
         
         const data = await loginUser(userData);
-        
+                
         await AsyncStorage.setItem("token", data.headers.authorization);
         setIsAuthenticated(true);
         return data;
