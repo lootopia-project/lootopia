@@ -1,4 +1,4 @@
-name: CI/CD Pipeline for instamint
+name: CI/CD Pipeline for lootopia
 
 on:
   push:
@@ -12,10 +12,18 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Install dependencies (React project)
+      - name: Install dependencies (expo web project)
         run: npm install
         working-directory: frontend
 
-      - name: Build React project
-        run: npm run build
+      - name: Build expo web project
+        run: npx expo export -p web
         working-directory: frontend
+
+      - name: Deploy to Netlify
+      run: netlify deploy --dir dist
+      working-directory: frontend
+
+      - name: Deploy to Netlify (production)
+      run: netlify deploy --prod
+      working-directory: frontend
