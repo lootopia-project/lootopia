@@ -2,12 +2,12 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import { Link } from 'expo-router';
 
-export default function HomeScreen() {
+export default function Truc() {
   return (
     <>
     <View>
-      <Text>Hello World</Text>
-      <Link href={'/Truc'}>Truc</Link>
+      <Text>Truc test</Text>
+      <Link href={'/'}>index</Link>
     </View>
     </>
   );
