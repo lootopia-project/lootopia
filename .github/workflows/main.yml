@@ -1,4 +1,4 @@
-name: CI/CD Pipeline for lootopia
+name: CI/CD Pipeline for Lootopia
 
 on:
   push:
@@ -12,18 +12,18 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Install dependencies (expo web project)
+      - name: Install dependencies (Expo web project)
         run: npm install
         working-directory: frontend
 
-      - name: Build expo web project
-        run: npx expo export -p web
+      - name: Build Expo web project
+        run: npx expo export --platform web
         working-directory: frontend
 
       - name: Deploy to Netlify
-      run: netlify deploy --dir dist
-      working-directory: frontend
+        run: netlify deploy --dir=dist
+        working-directory: frontend
 
       - name: Deploy to Netlify (production)
-      run: netlify deploy --prod
-      working-directory: frontend
+        run: netlify deploy --prod
+        working-directory: frontend
