@@ -3,8 +3,7 @@ import axios from 'axios';
 import AXIOS_ERROR from '@/type/request/axios_error';
 import LOGIN from '@/type/feature/auth/login';
 import RETURN from '@/type/request/return';
-import { API_URL } from '@env'
-
+const API_URL = process.env.EXPO_PUBLIC_API_URL
 const config = {
     headers: {
         "Content-Type": "application/json",
