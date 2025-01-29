@@ -1,34 +1,13 @@
-import type { HttpContext } from '@adonisjs/core/http'
-import mail from '@adonisjs/mail/services/main'
+import db from '@adonisjs/lucid/services/db'
+import User from "#models/user";
+import MailService from "../service/mail_service.js";
 
 export default class NotificationsController {
-    async sendMail({view}: HttpContext) {
-        // Récupérer l'utilisateur authentifié
-        // const user = auth.use('api').user
+    async sendMail() {
+        // console.log("sendMail")
+        // const users:User=await db.from('users').where('nickname', 'kevin').first()
         //
-        // if (!user) {
-        //     return {
-        //         message: 'Utilisateur non authentifié.',
-        //         status: 'error'
-        //     }
-        // }
+        // await MailService.sendMail("recompenses", users)
 
-        // Récupérer le message depuis la requête
-        // const { message } = request.all()
-
-        // Envoyer l'email
-        // return view.render('emails/notification', { message: 'Hello world' })
-        await mail.send((mail) => {
-            mail
-                .from('noreply.lootopia@gmail.com')
-                .to("kevinmetri.pro@gmail.com") 
-                .subject('Une notification de Lootopia')
-                .htmlView('emails/notification', {  message:"" }) 
-        })
-
-        return {
-            message: 'Email envoyé avec succès à ' ,
-            status: 'success',
-        }
     }
 }
