@@ -1,9 +1,8 @@
-// import type { HttpContext } from '@adonisjs/core/http'
-import { HttpContext } from "@adonisjs/core/http";
+import type { HttpContext } from '@adonisjs/core/http'
 import mail from '@adonisjs/mail/services/main'
 
 export default class NotificationsController {
-    async sendMail({}: HttpContext) {
+    async sendMail({view}: HttpContext) {
         // Récupérer l'utilisateur authentifié
         // const user = auth.use('api').user
         //
@@ -18,12 +17,13 @@ export default class NotificationsController {
         // const { message } = request.all()
 
         // Envoyer l'email
+        // return view.render('emails/notification', { message: 'Hello world' })
         await mail.send((mail) => {
             mail
-                .from('noreply.lootopia@gmail.com') // Remplacez par votre adresse email d'envoi
-                .to("kevinmetri.pro@gmail.com") // Adresse email de l'utilisateur
+                .from('noreply.lootopia@gmail.com')
+                .to("kevinmetri.pro@gmail.com") 
                 .subject('Une notification de Lootopia')
-                .htmlView('emails/notification', {  message:"" }) // Vue HTML pour l'email
+                .htmlView('emails/notification', {  message:"" }) 
         })
 
         return {

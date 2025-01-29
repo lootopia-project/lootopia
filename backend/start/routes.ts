@@ -14,7 +14,7 @@ const AuthController = () => import('#controllers/auth_controller')
 
 router.post('/login', [AuthController, 'login'])
 router.post('/register', [AuthController, 'register'])
-router.post('/sendMail', [NotificationsController, 'sendMail'])
+router.get('/sendMail', [NotificationsController, 'sendMail'])
 
 router
   .group(() => {
