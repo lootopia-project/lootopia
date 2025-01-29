@@ -9,7 +9,6 @@ export default class MailService {
 
         switch (type) {
             case "inscription":
-                console.log("user", user);
                 subject = "Bienvenue sur Lootopia !";
                 view = "emails/notification";
                 templateData = {

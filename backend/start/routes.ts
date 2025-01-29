@@ -9,13 +9,10 @@
 
 import router from '@adonisjs/core/services/router'
 import { middleware } from './kernel.js'
-import NotificationsController from "#controllers/notifications_controller";
 const AuthController = () => import('#controllers/auth_controller')
-const NotificationsController = () => import('#controllers/notifications_controller')
 
 router.post('/login', [AuthController, 'login'])
 router.post('/register', [AuthController, 'register'])
-router.get('/sendMail', [NotificationsController, 'sendMail'])
 
 router
   .group(() => {
