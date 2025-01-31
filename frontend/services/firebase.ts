@@ -30,11 +30,11 @@ const requestFcmTokenWeb = async (): Promise<{ platform: string; token: string |
     try {
         // if ("serviceWorker" in navigator) {
         //     console.log("Enregistrement du Service Worker pour le Web.");
-        //     await navigator.serviceWorker
-        //         .register("./firebase-messaging-sw.js")
-        //         .then((registration) => {
-        //             console.log("Service Worker enregistré :", registration.scope);
-        //         });
+            await navigator.serviceWorker
+                .register("./firebase-messaging-sw.js")
+                .then((registration) => {
+                    console.log("Service Worker enregistré :", registration.scope);
+                });
         // } else {
         //     console.warn("Les Service Workers ne sont pas pris en charge par ce navigateur.");
         //     return { platform: "Web", token: null };
@@ -65,12 +65,28 @@ const requestFcmTokenWeb = async (): Promise<{ platform: string; token: string |
                     icon: payload.notification.icon || "/favicon.ico", // Icône par défaut
                 };
 
-                // Afficher la notification en premier plan
-                showNotification(notificationTitle, notificationOptions);
+                // Vérification des permissions pour afficher la notification
+                if (Notification.permission === "granted") {
+                    console.log("Permission de notification accordée.");
+
+                    // Afficher la notification en premier plan
+                    const notification = new Notification(notificationTitle, notificationOptions);
+
+                    // Gérer les clics sur la notification
+                    notification.onclick = (event) => {
+                        console.log("Notification cliquée :", event);
+                        // Vous pouvez rediriger l'utilisateur vers une URL ou effectuer une autre action ici
+                    };
+                } else {
+                    console.warn(
+                        "Les notifications ne sont pas autorisées par le navigateur. Demandez la permission à l'utilisateur."
+                    );
+                }
             } else {
                 console.warn("Pas de notification dans le payload.");
             }
         });
+
 
         return { platform: "Web", token: fcmToken };
     } catch (error) {
