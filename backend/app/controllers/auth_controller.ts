@@ -1,7 +1,6 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import db from '@adonisjs/lucid/services/db'
 import User from '#models/user'
-import { messages } from '@vinejs/vine/defaults'
 
 export default class AuthController {
   async login({ request, auth, response }: HttpContext) {
