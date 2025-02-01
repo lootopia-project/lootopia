@@ -20,14 +20,14 @@ export default class AuthController {
 
     const USER_VERIFY = await User.findBy('email', email)
     if (USER_VERIFY) {
-      return response.status(401).json({ message: 'User already exists' })
+      return response.status(201).json({ message: 'User already exists' })
     }
     const newUser = await User.create({
       email: email,
       password: password,
     })
 
-    return response.json(newUser)
+    return response.json({ message: true })
   }
 
   async logout({ auth, response }: HttpContext) {

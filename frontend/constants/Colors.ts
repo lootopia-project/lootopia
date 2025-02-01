@@ -3,24 +3,37 @@
  * There are many other ways to style your app. For example, [Nativewind](https://www.nativewind.dev/), [Tamagui](https://tamagui.dev/), [unistyles](https://reactnativeunistyles.vercel.app), etc.
  */
 
-const tintColorLight = '#0a7ea4';
-const tintColorDark = '#fff';
+const primaryGold = '#FFD700';
+const darkBrown = '#4B2E2F';
+const deepBlue = '#002D72';
+const mossGreen = '#3B7A57';
+const parchmentBeige = '#F5DEB3';
+
+const rubyRed = '#E63946';
+const silver = '#C0C0C0';
+const brightGreen = '#2ECC71';
 
 export const Colors = {
   light: {
-    text: '#11181C',
-    background: '#fff',
-    tint: tintColorLight,
-    icon: '#687076',
-    tabIconDefault: '#687076',
-    tabIconSelected: tintColorLight,
+    text: darkBrown,
+    background: parchmentBeige,
+    tint: primaryGold,
+    icon: mossGreen,
+    tabIconDefault: darkBrown,
+    tabIconSelected: primaryGold,
+    error: rubyRed,
+    success: brightGreen,
+    highlight: deepBlue,
   },
   dark: {
-    text: '#ECEDEE',
-    background: '#151718',
-    tint: tintColorDark,
-    icon: '#9BA1A6',
-    tabIconDefault: '#9BA1A6',
-    tabIconSelected: tintColorDark,
+    text: silver,
+    background: darkBrown,
+    tint: primaryGold,
+    icon: brightGreen,
+    tabIconDefault: silver,
+    tabIconSelected: primaryGold,
+    error: rubyRed,
+    success: brightGreen,
+    highlight: deepBlue,
   },
 };
