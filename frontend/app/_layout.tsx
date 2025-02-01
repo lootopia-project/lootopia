@@ -1,11 +1,13 @@
-import { Slot} from "expo-router";
+import { Slot } from "expo-router";
 import { AuthProvider } from "@/hooks/providers/AuthProvider";
-import LanguageSwitcher from "@/components/lang";
+import { ErrorProvider } from "@/hooks/providers/ErrorProvider";
+
 export default function RootLayout() {
   return (
     <AuthProvider>
-      <LanguageSwitcher />
-      <Slot />
+      <ErrorProvider>
+        <Slot />
+      </ErrorProvider>
     </AuthProvider>
   )
 }

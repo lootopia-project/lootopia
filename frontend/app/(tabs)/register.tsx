@@ -1,71 +1,237 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, Button, StyleSheet } from "react-native";
-import { useRouter, Link } from "expo-router";
+import { Link } from "expo-router";
+import {
+  View, Text, TextInput, TouchableOpacity,
+  KeyboardAvoidingView, Platform, Keyboard, useColorScheme
+} from 'react-native';
 import { registerUser } from "@/services/AuthService";
-import lang from "@/translation";
+import { validatePassword } from "@/constants/validatePassword";
+import AXIOS_ERROR from "@/type/request/axios_error";
+import aboutPassword from "@/components/aboutPassword";
+import { Colors } from "@/constants/Colors";
+import {useErrors} from "@/hooks/providers/ErrorProvider";
 
-export default function LoginPage() {
-  
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const router = useRouter();
+
+export default function RegisterPage() {
+  const [success, setSuccess] = useState("");
+  const colorScheme = useColorScheme();
+  const themeColors = colorScheme === "dark" ? Colors.dark : Colors.light;
+  const {setErrorVisible, setErrorMessage} = useErrors();
+  const [formData, setFormData] = useState({
+    username: "",
+    password: "",
+    R_PASSWORD: ""
+  });
+
+  const [checkPassword, setCheckPassword] = useState({
+    length: false,
+    maj: false,
+    min: false,
+    special: false,
+    same: false
+  });
+
+  const handleChange = (key: keyof typeof formData, value: string) => {
+    setFormData(prevFormData => ({
+      ...prevFormData,
+      [key]: value
+    }));
+
+    const newFormData = {
+      ...formData,
+      [key]: value
+    };
+
+    const passwordErrors = {
+      length: newFormData.password.length >= 10 || newFormData.R_PASSWORD.length >= 10,
+      maj: /[A-Z]/u.test(newFormData.password) || /[A-Z]/u.test(newFormData.R_PASSWORD),
+      min: /[a-z]/u.test(newFormData.password) || /[a-z]/u.test(newFormData.R_PASSWORD),
+      special: /[!@#$%^&*(),.?":{}|<>]/u.test(newFormData.password) || /[!@#$%^&*(),.?":{}|<>]/u.test(newFormData.R_PASSWORD),
+      same: newFormData.password === newFormData.R_PASSWORD
+    };
+
+    setCheckPassword(passwordErrors);
+  };
 
   const handleLogin = async () => {
-    try {
-      
-      const check = await registerUser({ email, password });
-      if (check.message) {
-        router.push("/");
+    const passwordErrors = validatePassword(formData);
+    setCheckPassword(passwordErrors);
+
+    if (passwordErrors.length && passwordErrors.maj && passwordErrors.min && passwordErrors.special && passwordErrors.same) {
+      try {
+        const response = await registerUser({ email: formData.username, password: formData.password });
+        setSuccess("");
+        setErrorMessage(response.message);
+
+
+        if (response.message === true) {
+          setSuccess("Registration successful!");
+          setErrorMessage("");
+        }
+        else{
+          setErrorVisible(true);
+        }
+      } catch (error) {
+        console.error("Error in handleLogin:", error);
+        handleSavePasswordError(error);
       }
-    } catch (error) {
-      console.error("Error in handleLogin:", error);
+    } else {      
+      setErrorMessage("Password does not meet requirements.");
+      setErrorVisible(true);
     }
   };
+
+  const handleSavePasswordError = (err: unknown) => {
+    if ((err as AXIOS_ERROR).message) {
+      setErrorMessage((err as AXIOS_ERROR).message || "Error connecting");
+    } else {
+      setErrorMessage("Error connecting ");
+    }
+    setErrorVisible(true);
+  };
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>{lang.t("register")}</Text>
-      <TextInput
-        style={styles.input}
-        placeholder={lang.t("email")}
-        value={email}
-        onChangeText={setEmail}
-        keyboardType="email-address"
-        autoCapitalize="none"
-      />
-      <TextInput
-        style={styles.input}
-        placeholder={lang.t("password")}
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-        autoCapitalize="none"
-      />
-      <Button title={lang.t("register")} onPress={handleLogin} />
-      <Link href={"/login"}>{lang.t("login")}</Link>
-    </View>
+    <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.container}>
+
+
+      <View style={styles.formContainer}>
+        <Text style={styles.title}>Register</Text>
+
+        {success ? <Text style={styles.successText}>{success}</Text> : null}
+
+        <View style={styles.inputContainer}>
+          <Text style={styles.label}>Username</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Username"
+            placeholderTextColor={themeColors.icon}
+            value={formData.username || ""}
+            onChangeText={(text) => handleChange("username", text)}
+          />
+        </View>
+
+        <View style={styles.inputContainer}>
+          <Text style={styles.label}>Password</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Password"
+            placeholderTextColor={themeColors.icon}
+            secureTextEntry
+            value={formData.password || ""}
+            onChangeText={(text) => handleChange("password", text)}
+          />
+        </View>
+
+        {/* Repeat Password */}
+        <View style={styles.inputContainer}>
+          <Text style={styles.label}>Repeat Password</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Repeat Password"
+            placeholderTextColor={themeColors.icon}
+            secureTextEntry
+            value={formData.R_PASSWORD || ""}
+            onChangeText={(text) => handleChange("R_PASSWORD", text)}
+          />
+        </View>
+
+        <TouchableOpacity style={styles.button} onPress={() => {
+          Keyboard.dismiss();
+          handleLogin();
+        }}>
+          <Text style={styles.buttonText}>Sign up</Text>
+        </TouchableOpacity>
+
+        <View style={styles.passwordValidation}>
+          {aboutPassword(checkPassword)}
+        </View>
+
+        <Link href={"/login"} style={styles.link}>Already have an account? Sign in</Link>
+      </View>
+    </KeyboardAvoidingView>
   );
 }
 
-const styles = StyleSheet.create({
+const styles = {
   container: {
     flex: 1,
-    justifyContent: "center",
+    backgroundColor: Colors.light.background,
+    alignItems: 'center',
+    justifyContent: 'center',
     padding: 20,
-    backgroundColor: "#f5f5f5",
+  },
+  formContainer: {
+    width: '90%',
+    backgroundColor: "#fff",
+    padding: 20,
+    borderRadius: 10,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
   },
   title: {
-    fontSize: 24,
-    fontWeight: "bold",
+    fontSize: 28,
+    fontWeight: 'bold',
+    textAlign: 'center',
     marginBottom: 20,
-    textAlign: "center",
+    color: Colors.light.text,
+  },
+  inputContainer: {
+    marginBottom: 16,
+  },
+  label: {
+    fontSize: 18,
+    marginBottom: 8,
+    color: Colors.light.text,
   },
   input: {
-    height: 40,
-    borderColor: "#ccc",
     borderWidth: 1,
+    borderColor: Colors.light.icon,
     borderRadius: 8,
-    marginBottom: 15,
-    paddingHorizontal: 10,
-    backgroundColor: "#fff",
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    fontSize: 16,
+    backgroundColor: '#fff',
+    color: Colors.light.text,
   },
-});
+  button: {
+    backgroundColor: Colors.light.tint,
+    padding: 14,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  passwordValidation: {
+    marginTop: 20,
+  },
+  validText: {
+    color: Colors.light.success,
+    fontSize: 14,
+  },
+  errorText: {
+    color: Colors.light.error,
+    fontSize: 14,
+    textAlign: "center",
+    marginBottom: 10,
+  },
+  successText: {
+    color: Colors.light.success,
+    fontSize: 14,
+    textAlign: "center",
+    marginBottom: 10,
+  },
+  link: {
+    marginTop: 20,
+    color: Colors.light.tint,
+    textAlign: "center",
+    fontSize: 16,
+    textDecorationLine: 'underline',
+  },
+};
