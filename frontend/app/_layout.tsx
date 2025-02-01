@@ -1,10 +1,13 @@
-import { Slot} from "expo-router";
+import { Slot } from "expo-router";
 import { AuthProvider } from "@/hooks/providers/AuthProvider";
+import { ErrorProvider } from "@/hooks/providers/ErrorProvider";
 
 export default function RootLayout() {
   return (
     <AuthProvider>
-      <Slot />
+      <ErrorProvider>
+        <Slot />
+      </ErrorProvider>
     </AuthProvider>
   )
 }
