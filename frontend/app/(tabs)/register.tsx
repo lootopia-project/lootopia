@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "expo-router";
 import {
-  View, Text, TextInput, TouchableOpacity, ScrollView,
+  View, Text, TextInput, TouchableOpacity,
   KeyboardAvoidingView, Platform, Keyboard, useColorScheme
 } from 'react-native';
 import { registerUser } from "@/services/AuthService";
