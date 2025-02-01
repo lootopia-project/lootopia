@@ -1,45 +1,36 @@
 import React, { useState } from "react";
-import { useRouter, Link } from "expo-router";
-import { View, Text, TextInput, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform, Keyboard } from 'react-native';
+import { Link } from "expo-router";
+import {
+  View, Text, TextInput, TouchableOpacity, ScrollView,
+  KeyboardAvoidingView, Platform, Keyboard, useColorScheme
+} from 'react-native';
 import { registerUser } from "@/services/AuthService";
 import { validatePassword } from "@/constants/validatePassword";
 import AXIOS_ERROR from "@/type/request/axios_error";
-import aboutPassword from "@/componants/aboutPassword";
+import aboutPassword from "@/components/aboutPassword";
+import { Colors } from "@/constants/Colors";
+import {useErrors} from "@/hooks/providers/ErrorProvider";
+
 
 export default function RegisterPage() {
-
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("")
-  const [success, setSuccess] = useState("")
-
-  const router = useRouter();
-
-  // const handleLogin = async () => {
-  //   try {
-
-  //     const check = await registerUser({ email, password });
-  //     if (check.message) {
-  //       router.push("/");
-  //     }
-  //   } catch (error) {
-  //     console.error("Error in handleLogin:", error);
-  //   }
-  // };
-
+  const [success, setSuccess] = useState("");
+  const colorScheme = useColorScheme();
+  const themeColors = colorScheme === "dark" ? Colors.dark : Colors.light;
+  const {setErrorVisible, setErrorMessage} = useErrors();
   const [formData, setFormData] = useState({
     username: "",
     password: "",
     R_PASSWORD: ""
-  })
+  });
+
   const [checkPassword, setCheckPassword] = useState({
     length: false,
     maj: false,
     min: false,
     special: false,
     same: false
-  })
-  const [fielCheck, setFieldCheck] = useState("")
+  });
+
   const handleChange = (key: keyof typeof formData, value: string) => {
     setFormData(prevFormData => ({
       ...prevFormData,
@@ -62,109 +53,116 @@ export default function RegisterPage() {
     setCheckPassword(passwordErrors);
   };
 
-  const handleSavePasswordError = (err: unknown) => {
-    if ((err as AXIOS_ERROR).message) {
-      setError((err as AXIOS_ERROR).message || "Error connecting")
-    } else {
-      setError("Error connecting ")
-    }
-  }
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    setFieldCheck("")
-    const passwordErrors = validatePassword(formData)
-    setCheckPassword(passwordErrors)
+  const handleLogin = async () => {
+    const passwordErrors = validatePassword(formData);
+    setCheckPassword(passwordErrors);
 
     if (passwordErrors.length && passwordErrors.maj && passwordErrors.min && passwordErrors.special && passwordErrors.same) {
-      // checkUserExist(formData.username).then((response) => {
-      //     if (response.message) {
-      //         registerUser({ username: formData.username, password: formData.password, token:token || "" }).then(() => {
-      //             if (response.message) {
-      //                 setSuccess("User registered")
-      //             } else {
-      //                 setError("Error registering user")
-      //             }
-      //         }).catch(handleSavePasswordError)
-      //     } else {
-      //         setError("Username already exist")
-      //     }
-      // }
-      // ).catch(handleSavePasswordError)
+      try {
+        const response = await registerUser({ email: formData.username, password: formData.password });
+        setSuccess("");
+        setErrorMessage(response.message);
+
+
+        if (response.message === true) {
+          setSuccess("Registration successful!");
+          setErrorMessage("");
+        }
+        else{
+          setErrorVisible(true);
+        }
+      } catch (error) {
+        console.error("Error in handleLogin:", error);
+        handleSavePasswordError(error);
+      }
+    } else {      
+      setErrorMessage("Password does not meet requirements.");
+      setErrorVisible(true);
     }
-  }
+  };
+
+  const handleSavePasswordError = (err: unknown) => {
+    if ((err as AXIOS_ERROR).message) {
+      setErrorMessage((err as AXIOS_ERROR).message || "Error connecting");
+    } else {
+      setErrorMessage("Error connecting ");
+    }
+    setErrorVisible(true);
+  };
+
   return (
-    <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}>
-      <ScrollView>
-        <View>
-          <Text >Register</Text>
+    <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.container}>
 
-          {/* Username */}
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Username</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Username"
-              value={formData.username || ""}
-              onChangeText={(text) => handleChange("username", text)}
-            />
-          </View>
 
-          {/* Password */}
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Password</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Password"
-              secureTextEntry
-              value={formData.password || ""}
-              onChangeText={(text) => handleChange("password", text)}
-            />
-          </View>
+      <View style={styles.formContainer}>
+        <Text style={styles.title}>Register</Text>
 
-          {/* Repeat Password */}
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Repeat Password</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Repeat Password"
-              secureTextEntry
-              value={formData.R_PASSWORD || ""}
-              onChangeText={(text) => handleChange("R_PASSWORD", text)}
-            />
-          </View>
+        {success ? <Text style={styles.successText}>{success}</Text> : null}
 
-          {/* Sign Up Button */}
-          <TouchableOpacity onPress={() => {
-            Keyboard.dismiss();
-
-          }}>
-            <Text>Sign up</Text>
-          </TouchableOpacity>
-
-          {/* Password Strength Validation */}
-          <View style={styles.passwordValidation}>
-            {aboutPassword(checkPassword)}
-            {fielCheck ? <Text style={styles.errorText}>{fielCheck}</Text> : null}
-          </View>
+        <View style={styles.inputContainer}>
+          <Text style={styles.label}>Username</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Username"
+            placeholderTextColor={themeColors.icon}
+            value={formData.username || ""}
+            onChangeText={(text) => handleChange("username", text)}
+          />
         </View>
-      </ScrollView>
+
+        <View style={styles.inputContainer}>
+          <Text style={styles.label}>Password</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Password"
+            placeholderTextColor={themeColors.icon}
+            secureTextEntry
+            value={formData.password || ""}
+            onChangeText={(text) => handleChange("password", text)}
+          />
+        </View>
+
+        {/* Repeat Password */}
+        <View style={styles.inputContainer}>
+          <Text style={styles.label}>Repeat Password</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Repeat Password"
+            placeholderTextColor={themeColors.icon}
+            secureTextEntry
+            value={formData.R_PASSWORD || ""}
+            onChangeText={(text) => handleChange("R_PASSWORD", text)}
+          />
+        </View>
+
+        <TouchableOpacity style={styles.button} onPress={() => {
+          Keyboard.dismiss();
+          handleLogin();
+        }}>
+          <Text style={styles.buttonText}>Sign up</Text>
+        </TouchableOpacity>
+
+        <View style={styles.passwordValidation}>
+          {aboutPassword(checkPassword)}
+        </View>
+
+        <Link href={"/login"} style={styles.link}>Already have an account? Sign in</Link>
+      </View>
     </KeyboardAvoidingView>
   );
 }
+
 const styles = {
   container: {
     flex: 1,
-    justifyContent: 'center',
+    backgroundColor: Colors.light.background,
     alignItems: 'center',
-    paddingHorizontal: 20,
-    backgroundColor: '#F8F9FA',
-  },
-  scrollContainer: {
-    flexGrow: 1,
     justifyContent: 'center',
+    padding: 20,
   },
   formContainer: {
-    backgroundColor: 'white',
+    width: '90%',
+    backgroundColor: "#fff",
     padding: 20,
     borderRadius: 10,
     shadowColor: "#000",
@@ -172,51 +170,68 @@ const styles = {
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
-    width: '100%',
   },
   title: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: 'bold',
     textAlign: 'center',
-    marginBottom: 10,
+    marginBottom: 20,
+    color: Colors.light.text,
   },
   inputContainer: {
-    marginBottom: 12,
+    marginBottom: 16,
   },
   label: {
-    fontSize: 16,
-    marginBottom: 5,
+    fontSize: 18,
+    marginBottom: 8,
+    color: Colors.light.text,
   },
   input: {
     borderWidth: 1,
-    borderColor: '#CCC',
-    borderRadius: 5,
-    paddingVertical: 10,
-    paddingHorizontal: 15,
+    borderColor: Colors.light.icon,
+    borderRadius: 8,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
     fontSize: 16,
-    backgroundColor: 'white',
+    backgroundColor: '#fff',
+    color: Colors.light.text,
   },
   button: {
-    backgroundColor: '#3498db',
-    padding: 12,
-    borderRadius: 5,
+    backgroundColor: Colors.light.tint,
+    padding: 14,
+    borderRadius: 8,
     alignItems: 'center',
-    marginTop: 10,
+    marginTop: 20,
   },
   buttonText: {
-    color: 'white',
+    color: '#fff',
     fontSize: 18,
     fontWeight: 'bold',
   },
   passwordValidation: {
-    marginTop: 10,
+    marginTop: 20,
   },
   validText: {
-    color: 'green',
+    color: Colors.light.success,
     fontSize: 14,
   },
   errorText: {
-    color: 'red',
+    color: Colors.light.error,
     fontSize: 14,
+    textAlign: "center",
+    marginBottom: 10,
+  },
+  successText: {
+    color: Colors.light.success,
+    fontSize: 14,
+    textAlign: "center",
+    marginBottom: 10,
+  },
+  link: {
+    marginTop: 20,
+    color: Colors.light.tint,
+    textAlign: "center",
+    fontSize: 16,
+    textDecorationLine: 'underline',
   },
 };
