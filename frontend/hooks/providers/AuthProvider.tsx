@@ -5,6 +5,8 @@ import LOGIN from "@/type/feature/auth/login";
 import RETURN from "@/type/request/return";
 import AUTH_CONTEXT_TYPE from "@/type/feature/auth/auth_context_type";
 import { useRouter, usePathname } from "expo-router";
+import lang from "@/translation";
+
 const defaultContextValue: AUTH_CONTEXT_TYPE = {
     isAuthenticated: false,
     login: async (): Promise<RETURN> => {
@@ -50,7 +52,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         };
 
         initializeAuthState();
-    }, [pathName]);
+    }, [pathName, lang]);
 
     const login = async (userData: LOGIN): Promise<RETURN> => {
         

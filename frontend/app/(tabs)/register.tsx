@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { View, Text, TextInput, Button, StyleSheet } from "react-native";
 import { useRouter, Link } from "expo-router";
 import { registerUser } from "@/services/AuthService";
+import lang from "@/translation";
+
 export default function LoginPage() {
   
   const [email, setEmail] = useState("");
@@ -21,10 +23,10 @@ export default function LoginPage() {
   };
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Sign up</Text>
+      <Text style={styles.title}>{lang.t("register")}</Text>
       <TextInput
         style={styles.input}
-        placeholder="Email"
+        placeholder={lang.t("email")}
         value={email}
         onChangeText={setEmail}
         keyboardType="email-address"
@@ -32,14 +34,14 @@ export default function LoginPage() {
       />
       <TextInput
         style={styles.input}
-        placeholder="Password"
+        placeholder={lang.t("password")}
         value={password}
         onChangeText={setPassword}
         secureTextEntry
         autoCapitalize="none"
       />
-      <Button title="Register" onPress={handleLogin} />
-      <Link href={"/login"}>Sign in</Link>
+      <Button title={lang.t("register")} onPress={handleLogin} />
+      <Link href={"/login"}>{lang.t("login")}</Link>
     </View>
   );
 }
