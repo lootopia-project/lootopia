@@ -2,9 +2,12 @@ import React from 'react';
 import { View, Text, Button } from 'react-native';
 import { useAuth } from '@/hooks/providers/AuthProvider';
 import { useRouter } from 'expo-router';
+import { useLanguage } from '@/hooks/providers/LanguageProvider';
+
 export default function HomeScreen() {
   const { logout } = useAuth();
   const router = useRouter();
+  const {i18n} = useLanguage();
   const hangleLogout = async () => {
     try {
       
@@ -13,14 +16,14 @@ export default function HomeScreen() {
         router.push("/login");
       }
     } catch (error) {
-      console.error("Error in handleLogin:", error);
+      console.error("Error in hangleLogout:", error);
     }
   };
   return (
     <>
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Hello World !</Text>
-      <Button title="Logout" onPress={hangleLogout} />
+      <Text>{i18n.t("Hello World !")}</Text>
+      <Button title={i18n.t("logout")} onPress={hangleLogout} />
     </View>
     </>
   );

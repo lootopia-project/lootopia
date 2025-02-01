@@ -5,7 +5,7 @@ import LOGIN from "@/type/feature/auth/login";
 import RETURN from "@/type/request/return";
 import AUTH_CONTEXT_TYPE from "@/type/feature/auth/auth_context_type";
 import { useRouter, usePathname } from "expo-router";
-import lang from "@/translation";
+import { useLanguage } from "@/hooks/providers/LanguageProvider";
 
 const defaultContextValue: AUTH_CONTEXT_TYPE = {
     isAuthenticated: false,
@@ -27,7 +27,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const pathName = usePathname();
     const router = useRouter();
-
+    const { changeLanguage } = useLanguage();
     useEffect(() => {
         const initializeAuthState = async () => {            
             try {
@@ -35,6 +35,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                 
                 if (data.message === true) {
                     setIsAuthenticated(true);
+                    await AsyncStorage.setItem("lang", data.lang);
+                    changeLanguage(data.lang);
                 } else {
                     setIsAuthenticated(false);
                     await AsyncStorage.removeItem("token");
@@ -52,7 +54,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         };
 
         initializeAuthState();
-    }, [pathName, lang]);
+    }, [pathName]);
 
     const login = async (userData: LOGIN): Promise<RETURN> => {
         

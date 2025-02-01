@@ -4,14 +4,14 @@ import { useAuth } from "@/hooks/providers/AuthProvider";
 import { useErrors } from "@/hooks/providers/ErrorProvider";
 import { useRouter, Link } from "expo-router";
 import { Colors } from "@/constants/Colors";
-import lang from "@/translation";
+import { useLanguage } from "@/hooks/providers/LanguageProvider";
 
 export default function LoginPage() {
   const { login } = useAuth();
   const { setErrorVisible, setErrorMessage } = useErrors();
   const colorScheme = useColorScheme();
   const themeColors = colorScheme === "dark" ? Colors.dark : Colors.light;
-
+  const { i18n } = useLanguage();
   const router = useRouter();
 
   const [email, setEmail] = useState("");
@@ -25,7 +25,7 @@ export default function LoginPage() {
         router.push("/");
       }
     } catch (err) {
-      setErrorMessage("Invalid email or password. Please try again.");
+      setErrorMessage(i18n.t("Invalid email or password. Please try again."));
       setErrorVisible(true);
     }
   };
@@ -35,12 +35,12 @@ export default function LoginPage() {
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={[styles.container, { backgroundColor: themeColors.background }]}>
       <View style={styles.formContainer}>
-        <Text style={[styles.title, { color: themeColors.text }]}>Sign in</Text>
+        <Text style={[styles.title, { color: themeColors.text }]}>{i18n.t("Sign in")}</Text>
         <View style={styles.inputContainer}>
-          <Text style={[styles.label, { color: themeColors.text }]}>Email</Text>
+          <Text style={[styles.label, { color: themeColors.text }]}>{i18n.t("email")}</Text>
           <TextInput
             style={[styles.input, { borderColor: themeColors.icon, color: themeColors.text }]}
-            placeholder="Email"
+            placeholder={i18n.t("email")}
             placeholderTextColor={themeColors.icon}
             value={email}
             onChangeText={setEmail}
@@ -50,10 +50,10 @@ export default function LoginPage() {
         </View>
 
         <View style={styles.inputContainer}>
-          <Text style={[styles.label, { color: themeColors.text }]}>Password</Text>
+          <Text style={[styles.label, { color: themeColors.text }]}>{i18n.t("password")}</Text>
           <TextInput
             style={[styles.input, { borderColor: themeColors.icon, color: themeColors.text }]}
-            placeholder="Password"
+            placeholder={i18n.t("password")}
             placeholderTextColor={themeColors.icon}
             value={password}
             onChangeText={setPassword}
@@ -63,11 +63,11 @@ export default function LoginPage() {
         </View>
 
         <TouchableOpacity style={[styles.button, { backgroundColor: themeColors.tint }]} onPress={handleLogin}>
-          <Text style={[styles.buttonText, { color: themeColors.background }]}>Login</Text>
+          <Text style={[styles.buttonText, { color: themeColors.background }]}>{i18n.t("login")}</Text>
         </TouchableOpacity>
 
         <Link href={"/register"} style={[styles.link, { color: themeColors.tint }]}>
-          Don't have an account? Sign up
+          {i18n.t("Don't have an account? Sign up")}
         </Link>
       </View>
     </KeyboardAvoidingView>

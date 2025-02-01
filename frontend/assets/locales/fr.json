@@ -4,6 +4,23 @@
     "logout": "Déconnexion",
     "register": "Inscription",
     "password": "Mot de passe",
-    "email": "Email"
+    "email": "Email",
+    "Hello World !": "Bonjour le monde !",
+    "Registration successful!" : "Inscription réussie !",
+    "Password does not meet requirements." : "Le mot de passe ne répond pas aux exigences.",
+    "Error connecting " : "Erreur de connexion",
+    "Register": "Inscription",
+    "Username": "Nom d'utilisateur",
+    "Repeat Password": "Répéter le mot de passe",
+    "Sign up": "S'inscrire",
+    "Already have an account? Sign in": "Vous avez déjà un compte ? Connectez-vous",
+    "At least 10 characters" : "Au moins 10 caractères",
+    "At least one uppercase letter" : "Au moins une lettre majuscule",
+    "At least one lowercase letter" : "Au moins une lettre minuscule",
+    "At least one special character" : "Au moins un caractère spécial",
+    "Same password" : "Même mot de passe",
+    "Invalid email or password. Please try again." : "Email ou mot de passe invalide. Veuillez réessayer.",
+    "Sign in": "Se connecter",
+    "Don't have an account? Sign up": "Vous n'avez pas de compte ? Inscrivez-vous"
 }
   

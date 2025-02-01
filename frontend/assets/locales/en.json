@@ -4,6 +4,23 @@
     "logout": "Logout",
     "register": "Register",
     "password": "Password",
-    "email": "Email"
+    "email": "Email",
+    "Hello World !": "Hello World !",
+    "Registration successful!" : "Registration successful!",
+    "Password does not meet requirements." : "Password does not meet requirements.",
+    "Error connecting " : "Error connecting",
+    "Register": "Register",
+    "Username": "Username",
+    "Repeat Password": "Repeat Password",
+    "Sign up": "Sign up",
+    "Already have an account? Sign in": "Already have an account? Sign in",
+    "At least 10 characters" : "At least 10 characters",
+    "At least one uppercase letter" : "At least one uppercase letter",
+    "At least one lowercase letter" : "At least one lowercase letter",
+    "At least one special character" : "At least one special character",
+    "Same password" : "Same password",
+    "Invalid email or password. Please try again." : "Invalid email or password. Please try again.",
+    "Sign in": "Sign in",
+    "Don't have an account? Sign up": "Don't have an account? Sign up"
   }
   

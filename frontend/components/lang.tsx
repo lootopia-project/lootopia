@@ -1,25 +1,20 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View, StyleSheet, Text } from 'react-native';
-import {Picker} from '@react-native-picker/picker';
-import lang from '@/translation';
+import { Picker } from '@react-native-picker/picker';
+import { useLanguage } from '@/hooks/providers/LanguageProvider'; 
 
 export default function LanguageSwitcher() {
-  const [selectedLanguage, setSelectedLanguage] = useState(lang.locale);
-
-  const changeLanguage = (newLang:string) => {
-    setSelectedLanguage(newLang);
-    lang.locale = newLang;
-  };
+  const { locale, changeLanguage, i18n } = useLanguage();
 
   return (
-    <View style={styles.container}>
+    <View>
       <Picker
-        selectedValue={selectedLanguage}
+        selectedValue={locale}
         onValueChange={(itemValue) => changeLanguage(itemValue)}
         style={styles.picker}
       >
-        <Picker.Item label="🇬🇧 English" value="en" />
-        <Picker.Item label="🇫🇷 Français" value="fr" />
+        <Picker.Item label="English" value="en" />
+        <Picker.Item label="Français" value="fr" />
       </Picker>
     </View>
   );
@@ -27,9 +22,7 @@ export default function LanguageSwitcher() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    alignSelf: 'flex-start',
     padding: 20,
   },
   text: {
