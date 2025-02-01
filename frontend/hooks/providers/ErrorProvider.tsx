@@ -30,7 +30,7 @@ export const ErrorProvider = ({ children }: { children: ReactNode }) => {
 export const useErrors = () => {
     const context = useContext(ERROR_CONTEXT);
     if (!context) {
-      throw new Error("useAuth must be used within an AuthProvider");
+      throw new Error("useErrors must be used within a ErrorProvider");
     }
     return context;
   };
