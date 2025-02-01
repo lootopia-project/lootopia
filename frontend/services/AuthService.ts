@@ -3,9 +3,11 @@ import axios from 'axios';
 import AXIOS_ERROR from '@/type/request/axios_error';
 import LOGIN from '@/type/feature/auth/login';
 import RETURN from '@/type/request/return';
-const API_URL = "http://localhost:3333"
+// const API_URL = "http://localhost:3333"
+const API_URL ='http://192.168.1.19:3333'
+
 const FCM_PUBLIC_KEY = "BP-o-H2NKTa-Ske6pWy7Cl4CSvxRyrmJwwEaH4T_y7obZ-q2qmHPNQ8PQqSGh69QplFT7FIEYQ6JxjMjO3kYoK8"
-import {messaging, requestFcmToken} from "./firebase"; // Chemin vers votre fichier Firebase
+import { requestFcmToken} from "./firebase"; // Chemin vers votre fichier Firebase
 
 const config = {
     headers: {
@@ -18,7 +20,6 @@ const config = {
 export const loginUser = async (userData: LOGIN): Promise<RETURN> => {
     try {
         const { email, password } = userData;
-
         // Récupérer le token FCM via requestFcmToken
         const fcmToken = await requestFcmToken();
         if (!fcmToken) {
@@ -40,14 +41,13 @@ export const loginUser = async (userData: LOGIN): Promise<RETURN> => {
         }
 
         console.log("fcmToken:", fcmToken);
-
-        // Envoyer les informations de connexion au backend
+        console.log(API_URL)
         const response = await axios.post<RETURN>(
             `${API_URL}/login`,
             {
                 email,
                 password,
-                fcmToken: fcmToken || null, // Inclure le token FCM dans le payload si disponible
+                fcmToken: fcmToken || null,
             },
             config
         );

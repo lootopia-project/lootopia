@@ -3,8 +3,10 @@ import db from '@adonisjs/lucid/services/db'
 import User from '#models/user'
 import admin from "#services/firebaseService";
 import UserFcmToken from "#models/user_fcm_token";
+import fetch from 'node-fetch';
 
 export default class AuthController {
+
   async login({ request, auth, response }: HttpContext) {
     const { email, password, fcmToken } = request.all();
 
@@ -19,7 +21,6 @@ export default class AuthController {
 
       // Sauvegarder ou mettre à jour le token FCM si fourni
       if (fcmToken) {
-        console.log('fcmToken reçu:', fcmToken);
 
         // Mettre à jour ou créer un token FCM associé à l'utilisateur
         await UserFcmToken.updateOrCreate(
@@ -28,37 +29,49 @@ export default class AuthController {
         );
 
         try {
-          // Vérifier si le token FCM est une chaîne non vide
-          console.log(!fcmToken || typeof fcmToken.token !== 'string');
-          if (!fcmToken || typeof fcmToken.token !== 'string') {
-            throw new Error('Le token FCM fourni est vide ou invalide.');
-          }
+          if (fcmToken.platform === 'Mobile') {
+            // Envoi via Expo pour les appareils mobiles
+            const expoPushToken = fcmToken.token;
 
-          // Construire le message
-          const message = {
-            notification: {
+            if (!expoPushToken.startsWith('ExponentPushToken')) {
+              throw new Error('Le token Expo Push fourni est invalide.');
+            }
+
+            // Construire le message
+            const message = {
+              to: expoPushToken,
               title: 'Connexion réussie',
               body: `Bonjour ${verifyCredentials.name}, vous êtes maintenant connecté.`,
-            },
-            token: fcmToken.token, // Utiliser le token FCM nettoyé
-          };
-          console.log('Message de notification construit:', message);
+            };
 
-          // Envoyer la notification
-          const result = await admin.messaging().send(message);
-          console.log('Notification envoyée avec succès.', result);
-        } catch (error) {
-          console.error(
-              'Erreur lors de l\'envoi de la notification :',
-              error.message || error,
-              error.stack || ''
-          );
+            // Envoyer la notification via l'API Expo
+            const expoResponse = await fetch('https://exp.host/--/api/v2/push/send', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(message),
+            });
 
-          if (error.code === 'messaging/invalid-payload') {
-            console.error(
-                'Le token FCM ou le message est invalide. Vérifiez que le token FCM correspond bien à un appareil inscrit.'
-            );
+            const result = await expoResponse.json();
+            console.log('Notification envoyée via Expo avec succès:', result);
+          } else if (fcmToken.platform === 'Web') {
+            // Envoi via Firebase pour les navigateurs Web
+            const message = {
+              notification: {
+                title: 'Connexion réussie',
+                body: `Bonjour ${verifyCredentials.name}, vous êtes maintenant connecté.`,
+              },
+              token: fcmToken.token, // Utiliser le token FCM pour le Web
+            };
+
+            const result = await admin.messaging().send(message);
+            console.log('Notification envoyée via Firebase avec succès:', result);
+          } else {
+            console.warn('Plateforme non reconnue. Aucune notification envoyée.');
           }
+        } catch (error) {
+          console.error('Erreur lors de l\'envoi de la notification :', error.message || error);
         }
       } else {
         console.warn('Aucun token FCM fourni. La notification ne sera pas envoyée.');
@@ -69,6 +82,7 @@ export default class AuthController {
       return response.unauthorized({ message: 'Invalid credentials' });
     }
   }
+
 
 
 

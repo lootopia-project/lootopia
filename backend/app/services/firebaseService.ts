@@ -14,14 +14,12 @@ import axios from 'axios';
 
         // Télécharger le fichier JSON
         const { data: serviceAccount } = await axios.get(serviceAccountUrl);
-        console.log('Fichier serviceAccountKey.json téléchargé avec succès.');
 
         // Initialiser Firebase Admin
         if (!admin.apps.length) {
             admin.initializeApp({
                 credential: admin.credential.cert(serviceAccount),
             });
-            console.log('Firebase Admin initialisé avec succès.');
         }
     } catch (error) {
         console.error('Erreur lors de l\'initialisation de Firebase Admin :', error.message);

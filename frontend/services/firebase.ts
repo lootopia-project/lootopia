@@ -1,7 +1,9 @@
 import { Platform } from "react-native";
 import { initializeApp } from "firebase/app";
 import { getMessaging, getToken, onMessage } from "firebase/messaging";
-import messaging from "@react-native-firebase/messaging";
+import * as Notifications from "expo-notifications";
+import { getDatabase, ref, get, child } from "firebase/database";
+import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 
 // Configuration Firebase
 const firebaseConfig = {
@@ -14,31 +16,45 @@ const firebaseConfig = {
     databaseURL: "https://lootopia-8fcf2-default-rtdb.firebaseio.com/",
 };
 
-// Initialiser Firebase
+// Initialiser Firebase pour le web
 const app = initializeApp(firebaseConfig);
 
-const showNotification = (title: string, options: NotificationOptions) => {
-    if (Notification.permission === "granted") {
-        new Notification(title, options);
+// Configurer Expo Notifications pour le mobile
+Notifications.setNotificationHandler({
+    handleNotification: async () => ({
+        shouldShowAlert: true,
+        shouldPlaySound: true,
+        shouldSetBadge: false,
+    }),
+});
+
+// Fonction pour afficher une notification
+const showNotification = (title: string, body: string) => {
+    if (Platform.OS === "web") {
+        if (Notification.permission === "granted") {
+            new Notification(title, { body });
+        } else {
+            console.warn("Les notifications ne sont pas autorisées par le navigateur.");
+        }
     } else {
-        console.warn("Les notifications ne sont pas autorisées par le navigateur.");
+        Notifications.scheduleNotificationAsync({
+            content: { title, body },
+            trigger: null,
+        });
     }
 };
 
-// Fonction pour le Web : enregistrer le Service Worker et récupérer le token
+// Fonction pour gérer les notifications Web avec Firebase
 const requestFcmTokenWeb = async (): Promise<{ platform: string; token: string | null }> => {
     try {
-        // if ("serviceWorker" in navigator) {
-        //     console.log("Enregistrement du Service Worker pour le Web.");
+        if ("serviceWorker" in navigator) {
+            console.log("Enregistrement du Service Worker pour le Web.");
             await navigator.serviceWorker
                 .register("./firebase-messaging-sw.js")
                 .then((registration) => {
                     console.log("Service Worker enregistré :", registration.scope);
                 });
-        // } else {
-        //     console.warn("Les Service Workers ne sont pas pris en charge par ce navigateur.");
-        //     return { platform: "Web", token: null };
-        // }
+        }
 
         const messaging = getMessaging(app);
         const permission = await Notification.requestPermission();
@@ -54,39 +70,14 @@ const requestFcmTokenWeb = async (): Promise<{ platform: string; token: string |
 
         console.log("FCM Token (Web):", fcmToken);
 
-        // Ajouter un écouteur pour les messages en premier plan
         onMessage(messaging, (payload) => {
-            console.log("Message reçu en premier plan :", payload);
+            console.log("Message reçu en premier plan (Web) :", payload);
 
             if (payload.notification) {
-                const notificationTitle = payload.notification.title || "Notification";
-                const notificationOptions: NotificationOptions = {
-                    body: payload.notification.body || "Vous avez une nouvelle notification.",
-                    icon: payload.notification.icon || "/favicon.ico", // Icône par défaut
-                };
-
-                // Vérification des permissions pour afficher la notification
-                if (Notification.permission === "granted") {
-                    console.log("Permission de notification accordée.");
-
-                    // Afficher la notification en premier plan
-                    const notification = new Notification(notificationTitle, notificationOptions);
-
-                    // Gérer les clics sur la notification
-                    notification.onclick = (event) => {
-                        console.log("Notification cliquée :", event);
-                        // Vous pouvez rediriger l'utilisateur vers une URL ou effectuer une autre action ici
-                    };
-                } else {
-                    console.warn(
-                        "Les notifications ne sont pas autorisées par le navigateur. Demandez la permission à l'utilisateur."
-                    );
-                }
-            } else {
-                console.warn("Pas de notification dans le payload.");
+                const { title, body } = payload.notification;
+                showNotification(title || "Notification", body || "Vous avez une nouvelle notification.");
             }
         });
-
 
         return { platform: "Web", token: fcmToken };
     } catch (error) {
@@ -95,33 +86,27 @@ const requestFcmTokenWeb = async (): Promise<{ platform: string; token: string |
     }
 };
 
-// Fonction pour React Native : demander les permissions et récupérer le token
+// Fonction pour gérer les notifications Mobile avec Expo Notifications
 const requestFcmTokenMobile = async (): Promise<{ platform: string; token: string | null }> => {
     try {
-        const authStatus = await messaging().requestPermission();
-        const isAuthorized =
-            authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-            authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+        const { status } = await Notifications.requestPermissionsAsync();
 
-        if (isAuthorized) {
-            const fcmToken = await messaging().getToken();
-            console.log("FCM Token (Mobile):", fcmToken);
-
-            // Ajouter un écouteur pour les messages en premier plan
-            messaging().onMessage(async (payload) => {
-                console.log("Message reçu en premier plan (Mobile) :", payload);
-            });
-
-            return { platform: "Mobile", token: fcmToken };
-        } else {
+        if (status !== "granted") {
             console.warn("Les permissions de notification push ont été refusées.");
             return { platform: "Mobile", token: null };
         }
+
+        const expoPushToken = (await Notifications.getExpoPushTokenAsync()).data;
+
+        Notifications.addNotificationReceivedListener((notification) => {});
+
+        return { platform: "Mobile", token: expoPushToken };
     } catch (error) {
-        console.error("Erreur lors de la récupération du token FCM (Mobile) :", error);
+        console.error("Erreur lors de la récupération du token Expo Push :", error);
         return { platform: "Mobile", token: null };
     }
 };
+
 
 // Fonction principale pour récupérer le token FCM selon la plateforme
 export const requestFcmToken = async (): Promise<{ platform: string; token: string | null }> => {
@@ -132,6 +117,16 @@ export const requestFcmToken = async (): Promise<{ platform: string; token: stri
     }
 };
 
-// Exporter l'objet messaging pour d'autres usages
-export { messaging };
+Notifications.setNotificationHandler({
+    handleNotification: async () => ({
+        shouldShowAlert: true,
+        shouldPlaySound: true,
+        shouldSetBadge: false,
+    }),
+});
+const database = getDatabase(app);
+
+
+// Exporter les objets nécessaires
+export { Notifications,  getDatabase, ref, get, child,database };
 export default app;
