@@ -3,12 +3,14 @@ import Hunting from "#models/hunting";
 import db from "@adonisjs/lucid/services/db";
 import {DateTime} from "luxon";
 import {adminDatabase} from "#services/firebaseAdmin";
+import {getLastMessages, getLastMessagesForHunts} from "#services/firebaseService";
 
 export default class HuntingsController {
     /**
      * Récupère les détails d'une chasse au trésor
      */
     async getHunting({ params, response, auth }: HttpContext) {
+        console.log("getHunting");
         try {
 
             // ID de la chasse à récupérer
@@ -59,7 +61,7 @@ export default class HuntingsController {
      * Crée une nouvelle chasse au trésor
      */
     async createHunting({ auth, response }: HttpContext) {
-
+        console.log("createHunting");
         const user = auth.user;
         if (!user) {
             return response.unauthorized({ message: "Utilisateur non authentifié" });
@@ -102,10 +104,7 @@ export default class HuntingsController {
 
         try {
             const huntRef = adminDatabase.ref(`treasureHunts/${hunting.id}`);
-
             await huntRef.set(newHuntData);
-
-
             return response.created({
                 message: "Chasse au trésor créée avec succès",
                 huntId: hunting.id,
@@ -115,4 +114,58 @@ export default class HuntingsController {
             return response.internalServerError({ message: "Erreur interne lors de la création de la chasse." });
         }
     }
+
+    async getHuntingsParticpatedOrOrganized({ auth, response }: HttpContext) {
+        console.log("getHuntingsParticpatedOrOrganized");
+
+        const user = auth.user;
+        if (!user) {
+            return response.unauthorized({ message: "Utilisateur non authentifié" });
+        }
+
+        try {
+            // Récupération des chasses organisées
+            const organizedHuntings = await Hunting.query()
+                .where("userId", user.id)
+                .select("id");
+
+            // Récupération des chasses participées
+            const participatedHuntings = await db
+                .from("users_huntings")
+                .where("user_id", user.id)
+                .select("hunting_id");
+
+            // Fusionner les IDs des chasses
+            const huntIds = [
+                ...organizedHuntings.map((hunting) => hunting.id),
+                ...participatedHuntings.map((userHunting) => userHunting.hunting_id),
+            ];
+
+            // Récupérer les derniers messages pour chaque chasse
+            const huntMessages = await getLastMessagesForHunts(huntIds, 1);
+
+            // Associer les rôles (organizer/participant) et les derniers messages
+            const hunts = huntIds.map((id) => {
+                const role = organizedHuntings.some((hunting) => hunting.id === id)
+                    ? "organizer"
+                    : "participant";
+                const lastMessage = huntMessages.find((hunt) => hunt.huntId === id)?.lastMessage;
+
+                return {
+                    id,
+                    role,
+                    lastMessage,
+                };
+            });
+
+            return response.ok(hunts);
+        } catch (error) {
+            console.error("Erreur lors de la récupération des chasses :", error);
+            return response.internalServerError({
+                message: "Erreur lors de la récupération des chasses.",
+            });
+        }
+    }
+
+
 }

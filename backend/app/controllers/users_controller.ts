@@ -3,6 +3,7 @@ import {HttpContext} from "@adonisjs/core/http";
 export default class UsersController {
 
     async UserConnected({ auth, response }: HttpContext) {
+        console.log("UserConnected");
         const user ={
             id: auth.user?.id,
             nickname: auth.user?.nickname,

@@ -60,5 +60,38 @@ export default class extends BaseSeeder {
       },
     ])
 
+    const hunting2 = await Hunting.create({
+      title: 'Chasse au trésor épique',
+      description: 'Une aventure unique pour découvrir des trésors cachés.',
+      price: 50,
+      minUser: 2,
+      maxUser: 5,
+      private: false,
+      endDate: DateTime.now().plus({ days: 7 }),
+      searchDelay: '02:00:00', // Format HH:mm:ss
+      status: true,
+      background: 'https://example.com/bg.jpg',
+      textColor: '#FFFFFF',
+      headerImg: 'https://example.com/header.jpg',
+      userId: anthony.id,
+      worldId: worldId,
+    })
+
+
+    await UsersHunting.createMany([
+      {
+        userId: kevin.id,
+        huntingId: hunting2.id,
+        score: 0, // Ajout de la valeur par défaut
+        opinion: "Aucune opinion", // Nouvelle valeur ajoutée
+      },
+      {
+        userId: yassine.id,
+        huntingId: hunting2.id,
+        score: 0, // Ajout de la valeur par défaut
+        opinion: "Aucune opinion", // Nouvelle valeur ajoutée
+      },
+    ])
+
   }
 }

@@ -39,11 +39,10 @@ const initializeFirebaseAdmin = async () => {
     try {
         const serviceAccount = await fetchServiceAccount();
 
-        // Vérifiez si l'application Firebase par défaut existe
         if (!getApps().length) {
             initializeApp({
                 credential: cert(serviceAccount),
-                databaseURL: databaseUrl, // URL explicite
+                databaseURL: databaseUrl,
             });
         }
         return getDatabase();
@@ -53,5 +52,4 @@ const initializeFirebaseAdmin = async () => {
     }
 };
 
-// Exporter la base de données
 export const adminDatabase = await initializeFirebaseAdmin();
