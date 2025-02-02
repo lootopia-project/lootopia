@@ -22,9 +22,10 @@ router
   .group(() => {
     router.post('/logout', [AuthController, 'logout'])
     router.post('/checkIsLogin', [AuthController, 'checkIsLogin'])
-    router.get('/huntings/:id', [HuntingsController, 'getHunting'])
     router.get('/UserConnected', [UsersController, 'UserConnected'])
     router.post('/huntings/create', [HuntingsController, 'createHunting'])
+    router.get('/huntings/getAllForMessage', [HuntingsController, 'getHuntingsParticpatedOrOrganized'])
+    router.get('/huntings/getHunting/:id', [HuntingsController, 'getHunting'])
   })
   .use([
     middleware.auth({

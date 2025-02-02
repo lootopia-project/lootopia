@@ -1,9 +1,17 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
-import RETURN from "@/type/request/return";
-import AXIOS_ERROR from "@/type/request/axios_error";
-const API_URL = "http://localhost:3333"
-// const API_URL ='http://192.168.1.19:3333'
+import {Platform} from "react-native";
+
+
+// Ajoute une valeur par défaut pour éviter les erreurs
+let API_URL =''
+if (Platform.OS === 'web') {
+    API_URL=process.env.EXPO_PUBLIC_API_URL as string
+}else{
+    API_URL=process.env.EXPO_PUBLIC_API_URL_MOBILE as string
+}
+
+
 export const UserConnected = async () => {
     try {
         const token = await AsyncStorage.getItem('token');
@@ -13,15 +21,17 @@ export const UserConnected = async () => {
                 "Authorization": token ? `${token}` : '',
             },
             withCredentials: true
-        }
-        const response = await axios.get<RETURN>(`${API_URL}/UserConnected`, config)
+        };
 
-        return response.data
+        const response = await axios.get(`${API_URL}/UserConnected`, config);
+        return response.data;
     } catch (err: unknown) {
-        if ((err as AXIOS_ERROR).message) {
-            throw new Error("Error connecting")
+        console.error("Erreur Axios :", err);
+
+        if ((err as any)?.message) {
+            throw new Error("Error connecting");
         } else {
-            throw new Error("Error connecting to server")
+            throw new Error("Error connecting to server");
         }
     }
-}
+};

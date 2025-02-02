@@ -3,10 +3,18 @@ import axios from 'axios';
 import AXIOS_ERROR from '@/type/request/axios_error';
 import LOGIN from '@/type/feature/auth/login';
 import RETURN from '@/type/request/return';
-const API_URL = "http://localhost:3333"
-// const API_URL ='http://192.168.1.19:3333'
+import {Platform} from "react-native";
+import { requestFcmToken} from "./firebase";
 
-import { requestFcmToken} from "./firebase"; // Chemin vers votre fichier Firebase
+let API_URL =''
+if (Platform.OS === 'web') {
+    API_URL=process.env.EXPO_PUBLIC_API_URL as string
+}else{
+    API_URL=process.env.EXPO_PUBLIC_API_URL_MOBILE as string
+}
+
+
+// console.log(API_URL)
 
 const config = {
     headers: {

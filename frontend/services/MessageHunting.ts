@@ -1,43 +1,95 @@
 import { initializeApp } from "firebase/app";
 import { getDatabase, ref, child, get } from "firebase/database";
-import { getAuth, signInAnonymously } from "firebase/auth";
-import {firebaseConfig} from "@/config/firebaseConfig";
+import {
+    getAuth,
+    signInAnonymously,
+    setPersistence,
+    browserSessionPersistence,
+} from "firebase/auth";
+import { firebaseConfig } from "@/config/firebaseConfig";
 
-
-
-// Initialiser Firebase
+// ✅ Initialisation de Firebase
+console.log("🔄 Initialisation de Firebase...");
 const app = initializeApp(firebaseConfig);
-const database = getDatabase(app);
-const auth = getAuth(app);
+console.log("✅ Firebase initialisé :", app);
 
-// Fonction pour connecter anonymement un utilisateur
-const authenticateUser = async (): Promise<void> => {
+// ✅ Initialisation de Firebase Auth
+const auth = getAuth(app);
+console.log("✅ Authentification Firebase initialisée :", auth);
+
+// ✅ Gestion des erreurs silencieuses Firebase
+const originalConsoleError = console.error;
+console.error = (message?: any, ...optionalParams: any[]): void => {
+    if (typeof message === "string" && message.includes(" @firebase/auth")) {
+        return;
+    }
+    if (
+        optionalParams.some(
+            (param) =>
+                typeof param === "object" &&
+                param?.message?.includes("INTERNAL ASSERTION FAILED: Expected a class definition")
+        )
+    ) {
+        return;
+    }
+    originalConsoleError(message, ...optionalParams);
+};
+
+// ✅ Configuration de la persistance
+const configurePersistence = async () => {
     try {
-        await signInAnonymously(auth);
+        console.log("🔄 Configuration de la persistance...");
+        await setPersistence(auth, browserSessionPersistence);
+        console.log("✅ Persistance configurée.");
     } catch (error) {
-        console.error("Erreur lors de la connexion anonyme :", error);
-        throw error;
+        console.error("❌ Erreur lors de la configuration de la persistance :", error);
     }
 };
 
-// Fonction pour récupérer les données
-export const fetchTreasureHunt = async (huntId: string) => {
+// ✅ Authentification anonyme
+const authenticateUser = async (): Promise<void> => {
     try {
-        // Authentifiez l'utilisateur avant de récupérer les données
+        console.log("🔄 Vérification de l'authentification...");
+        await configurePersistence();
+
+        if (!auth.currentUser) {
+            console.log("🔄 Connexion anonyme en cours...");
+            await signInAnonymously(auth);
+            console.log("✅ Connexion anonyme réussie !");
+        } else {
+            console.log("✅ Utilisateur déjà authentifié :", auth.currentUser);
+        }
+    } catch (error) {
+        console.error("❌ Erreur lors de l'authentification anonyme :", error);
+    }
+};
+
+// ✅ Initialisation de Firebase Database
+console.log("🔄 Initialisation de la base de données Firebase...");
+const database = getDatabase(app);
+console.log("✅ Base de données Firebase initialisée :", database);
+
+// ✅ Fonction pour récupérer une chasse au trésor
+export const fetchTreasureHunt = async (huntId: string): Promise<any> => {
+    try {
+        console.log(`🔄 Récupération des données pour la chasse au trésor ID: ${huntId}`);
         await authenticateUser();
 
         const dbRef = ref(database);
-
         const snapshot = await get(child(dbRef, `treasureHunts/${huntId}`));
 
         if (snapshot.exists()) {
+            console.log("✅ Données trouvées :", snapshot.val());
             return snapshot.val();
         } else {
-            console.warn("Aucune donnée trouvée pour ce huntId !");
+            console.warn("⚠️ Aucune donnée trouvée pour ce huntId !");
             return null;
         }
     } catch (error) {
-        console.error("Erreur lors de la récupération des données :", error);
-        throw error;
+        console.error("❌ Erreur lors de la récupération des données :", error);
+        return null; // Retourner une valeur par défaut pour éviter un crash
     }
 };
+
+// ✅ Exportation des instances Firebase
+export { app, auth, database };

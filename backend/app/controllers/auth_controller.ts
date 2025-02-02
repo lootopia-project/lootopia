@@ -37,14 +37,12 @@ export default class AuthController {
               throw new Error('Le token Expo Push fourni est invalide.');
             }
 
-            // Construire le message
             const message = {
               to: expoPushToken,
               title: 'Connexion réussie',
               body: `Bonjour ${verifyCredentials.name}, vous êtes maintenant connecté.`,
             };
 
-            // Envoyer la notification via l'API Expo
             const expoResponse = await fetch('https://exp.host/--/api/v2/push/send', {
               method: 'POST',
               headers: {
@@ -56,27 +54,21 @@ export default class AuthController {
             const result = await expoResponse.json();
             console.log('Notification envoyée via Expo avec succès:', result);
           } else if (fcmToken.platform === 'Web') {
-            // Envoi via Firebase pour les navigateurs Web
+
             const message = {
               notification: {
                 title: 'Connexion réussie',
                 body: `Bonjour ${verifyCredentials.name}, vous êtes maintenant connecté.`,
               },
-              token: fcmToken.token, // Utiliser le token FCM pour le Web
+              token: fcmToken.token,
             };
 
             const result = await admin.messaging().send(message);
-            console.log('Notification envoyée via Firebase avec succès:', result);
-          } else {
-            console.warn('Plateforme non reconnue. Aucune notification envoyée.');
           }
         } catch (error) {
           console.error('Erreur lors de l\'envoi de la notification :', error.message || error);
         }
-      } else {
-        console.warn('Aucun token FCM fourni. La notification ne sera pas envoyée.');
       }
-
       return response.json(head);
     } else {
       return response.unauthorized({ message: 'Invalid credentials' });

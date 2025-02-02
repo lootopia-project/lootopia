@@ -3,27 +3,33 @@ import { FlatList, Text, TextInput, Button, View } from "react-native";
 import { getDatabase, ref, push, onValue } from "firebase/database";
 import { fetchTreasureHunt } from "@/services/MessageHunting";
 import { UserConnected } from "@/services/UserService";
-import { FontAwesome } from "@expo/vector-icons"; // Importer des icônes
+import { FontAwesome } from "@expo/vector-icons";
+import { getHuntingsForMessages } from "@/services/HuntingService"; // Importer des icônes
 
 const Message = () => {
     const [messages, setMessages] = useState([]);
     const [text, setText] = useState("");
-    const huntId = "huntId1"; // Identifiant de la chasse
     const db = getDatabase(); // Initialise la base de données
     const [user, setUser] = useState(null); // Utilisateur connecté
     const [organizerId, setOrganizerId] = useState(""); // ID de l'organisateur
+    const [lastMessage, setLastMessage] = useState([]); // Dernier message
 
     // Écoute en temps réel et récupération des détails
     useEffect(() => {
         const fetchData = async () => {
+            console.log("fetchData");
             try {
+                console.log("try");
                 const userConnected = await UserConnected();
+                setLastMessage(await getHuntingsForMessages());
+                console.log("afterr userConnected");
                 setUser(userConnected);
+                console.log(userConnected);
 
-                const huntData = await fetchTreasureHunt(huntId);
-                setOrganizerId(huntData.organizerId);
+                const huntData = await fetchTreasureHunt("1");
+                setOrganizerId(huntData.organizer);
 
-                const messagesRef = ref(db, `treasureHunts/${huntId}/messages`);
+                const messagesRef = ref(db, `treasureHunts/${"1"}/messages`);
 
                 // Écoute des messages en temps réel
                 const unsubscribe = onValue(messagesRef, (snapshot) => {
@@ -39,26 +45,31 @@ const Message = () => {
                     }
                 });
 
-                return () => unsubscribe();
+                return unsubscribe;
             } catch (error) {
                 console.error("Erreur lors de la récupération des données :", error);
             }
         };
 
-        fetchData();
-    }, [db, huntId]);
+        // Appeler fetchData dans une fonction interne
+        fetchData().catch((error) =>
+            console.error("Erreur lors de l'exécution de fetchData :", error)
+        );
+    }, [db]);
+
+    console.log(lastMessage);
 
     // Fonction pour envoyer un message
     const handleSend = async () => {
         if (text.trim()) {
             try {
                 const message = {
-                    senderId: user?.nickname,
+                    sender: user?.nickname,
                     text,
                     timestamp: new Date().toISOString(),
                 };
 
-                const messagesRef = ref(db, `treasureHunts/${huntId}/messages`);
+                const messagesRef = ref(db, `treasureHunts/${"1"}/messages`);
                 await push(messagesRef, message);
 
                 setText("");
@@ -72,7 +83,9 @@ const Message = () => {
         <View className="flex-1 p-4 bg-gray-100">
             {/* Liste des messages */}
             <FlatList
-                data={[...messages].sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp))}
+                data={[...messages].sort(
+                    (a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
+                )}
                 keyExtractor={(item) => item.id}
                 renderItem={({ item }) => (
                     <View className="flex-row items-center space-x-2 mb-2">
@@ -82,12 +95,12 @@ const Message = () => {
                         )}
                         <Text
                             className={`text-base ${
-                                item.senderId === user?.nickname
+                                item.sender === user?.nickname
                                     ? "text-blue-600 font-bold"
                                     : "text-gray-700"
                             }`}
                         >
-                            {item.senderId === user?.nickname ? "Vous" : item.senderId}: {item.text}
+                            {item.sender === user?.nickname ? "Vous" : item.sender}: {item.text}
                         </Text>
                     </View>
                 )}
