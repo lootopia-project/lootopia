@@ -21,7 +21,6 @@ export default class extends BaseSeeder {
     const world = await World.first() // Prend un monde existant
 
     if (!world) {
-      console.log("Création d'un monde par défaut...")
       const newWorld = await World.create({ name: "Monde Par Défaut" }) // Ajoute un monde si vide
       worldId = newWorld.id
     } else {
@@ -41,11 +40,10 @@ export default class extends BaseSeeder {
       background: 'https://example.com/bg.jpg',
       textColor: '#FFFFFF',
       headerImg: 'https://example.com/header.jpg',
-      userId: kevin.id, // Kevin est le créateur
-      worldId: worldId, // Supposons un monde par défaut
+      userId: kevin.id,
+      worldId: worldId,
     })
 
-    console.log('Chasse au trésor créée:', hunting.id)
 
     await UsersHunting.createMany([
       {

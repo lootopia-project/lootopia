@@ -24,6 +24,7 @@ router
     router.post('/checkIsLogin', [AuthController, 'checkIsLogin'])
     router.get('/huntings/:id', [HuntingsController, 'getHunting'])
     router.get('/UserConnected', [UsersController, 'UserConnected'])
+    router.post('/huntings/create', [HuntingsController, 'createHunting'])
   })
   .use([
     middleware.auth({

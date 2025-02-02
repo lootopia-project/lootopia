@@ -3,10 +3,9 @@ import axios from 'axios';
 import AXIOS_ERROR from '@/type/request/axios_error';
 import LOGIN from '@/type/feature/auth/login';
 import RETURN from '@/type/request/return';
-// const API_URL = "http://localhost:3333"
-const API_URL ='http://192.168.1.19:3333'
+const API_URL = "http://localhost:3333"
+// const API_URL ='http://192.168.1.19:3333'
 
-const FCM_PUBLIC_KEY = "BP-o-H2NKTa-Ske6pWy7Cl4CSvxRyrmJwwEaH4T_y7obZ-q2qmHPNQ8PQqSGh69QplFT7FIEYQ6JxjMjO3kYoK8"
 import { requestFcmToken} from "./firebase"; // Chemin vers votre fichier Firebase
 
 const config = {
@@ -23,25 +22,17 @@ export const loginUser = async (userData: LOGIN): Promise<RETURN> => {
         // Récupérer le token FCM via requestFcmToken
         const fcmToken = await requestFcmToken();
         if (!fcmToken) {
-            console.warn("Token FCM introuvable ou non autorisé. Tentative de demande de permission...");
 
-            // Demander l'autorisation manuellement
             const permission = await Notification.requestPermission();
             if (permission === "granted") {
-                console.log("Autorisation accordée. Récupération d'un nouveau token FCM...");
                 const newFcmToken = await requestFcmToken(); // Récupérer un nouveau token après autorisation
                 if (!newFcmToken) {
                     console.warn("Impossible d'obtenir un token FCM après avoir demandé l'autorisation.");
-                } else {
-                    console.log("Nouveau token FCM obtenu :", newFcmToken);
                 }
             } else {
                 console.error("L'utilisateur a refusé les notifications.");
             }
         }
-
-        console.log("fcmToken:", fcmToken);
-        console.log(API_URL)
         const response = await axios.post<RETURN>(
             `${API_URL}/login`,
             {

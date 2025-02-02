@@ -1,32 +1,34 @@
 import React, { useEffect, useState } from "react";
 import { FlatList, Text, TextInput, Button, View } from "react-native";
-import { getDatabase, ref, push, onValue } from "firebase/database"; // Import des fonctions nécessaires
+import { getDatabase, ref, push, onValue } from "firebase/database";
 import { fetchTreasureHunt } from "@/services/MessageHunting";
-import {UserConnected} from "@/services/UserService"; // Votre service existant pour récupérer les détails de la chasse
+import { UserConnected } from "@/services/UserService";
+import { FontAwesome } from "@expo/vector-icons"; // Importer des icônes
 
 const Message = () => {
     const [messages, setMessages] = useState([]);
     const [text, setText] = useState("");
-    const huntId = "huntId1"; // Identifiant de la chasse au trésor
-    const senderId = "userId1"; // Remplacez par l'ID de l'utilisateur connecté
-
+    const huntId = "huntId1"; // Identifiant de la chasse
     const db = getDatabase(); // Initialise la base de données
+    const [user, setUser] = useState(null); // Utilisateur connecté
+    const [organizerId, setOrganizerId] = useState(""); // ID de l'organisateur
 
-    // Fonction pour écouter les messages en temps réel
+    // Écoute en temps réel et récupération des détails
     useEffect(() => {
         const fetchData = async () => {
             try {
-                console.log(await UserConnected());
+                const userConnected = await UserConnected();
+                setUser(userConnected);
+
+                const huntData = await fetchTreasureHunt(huntId);
+                setOrganizerId(huntData.organizerId);
 
                 const messagesRef = ref(db, `treasureHunts/${huntId}/messages`);
-                console.log("Référence des messages :", messagesRef);
 
                 // Écoute des messages en temps réel
                 const unsubscribe = onValue(messagesRef, (snapshot) => {
                     if (snapshot.exists()) {
                         const data = snapshot.val();
-                        console.log("Données des messages :", data);
-
                         const parsedMessages = Object.keys(data).map((key) => ({
                             id: key,
                             ...data[key],
@@ -37,7 +39,6 @@ const Message = () => {
                     }
                 });
 
-                // Retourner la fonction pour arrêter l'écoute
                 return () => unsubscribe();
             } catch (error) {
                 console.error("Erreur lors de la récupération des données :", error);
@@ -47,19 +48,20 @@ const Message = () => {
         fetchData();
     }, [db, huntId]);
 
-
     // Fonction pour envoyer un message
     const handleSend = async () => {
         if (text.trim()) {
             try {
                 const message = {
-                    senderId,
+                    senderId: user?.nickname,
                     text,
                     timestamp: new Date().toISOString(),
                 };
+
                 const messagesRef = ref(db, `treasureHunts/${huntId}/messages`);
-                await push(messagesRef, message); // Ajoute le message à la base de données
-                setText(""); // Réinitialise le champ de texte
+                await push(messagesRef, message);
+
+                setText("");
             } catch (error) {
                 console.error("Erreur lors de l'envoi du message :", error);
             }
@@ -67,22 +69,39 @@ const Message = () => {
     };
 
     return (
-        <View style={{ flex: 1, padding: 10 }}>
+        <View className="flex-1 p-4 bg-gray-100">
+            {/* Liste des messages */}
             <FlatList
-                data={messages}
+                data={[...messages].sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp))}
                 keyExtractor={(item) => item.id}
                 renderItem={({ item }) => (
-                    <Text>
-                        {item.senderId === senderId ? "Vous" : item.senderId}: {item.text}
-                    </Text>
+                    <View className="flex-row items-center space-x-2 mb-2">
+                        {/* Afficher la couronne si l'utilisateur est l'organisateur */}
+                        {item.senderId === organizerId && (
+                            <FontAwesome name="crown" size={16} color="gold" />
+                        )}
+                        <Text
+                            className={`text-base ${
+                                item.senderId === user?.nickname
+                                    ? "text-blue-600 font-bold"
+                                    : "text-gray-700"
+                            }`}
+                        >
+                            {item.senderId === user?.nickname ? "Vous" : item.senderId}: {item.text}
+                        </Text>
+                    </View>
                 )}
+                className="mb-4"
             />
+
             <TextInput
                 value={text}
                 onChangeText={setText}
                 placeholder="Écrire un message..."
-                style={{ borderWidth: 1, padding: 10, marginBottom: 10 }}
+                className="border border-gray-300 rounded-lg px-4 py-2 mb-4 bg-white"
             />
+
+            {/* Bouton envoyer */}
             <Button title="Envoyer" onPress={handleSend} />
         </View>
     );

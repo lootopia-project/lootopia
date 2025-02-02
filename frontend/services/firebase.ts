@@ -3,18 +3,14 @@ import { initializeApp } from "firebase/app";
 import { getMessaging, getToken, onMessage } from "firebase/messaging";
 import * as Notifications from "expo-notifications";
 import { getDatabase, ref, get, child } from "firebase/database";
+
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
+import {firebaseConfig} from "@/config/firebaseConfig";
 
 // Configuration Firebase
-const firebaseConfig = {
-    apiKey: "AIzaSyBK7_L-TtdMuTIzs55HjKntSPnUo0isLIA",
-    authDomain: "lootopia-8fcf2.firebaseapp.com",
-    projectId: "lootopia-8fcf2",
-    storageBucket: "lootopia-8fcf2.firebasestorage.app",
-    messagingSenderId: "958851825460",
-    appId: "1:958851825460:web:552f74f3a8722e68a96f61",
-    databaseURL: "https://lootopia-8fcf2-default-rtdb.firebaseio.com/",
-};
+
+
+
 
 // Initialiser Firebase pour le web
 const app = initializeApp(firebaseConfig);
@@ -48,12 +44,9 @@ const showNotification = (title: string, body: string) => {
 const requestFcmTokenWeb = async (): Promise<{ platform: string; token: string | null }> => {
     try {
         if ("serviceWorker" in navigator) {
-            console.log("Enregistrement du Service Worker pour le Web.");
             await navigator.serviceWorker
                 .register("./firebase-messaging-sw.js")
-                .then((registration) => {
-                    console.log("Service Worker enregistré :", registration.scope);
-                });
+                .then((registration) => {});
         }
 
         const messaging = getMessaging(app);
@@ -68,10 +61,8 @@ const requestFcmTokenWeb = async (): Promise<{ platform: string; token: string |
             vapidKey: "BP-o-H2NKTa-Ske6pWy7Cl4CSvxRyrmJwwEaH4T_y7obZ-q2qmHPNQ8PQqSGh69QplFT7FIEYQ6JxjMjO3kYoK8",
         });
 
-        console.log("FCM Token (Web):", fcmToken);
 
         onMessage(messaging, (payload) => {
-            console.log("Message reçu en premier plan (Web) :", payload);
 
             if (payload.notification) {
                 const { title, body } = payload.notification;
