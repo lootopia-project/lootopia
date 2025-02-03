@@ -95,8 +95,8 @@ export default class HuntingsController {
             messages:
                 [
                     {
-                        message: "Bienvenue dans la chasse au trésor !",
-                        date: DateTime.now().toISO(),
+                        text: "Bienvenue dans la chasse au trésor !",
+                        timestamp: new Date().toISOString(),
                         sender  : user.nickname,
                     },
                     ]
@@ -145,7 +145,7 @@ export default class HuntingsController {
             const huntMessages = await getLastMessagesForHunts(huntIds, 1);
 
             // Associer les rôles (organizer/participant) et les derniers messages
-            const hunts = huntIds.map((id) => {
+            let hunts = huntIds.map((id) => {
                 const role = organizedHuntings.some((hunting) => hunting.id === id)
                     ? "organizer"
                     : "participant";
@@ -158,6 +158,12 @@ export default class HuntingsController {
                 };
             });
 
+            hunts = hunts.sort((a, b) => {
+                const dateA = a.lastMessage?.date ? new Date(a.lastMessage.date).getTime() : 0;
+                const dateB = b.lastMessage?.date ? new Date(b.lastMessage.date).getTime() : 0;
+                return dateB - dateA; // Tri descendant
+            });
+
             return response.ok(hunts);
         } catch (error) {
             console.error("Erreur lors de la récupération des chasses :", error);
@@ -166,6 +172,7 @@ export default class HuntingsController {
             });
         }
     }
+
 
 
 }

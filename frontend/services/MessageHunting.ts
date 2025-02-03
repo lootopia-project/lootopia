@@ -56,8 +56,6 @@ const authenticateUser = async (): Promise<void> => {
             console.log("🔄 Connexion anonyme en cours...");
             await signInAnonymously(auth);
             console.log("✅ Connexion anonyme réussie !");
-        } else {
-            console.log("✅ Utilisateur déjà authentifié :", auth.currentUser);
         }
     } catch (error) {
         console.error("❌ Erreur lors de l'authentification anonyme :", error);
@@ -67,7 +65,6 @@ const authenticateUser = async (): Promise<void> => {
 // ✅ Initialisation de Firebase Database
 console.log("🔄 Initialisation de la base de données Firebase...");
 const database = getDatabase(app);
-console.log("✅ Base de données Firebase initialisée :", database);
 
 // ✅ Fonction pour récupérer une chasse au trésor
 export const fetchTreasureHunt = async (huntId: string): Promise<any> => {
@@ -79,7 +76,6 @@ export const fetchTreasureHunt = async (huntId: string): Promise<any> => {
         const snapshot = await get(child(dbRef, `treasureHunts/${huntId}`));
 
         if (snapshot.exists()) {
-            console.log("✅ Données trouvées :", snapshot.val());
             return snapshot.val();
         } else {
             console.warn("⚠️ Aucune donnée trouvée pour ce huntId !");

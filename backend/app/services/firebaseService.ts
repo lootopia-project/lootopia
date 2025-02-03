@@ -34,14 +34,13 @@ export const getLastMessagesForHunts = async (
     limit: number
 ): Promise<Record<string, any>[]> => {
     try {
-        // Récupérer la référence à la base de données Firebase
         const db = admin.database();
         const results: Record<string, any>[] = [];
 
-        // Pour chaque chasse, récupérer les derniers messages
         for (const huntId of huntIds) {
             const ref = db.ref(`treasureHunts/${huntId}/messages`);
-            const snapshot = await ref.limitToLast(limit).once("value");
+            const snapshot = await ref.limitToLast(limit).once("value")
+            console.log(snapshot);
 
             if (snapshot.exists()) {
                 const messages: Record<string, any>[] = [];
@@ -51,10 +50,19 @@ export const getLastMessagesForHunts = async (
                         ...child.val(),
                     });
                 });
+                    // console.log(messages)
+                // Trier les messages par timestamp
+                const sortedMessages = messages.sort(
+                    (a, b) =>
+                        new Date(a.timestamp).getTime() -
+                        new Date(b.timestamp).getTime()
+                );
 
-                // Ajouter les informations du dernier message à la chasse correspondante
-                if (messages.length > 0) {
-                    const lastMessage = messages[messages.length - 1]; // Dernier message
+                // Récupérer le dernier message après tri
+                console.log(sortedMessages.length)
+                if (sortedMessages.length > 0) {
+                    const lastMessage = sortedMessages[sortedMessages.length - 1];
+                    // console.log(lastMessage)
                     results.push({
                         huntId,
                         lastMessage: {
@@ -66,18 +74,17 @@ export const getLastMessagesForHunts = async (
                 } else {
                     results.push({
                         huntId,
-                        lastMessage: null, // Aucun message pour cette chasse
+                        lastMessage: null,
                     });
                 }
             } else {
                 results.push({
                     huntId,
-                    lastMessage: null, // Aucun message pour cette chasse
+                    lastMessage: null,
                 });
             }
-            console.log(results);
         }
-
+        // console.log(results)
         return results;
     } catch (error) {
         console.error(
@@ -87,5 +94,6 @@ export const getLastMessagesForHunts = async (
         throw error;
     }
 };
+
 
 export default admin;
