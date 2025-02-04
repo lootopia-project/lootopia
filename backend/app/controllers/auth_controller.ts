@@ -1,6 +1,7 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import db from '@adonisjs/lucid/services/db'
 import User from '#models/user'
+import i18nManager from '@adonisjs/i18n/services/main'
 
 export default class AuthController {
   async login({ request, auth, response }: HttpContext) {
@@ -12,6 +13,8 @@ export default class AuthController {
       const head = await auth
         .use('api')
         .authenticateAsClient(verifyCredentials, [], { expiresIn: '1day' })
+      const lang = i18nManager.locale(verifyCredentials.lang)
+
       return response.json(head)
     }
   }
