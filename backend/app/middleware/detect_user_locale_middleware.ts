@@ -39,7 +39,6 @@ export default class DetectUserLocaleMiddleware {
     /**
      * Assigning i18n property to the HTTP context
      */
-    console.log('Setting user language to', language);
     
     ctx.i18n = i18nManager.locale(language || i18nManager.defaultLocale)
 
