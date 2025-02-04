@@ -63,7 +63,8 @@ export default class AuthController {
               token: fcmToken.token,
             };
 
-            const result = await admin.messaging().send(message);
+            await admin.messaging().send(message);
+            return response.ok({ message: 'Notification sent' });
           }
         } catch (error) {
           console.error('Erreur lors de l\'envoi de la notification :', error.message || error);

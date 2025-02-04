@@ -58,7 +58,7 @@ const requestFcmTokenWeb = async (): Promise<{ platform: string; token: string |
         }
 
         const fcmToken = await getToken(messaging, {
-            vapidKey: "BP-o-H2NKTa-Ske6pWy7Cl4CSvxRyrmJwwEaH4T_y7obZ-q2qmHPNQ8PQqSGh69QplFT7FIEYQ6JxjMjO3kYoK8",
+            vapidKey:process.env.EXPO_PUBLIC_FCM_PUBLIC_KEY,
         });
 
 
