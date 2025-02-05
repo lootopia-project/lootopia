@@ -39,7 +39,7 @@ export default class DetectUserLocaleMiddleware {
     /**
      * Assigning i18n property to the HTTP context
      */
-    
+
     ctx.i18n = i18nManager.locale(language || i18nManager.defaultLocale)
 
     /**

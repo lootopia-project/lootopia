@@ -7,8 +7,8 @@ const i18nConfig = defineConfig({
   supportedLocales: ['en', 'fr'],
   loaders: [
     loaders.fs({
-      location: app.languageFilesPath()
-    })
+      location: app.languageFilesPath(),
+    }),
   ],
 })
 

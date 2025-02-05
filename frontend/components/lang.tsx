@@ -1,10 +1,10 @@
 import React from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { useLanguage } from '@/hooks/providers/LanguageProvider'; 
 
 export default function LanguageSwitcher() {
-  const { locale, changeLanguage, i18n } = useLanguage();
+  const { locale, changeLanguage } = useLanguage();
 
   return (
     <View>

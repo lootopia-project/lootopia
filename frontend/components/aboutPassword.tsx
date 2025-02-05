@@ -1,7 +1,7 @@
 import {View, Text} from 'react-native';
 import { useLanguage } from "@/hooks/providers/LanguageProvider"
 
-const aboutPassword = (checkPassword:{length: boolean, maj: boolean, min: boolean, special: boolean, same: boolean}) => {
+const AboutPassword = (checkPassword:{length: boolean, maj: boolean, min: boolean, special: boolean, same: boolean}) => {
     const { i18n } = useLanguage();
     return (
         <View>
@@ -84,4 +84,4 @@ const styles = {
     },
   };
 
-  export default aboutPassword;
+  export default AboutPassword;

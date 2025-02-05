@@ -7,7 +7,7 @@ import {
 import { registerUser } from "@/services/AuthService";
 import { validatePassword } from "@/constants/validatePassword";
 import AXIOS_ERROR from "@/type/request/axios_error";
-import aboutPassword from "@/components/aboutPassword";
+import AboutPassword from "@/components/AboutPassword";
 import { Colors } from "@/constants/Colors";
 import {useErrors} from "@/hooks/providers/ErrorProvider";
 import { useLanguage } from "@/hooks/providers/LanguageProvider";
@@ -143,7 +143,7 @@ export default function RegisterPage() {
         </TouchableOpacity>
 
         <View style={styles.passwordValidation}>
-          {aboutPassword(checkPassword)}
+          {AboutPassword(checkPassword)}
         </View>
 
         <Link href={"/login"} style={styles.link}>{i18n.t("Already have an account? Sign in")}</Link>

@@ -3,7 +3,6 @@ import mail from '@adonisjs/mail/services/main'
 import i18nManager from '@adonisjs/i18n/services/main'
 
 export default class MailService {
-
   static async sendMail(type: string, user: User) {
     let subject = ''
     let view = ''
@@ -15,7 +14,7 @@ export default class MailService {
         view = 'emails/notification'
         templateData = {
           name: user.name,
-          hello : i18n.t('_.hello'),
+          hello: i18n.t('_.hello'),
           message: i18n.t('_.Thank you for registering on Lootopia.'),
           objet: subject,
           lang: user.lang,
@@ -27,8 +26,8 @@ export default class MailService {
         view = 'emails/notification'
         templateData = {
           name: user.name,
-          message: i18n.t('_.You\'ve unlocked new rewards on Lootopia!'),
-          hello : i18n.t('_.hello'),
+          message: i18n.t("_.You've unlocked new rewards on Lootopia!"),
+          hello: i18n.t('_.hello'),
           lang: user.lang,
           objet: subject,
         }
@@ -42,7 +41,7 @@ export default class MailService {
           message: i18n.t('_.Your payment has been processed successfully.'),
           objet: subject,
           lang: user.lang,
-          hello : i18n.t('_.hello'),
+          hello: i18n.t('_.hello'),
         }
         break
 
