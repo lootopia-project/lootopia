@@ -43,8 +43,8 @@ export const getHuntingsForMessages = async (): Promise<LastMessage[]> => {
         withCredentials: true
     }
     try {
-        const response = await axios.get<Hunting[]>(`${API_URL}/huntings/getAllForMessage`, config)
-        return response.data
+        const response = await axios.get<LastMessage[]>(`${API_URL}/huntings/getAllForMessage`, config)
+        return response.data as LastMessage[]
     } catch (err: unknown) {
         if ((err as AXIOS_ERROR).message) {
             throw new Error("Error connecting")

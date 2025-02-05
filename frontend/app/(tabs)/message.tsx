@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, FlatList, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Button, FlatList, Text, TextInput, TouchableOpacity, View, StyleSheet } from "react-native";
 import { getDatabase, onValue, push, ref } from "firebase/database";
 import { fetchTreasureHunt } from "@/services/MessageHunting";
 import { UserConnected } from "@/services/UserService";
@@ -7,10 +7,8 @@ import { FontAwesome } from "@expo/vector-icons";
 import { getHuntingsForMessages } from "@/services/HuntingService";
 import Users from "@/type/feature/auth/users";
 import Messages from "@/type/feature/message/message";
-import {useRouter} from "expo-router";
+import { useRouter } from "expo-router";
 import LastMessage from "@/type/feature/message/last_message";
-
-
 
 const Message = () => {
     const [messages, setMessages] = useState<Messages[]>([]);
@@ -81,98 +79,78 @@ const Message = () => {
     };
 
     const handleConversationClick = (huntId: number) => {
-        setDiscussionId(huntId); // Mettre à jour l'ID de la discussion
-        setDiscussionClicked(true); // Activer la vue de la discussion
+        setDiscussionId(huntId);
+        setDiscussionClicked(true);
     };
 
     const handleBackClick = () => {
         setDiscussionId(null);
-        setDiscussionClicked(false); // Retour à la vue des conversations
+        setDiscussionClicked(false);
     };
 
     const renderItem = ({ item }: { item: LastMessage }) => (
-        <TouchableOpacity
-            className="flex-row items-center p-3 border-b border-gray-200"
-            onPress={() => handleConversationClick(item.id)}
-        >
-            {item.role === "organizer" && (
-                <FontAwesome name="star" size={20} color="gold" className="mr-3" />
-            )}
-            <View className="flex-1">
-                <Text className="font-bold text-lg">{item.lastMessage?.sender}</Text>
-                <Text className="text-gray-600" numberOfLines={1} ellipsizeMode="tail">
+        <TouchableOpacity style={styles.listItem} onPress={() => handleConversationClick(item.id)}>
+            {item.role === "organizer" && <FontAwesome name="star" size={20} color="gold" />}
+            <View style={styles.listItemText}>
+                <Text style={styles.listItemSender}>{item.lastMessage?.sender}</Text>
+                <Text style={styles.listItemMessage} numberOfLines={1} ellipsizeMode="tail">
                     {item.lastMessage?.text}
                 </Text>
             </View>
-            <Text className="text-gray-400 text-sm ml-2">
-                {item.lastMessage?.date &&
-                    new Date(item.lastMessage.date).toLocaleDateString()}
+            <Text style={styles.listItemDate}>
+                {item.lastMessage?.date && new Date(item.lastMessage.date).toLocaleDateString()}
             </Text>
         </TouchableOpacity>
     );
 
     const redirectWelcome = () => {
         router.push("/");
-    }
+    };
 
     return (
         <>
             {!discussionClicked ? (
-                <View className="flex-1 bg-gray-100">
-                    <TouchableOpacity
-                        onPress={redirectWelcome}
-                        className="mb-4 flex-row items-center space-x-2"
-                    >
+                <View style={styles.container}>
+                    <TouchableOpacity style={styles.backButton} onPress={redirectWelcome}>
                         <FontAwesome name="arrow-left" size={20} color="black" />
-                        <Text className="text-lg font-bold">Retour</Text>
+                        <Text style={styles.backButtonText}>Retour</Text>
                     </TouchableOpacity>
 
                     <FlatList
                         data={lastMessages}
-                        keyExtractor={(item) => item.id.toString()}
+                        keyExtractor={(item) => item?.id.toString()}
                         renderItem={renderItem}
                         ListEmptyComponent={
-                            <Text className="text-center text-gray-600 mt-10">
-                                Aucune conversation pour l'instant.
-                            </Text>
+                            <Text style={styles.emptyMessage}>Aucune conversation pour l'instant.</Text>
                         }
                     />
                 </View>
             ) : (
-                <View className="flex-1 p-4 bg-gray-100">
-                    <TouchableOpacity
-                        onPress={handleBackClick}
-                        className="mb-4 flex-row items-center space-x-2"
-                    >
+                <View style={styles.messageContainer}>
+                    <TouchableOpacity style={styles.backButton} onPress={handleBackClick}>
                         <FontAwesome name="arrow-left" size={20} color="black" />
-                        <Text className="text-lg font-bold">Retour</Text>
+                        <Text style={styles.backButtonText}>Retour</Text>
                     </TouchableOpacity>
 
                     <FlatList
                         data={[...messages].sort(
                             (a, b) =>
-                                new Date(a.timestamp ?? 0).getTime() -
-                                new Date(b.timestamp ?? 0).getTime()
+                                new Date(a.timestamp ?? 0).getTime() - new Date(b.timestamp ?? 0).getTime()
                         )}
                         keyExtractor={(item) => item.id}
                         renderItem={({ item }) => (
-                            <View className="flex-row justify-between items-center mb-2">
-                                <View className="flex-row items-center space-x-2">
-                                    {item.sender === organizerId && (
-                                        <FontAwesome name="star" size={16} color="gold" />
-                                    )}
+                            <View style={styles.messageItem}>
+                                <View style={styles.messageItemSender}>
+                                    {item.sender === organizerId && <FontAwesome name="star" size={16} color="gold" />}
                                     <Text
-                                        className={`text-base ${
-                                            item.sender === user?.nickname
-                                                ? "text-blue-600 font-bold"
-                                                : "text-gray-700"
-                                        }`}
+                                        style={
+                                            item.sender === user?.nickname ? styles.messageTextSelf : styles.messageTextOther
+                                        }
                                     >
-                                        {item.sender === user?.nickname ? "Vous" : item.sender}:{" "}
-                                        {item.text}
+                                        {item.sender === user?.nickname ? "Vous" : item.sender}: {item.text}
                                     </Text>
                                 </View>
-                                <Text className="text-gray-400 text-sm">
+                                <Text style={styles.messageTimestamp}>
                                     {item.timestamp && new Date(item.timestamp).toLocaleTimeString([], {
                                         hour: "2-digit",
                                         minute: "2-digit",
@@ -180,14 +158,13 @@ const Message = () => {
                                 </Text>
                             </View>
                         )}
-                        className="mb-4"
                     />
 
                     <TextInput
                         value={text}
                         onChangeText={setText}
                         placeholder="Écrire un message..."
-                        className="border border-gray-300 rounded-lg px-4 py-2 mb-4 bg-white"
+                        style={styles.input}
                     />
                     <Button title="Envoyer" onPress={handleSend} />
                 </View>
@@ -195,5 +172,88 @@ const Message = () => {
         </>
     );
 };
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: "#f3f4f6",
+        paddingHorizontal: 16,
+        paddingTop: 40, // Ajout de padding en haut pour espacement sur mobile
+    },
+    backButton: {
+        flexDirection: "row",
+        alignItems: "center",
+        marginBottom: 16,
+        paddingVertical: 10, // Espacement vertical pour rendre le bouton plus accessible
+    },
+    backButtonText: {
+        fontSize: 18,
+        fontWeight: "bold",
+        marginLeft: 8, // Espacement entre l'icône et le texte
+    },
+    listItem: {
+        flexDirection: "row",
+        alignItems: "center",
+        padding: 12,
+        borderBottomWidth: 1,
+        borderColor: "#e5e7eb",
+    },
+    listItemText: {
+        flex: 1,
+    },
+    listItemSender: {
+        fontSize: 16,
+        fontWeight: "bold",
+    },
+    listItemMessage: {
+        color: "#6b7280",
+    },
+    listItemDate: {
+        color: "#9ca3af",
+        fontSize: 14,
+        marginLeft: 8,
+    },
+    messageContainer: {
+        flex: 1,
+        paddingHorizontal: 16,
+        paddingTop: 40, // Assurez-vous que le haut est également espacé ici
+        backgroundColor: "#f3f4f6",
+    },
+    messageItem: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        marginBottom: 8,
+    },
+    messageItemSender: {
+        flexDirection: "row",
+        alignItems: "center",
+    },
+    messageTextSelf: {
+        color: "#2563eb",
+        fontWeight: "bold",
+    },
+    messageTextOther: {
+        color: "#374151",
+    },
+    messageTimestamp: {
+        color: "#9ca3af",
+        fontSize: 14,
+    },
+    input: {
+        borderWidth: 1,
+        borderColor: "#d1d5db",
+        borderRadius: 8,
+        padding: 8,
+        marginBottom: 16,
+        backgroundColor: "white",
+    },
+    emptyMessage: {
+        textAlign: "center",
+        color: "#6b7280",
+        marginTop: 10,
+    },
+});
+
 
 export default Message;
