@@ -9,7 +9,7 @@ import UsersHunting from '#models/users_hunting'
 import Whitelist from '#models/whitelist'
 import Reward from '#models/reward'
 import Hunting from '#models/hunting'
-import UserFcmToken from "#models/user_fcm_token";
+import UserFcmToken from '#models/user_fcm_token'
 
 const AuthFinder = withAuthFinder(() => hash.use('scrypt'), {
   uids: ['email', 'nickname'],

@@ -4,7 +4,6 @@ import { getMessaging, getToken, onMessage } from "firebase/messaging";
 import * as Notifications from "expo-notifications";
 import { getDatabase, ref, get, child } from "firebase/database";
 
-import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 import {firebaseConfig} from "@/config/firebaseConfig";
 
 // Configuration Firebase

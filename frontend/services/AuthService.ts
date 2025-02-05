@@ -14,7 +14,6 @@ if (Platform.OS === 'web') {
 }
 
 
-// console.log(API_URL)
 
 const config = {
     headers: {
@@ -24,7 +23,7 @@ const config = {
 }
 
 
-export const loginUser = async (userData: LOGIN): Promise<RETURN> => {
+const loginUser = async (userData: LOGIN): Promise<RETURN> => {
     try {
         const { email, password } = userData;
         // Récupérer le token FCM via requestFcmToken

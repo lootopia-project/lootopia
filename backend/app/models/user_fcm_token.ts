@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon'
-import {BaseModel, belongsTo, column} from '@adonisjs/lucid/orm'
-import User from "#models/user";
+import { BaseModel, belongsTo, column } from '@adonisjs/lucid/orm'
+import User from '#models/user'
 
 export default class UserFcmToken extends BaseModel {
   @column({ isPrimary: true })
@@ -11,7 +11,6 @@ export default class UserFcmToken extends BaseModel {
 
   @column()
   public fcmToken: string
-
 
   @belongsTo(() => User)
   public user: typeof User

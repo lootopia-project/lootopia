@@ -1,47 +1,43 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import db from '@adonisjs/lucid/services/db'
 import User from '#models/user'
-import admin from "#services/firebaseService";
-import UserFcmToken from "#models/user_fcm_token";
-import fetch from 'node-fetch';
+import UserFcmToken from '#models/user_fcm_token'
+import fetch from 'node-fetch'
+import admin from 'firebase-admin'
 
 export default class AuthController {
-
   async login({ request, auth, response }: HttpContext) {
-    const { email, password, fcmToken } = request.all();
+    const { email, password, fcmToken } = request.all()
 
-    // Vérifiez les informations d'identification
-    const verifyCredentials = await User.verifyCredentials(email, password);
+    const verifyCredentials = await User.verifyCredentials(email, password)
 
     if (verifyCredentials) {
-      // Authentifier l'utilisateur et générer un token d'accès
       const head = await auth
-          .use('api')
-          .authenticateAsClient(verifyCredentials, [], { expiresIn: '1day' });
+        .use('api')
+        .authenticateAsClient(verifyCredentials, [], { expiresIn: '1day' })
 
       // Sauvegarder ou mettre à jour le token FCM si fourni
       if (fcmToken) {
-
         // Mettre à jour ou créer un token FCM associé à l'utilisateur
         await UserFcmToken.updateOrCreate(
-            { userId: verifyCredentials.id }, // Critères de recherche
-            { fcmToken } // Données à mettre à jour
-        );
+          { userId: verifyCredentials.id }, // Critères de recherche
+          { fcmToken } // Données à mettre à jour
+        )
 
         try {
           if (fcmToken.platform === 'Mobile') {
             // Envoi via Expo pour les appareils mobiles
-            const expoPushToken = fcmToken.token;
+            const expoPushToken = fcmToken.token
 
             if (!expoPushToken.startsWith('ExponentPushToken')) {
-              throw new Error('Le token Expo Push fourni est invalide.');
+              throw new Error('Le token Expo Push fourni est invalide.')
             }
 
             const message = {
               to: expoPushToken,
               title: 'Connexion réussie',
               body: `Bonjour ${verifyCredentials.name}, vous êtes maintenant connecté.`,
-            };
+            }
 
             const expoResponse = await fetch('https://exp.host/--/api/v2/push/send', {
               method: 'POST',
@@ -49,36 +45,29 @@ export default class AuthController {
                 'Content-Type': 'application/json',
               },
               body: JSON.stringify(message),
-            });
+            })
 
-            const result = await expoResponse.json();
-            console.log('Notification envoyée via Expo avec succès:', result);
+            const result = await expoResponse.json()
           } else if (fcmToken.platform === 'Web') {
-
             const message = {
               notification: {
                 title: 'Connexion réussie',
                 body: `Bonjour ${verifyCredentials.name}, vous êtes maintenant connecté.`,
               },
               token: fcmToken.token,
-            };
+            }
 
-            await admin.messaging().send(message);
-            return response.ok({ message: 'Notification sent' });
+            await admin.messaging().send(message)
           }
         } catch (error) {
-          console.error('Erreur lors de l\'envoi de la notification :', error.message || error);
+          console.error("Erreur lors de l'envoi de la notification :", error.message || error)
         }
       }
-      return response.json(head);
+      return response.json(head)
     } else {
-      return response.unauthorized({ message: 'Invalid credentials' });
+      return response.unauthorized({ message: 'Invalid credentials' })
     }
   }
-
-
-
-
 
   async register({ request, response }: HttpContext) {
     const { email, password } = request.all()

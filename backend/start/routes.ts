@@ -24,7 +24,10 @@ router
     router.post('/checkIsLogin', [AuthController, 'checkIsLogin'])
     router.get('/UserConnected', [UsersController, 'UserConnected'])
     router.post('/huntings/create', [HuntingsController, 'createHunting'])
-    router.get('/huntings/getAllForMessage', [HuntingsController, 'getHuntingsParticpatedOrOrganized'])
+    router.get('/huntings/getAllForMessage', [
+      HuntingsController,
+      'getHuntingsParticpatedOrOrganized',
+    ])
     router.get('/huntings/getHunting/:id', [HuntingsController, 'getHunting'])
   })
   .use([

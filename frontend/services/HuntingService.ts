@@ -3,6 +3,7 @@ import axios from "axios";
 import AXIOS_ERROR from "@/type/request/axios_error";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {Platform} from "react-native";
+import LastMessage from "@/type/feature/message/last_message";
 let API_URL =''
 if (Platform.OS === 'web') {
     API_URL=process.env.EXPO_PUBLIC_API_URL as string
@@ -32,7 +33,7 @@ export const getHunting= async (id: number): Promise<Hunting> => {
     }
 }
 
-export const getHuntingsForMessages = async (): Promise<Hunting[]> => {
+export const getHuntingsForMessages = async (): Promise<LastMessage[]> => {
     const token = await AsyncStorage.getItem('token');
     const config = {
         headers: {

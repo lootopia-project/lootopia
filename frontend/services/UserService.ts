@@ -24,7 +24,7 @@ export const UserConnected = async () => {
         };
 
         const response = await axios.get(`${API_URL}/UserConnected`, config);
-        return response.data;
+        return response.data as User
     } catch (err: unknown) {
         console.error("Erreur Axios :", err);
 

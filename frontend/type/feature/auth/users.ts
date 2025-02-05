@@ -1,4 +1,4 @@
-interface User{
+interface Users{
     id: number
     nickname: string
     email: string
@@ -7,4 +7,4 @@ interface User{
     crowns: number
 }
 
-export default User
+export default Users

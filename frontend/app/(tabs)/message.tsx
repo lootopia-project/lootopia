@@ -5,16 +5,23 @@ import { fetchTreasureHunt } from "@/services/MessageHunting";
 import { UserConnected } from "@/services/UserService";
 import { FontAwesome } from "@expo/vector-icons";
 import { getHuntingsForMessages } from "@/services/HuntingService";
+import Users from "@/type/feature/auth/users";
+import Messages from "@/type/feature/message/message";
+import {useRouter} from "expo-router";
+import LastMessage from "@/type/feature/message/last_message";
+
+
 
 const Message = () => {
-    const [messages, setMessages] = useState([]); // Messages de la conversation
-    const [text, setText] = useState(""); // Contenu du message
-    const [user, setUser] = useState(null); // Utilisateur connecté
-    const [organizerId, setOrganizerId] = useState(""); // ID de l'organisateur
-    const [lastMessages, setLastMessage] = useState([]); // Derniers messages de chaque conversation
-    const [discussionClicked, setDiscussionClicked] = useState(false); // Gestion de la vue
-    const [discussionId, setDiscussionId] = useState(null); // ID de la discussion active
-    const db = getDatabase(); // Firebase Database
+    const [messages, setMessages] = useState<Messages[]>([]);
+    const [text, setText] = useState<string>("");
+    const [user, setUser] = useState<Users>();
+    const [organizerId, setOrganizerId] = useState<string>("");
+    const [lastMessages, setLastMessage] = useState<LastMessage[]>([]);
+    const [discussionClicked, setDiscussionClicked] = useState<boolean>(false);
+    const [discussionId, setDiscussionId] = useState<number | null>(null);
+    const db = getDatabase();
+    const router = useRouter();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -26,14 +33,14 @@ const Message = () => {
                 setLastMessage(huntings);
 
                 if (discussionId) {
-                    const huntData = await fetchTreasureHunt(discussionId);
+                    const huntData = await fetchTreasureHunt(discussionId.toString());
                     setOrganizerId(huntData.organizer);
 
                     const messagesRef = ref(db, `treasureHunts/${discussionId}/messages`);
                     onValue(messagesRef, (snapshot) => {
                         if (snapshot.exists()) {
                             const data = snapshot.val();
-                            const parsedMessages = Object.keys(data).map((key) => ({
+                            const parsedMessages: Messages[] = Object.keys(data).map((key) => ({
                                 id: key,
                                 ...data[key],
                             }));
@@ -52,7 +59,6 @@ const Message = () => {
             console.error("Erreur lors de l'exécution de fetchData :", error)
         );
     }, [db, discussionId]);
-    console.log(messages)
 
     const handleSend = async () => {
         if (text.trim()) {
@@ -65,8 +71,7 @@ const Message = () => {
 
                 const messagesRef = ref(db, `treasureHunts/${discussionId}/messages`);
                 await push(messagesRef, message);
-                setText(""); // Réinitialiser l'entrée
-                console.log("✅ Message envoyé :", message);
+                setText("");
             } catch (error) {
                 console.error("Erreur lors de l'envoi du message :", error);
             }
@@ -75,8 +80,7 @@ const Message = () => {
         }
     };
 
-    const handleConversationClick = (huntId) => {
-        console.log("Conversation sélectionnée avec l'ID :", huntId);
+    const handleConversationClick = (huntId: number) => {
         setDiscussionId(huntId); // Mettre à jour l'ID de la discussion
         setDiscussionClicked(true); // Activer la vue de la discussion
     };
@@ -86,13 +90,13 @@ const Message = () => {
         setDiscussionClicked(false); // Retour à la vue des conversations
     };
 
-    const renderItem = ({ item }) => (
+    const renderItem = ({ item }: { item: LastMessage }) => (
         <TouchableOpacity
             className="flex-row items-center p-3 border-b border-gray-200"
             onPress={() => handleConversationClick(item.id)}
         >
             {item.role === "organizer" && (
-                <FontAwesome name="crown" size={20} color="gold" className="mr-3" />
+                <FontAwesome name="star" size={20} color="gold" className="mr-3" />
             )}
             <View className="flex-1">
                 <Text className="font-bold text-lg">{item.lastMessage?.sender}</Text>
@@ -101,15 +105,28 @@ const Message = () => {
                 </Text>
             </View>
             <Text className="text-gray-400 text-sm ml-2">
-                {new Date(item.lastMessage?.date).toLocaleDateString()}
+                {item.lastMessage?.date &&
+                    new Date(item.lastMessage.date).toLocaleDateString()}
             </Text>
         </TouchableOpacity>
     );
+
+    const redirectWelcome = () => {
+        router.push("/");
+    }
 
     return (
         <>
             {!discussionClicked ? (
                 <View className="flex-1 bg-gray-100">
+                    <TouchableOpacity
+                        onPress={redirectWelcome}
+                        className="mb-4 flex-row items-center space-x-2"
+                    >
+                        <FontAwesome name="arrow-left" size={20} color="black" />
+                        <Text className="text-lg font-bold">Retour</Text>
+                    </TouchableOpacity>
+
                     <FlatList
                         data={lastMessages}
                         keyExtractor={(item) => item.id.toString()}
@@ -133,15 +150,16 @@ const Message = () => {
 
                     <FlatList
                         data={[...messages].sort(
-                            (a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
+                            (a, b) =>
+                                new Date(a.timestamp ?? 0).getTime() -
+                                new Date(b.timestamp ?? 0).getTime()
                         )}
                         keyExtractor={(item) => item.id}
                         renderItem={({ item }) => (
                             <View className="flex-row justify-between items-center mb-2">
                                 <View className="flex-row items-center space-x-2">
-                                    {/* Affiche une couronne si l'utilisateur est l'organisateur */}
-                                    {item.senderId === organizerId && (
-                                        <FontAwesome name="crown" size={16} color="gold" />
+                                    {item.sender === organizerId && (
+                                        <FontAwesome name="star" size={16} color="gold" />
                                     )}
                                     <Text
                                         className={`text-base ${
@@ -150,11 +168,12 @@ const Message = () => {
                                                 : "text-gray-700"
                                         }`}
                                     >
-                                        {item.sender === user?.nickname ? "Vous" : item.sender}: {item.text}
+                                        {item.sender === user?.nickname ? "Vous" : item.sender}:{" "}
+                                        {item.text}
                                     </Text>
                                 </View>
                                 <Text className="text-gray-400 text-sm">
-                                    {new Date(item.timestamp).toLocaleTimeString([], {
+                                    {item.timestamp && new Date(item.timestamp).toLocaleTimeString([], {
                                         hour: "2-digit",
                                         minute: "2-digit",
                                     })}
@@ -172,7 +191,6 @@ const Message = () => {
                     />
                     <Button title="Envoyer" onPress={handleSend} />
                 </View>
-
             )}
         </>
     );

@@ -1,19 +1,19 @@
 import { BaseSeeder } from '@adonisjs/lucid/seeders'
-import Hunting from "#models/hunting";
+import Hunting from '#models/hunting'
 import db from '@adonisjs/lucid/services/db'
-import User from "#models/user";
-import {DateTime} from "luxon";
-import UsersHunting from "#models/users_hunting";
-import World from "#models/world";
+import User from '#models/user'
+import { DateTime } from 'luxon'
+import UsersHunting from '#models/users_hunting'
+import World from '#models/world'
 
 export default class extends BaseSeeder {
   async run() {
-    const kevin :User=await db.from('users').where('nickname', 'kevin').first()
-    const anthony :User= await db.from('users').where('nickname', 'anthony').first()
-    const yassine :User= await db.from('users').where('nickname', 'yassine').first()
+    const kevin: User = await db.from('users').where('nickname', 'kevin').first()
+    const anthony: User = await db.from('users').where('nickname', 'anthony').first()
+    const yassine: User = await db.from('users').where('nickname', 'yassine').first()
 
     if (!kevin || !anthony || !yassine) {
-      console.error("Un ou plusieurs utilisateurs sont introuvables.")
+      console.error('Un ou plusieurs utilisateurs sont introuvables.')
       return
     }
     let worldId: number
@@ -21,7 +21,7 @@ export default class extends BaseSeeder {
     const world = await World.first() // Prend un monde existant
 
     if (!world) {
-      const newWorld = await World.create({ name: "Monde Par Défaut" }) // Ajoute un monde si vide
+      const newWorld = await World.create({ name: 'Monde Par Défaut' }) // Ajoute un monde si vide
       worldId = newWorld.id
     } else {
       worldId = world.id
@@ -44,19 +44,18 @@ export default class extends BaseSeeder {
       worldId: worldId,
     })
 
-
     await UsersHunting.createMany([
       {
         userId: anthony.id,
         huntingId: hunting.id,
         score: 0, // Ajout de la valeur par défaut
-        opinion: "Aucune opinion", // Nouvelle valeur ajoutée
+        opinion: 'Aucune opinion', // Nouvelle valeur ajoutée
       },
       {
         userId: yassine.id,
         huntingId: hunting.id,
         score: 0, // Ajout de la valeur par défaut
-        opinion: "Aucune opinion", // Nouvelle valeur ajoutée
+        opinion: 'Aucune opinion', // Nouvelle valeur ajoutée
       },
     ])
 
@@ -77,21 +76,19 @@ export default class extends BaseSeeder {
       worldId: worldId,
     })
 
-
     await UsersHunting.createMany([
       {
         userId: kevin.id,
         huntingId: hunting2.id,
         score: 0, // Ajout de la valeur par défaut
-        opinion: "Aucune opinion", // Nouvelle valeur ajoutée
+        opinion: 'Aucune opinion', // Nouvelle valeur ajoutée
       },
       {
         userId: yassine.id,
         huntingId: hunting2.id,
         score: 0, // Ajout de la valeur par défaut
-        opinion: "Aucune opinion", // Nouvelle valeur ajoutée
+        opinion: 'Aucune opinion', // Nouvelle valeur ajoutée
       },
     ])
-
   }
 }
