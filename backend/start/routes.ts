@@ -8,7 +8,7 @@
 */
 
 import router from '@adonisjs/core/services/router'
-import { middleware } from './kernel.js'
+import { middleware } from '#start/kernel'
 const AuthController = () => import('#controllers/auth_controller')
 const NotificationController = () => import('#controllers/notification_controller')
 const HuntingsController = () => import('#controllers/huntings_controller')

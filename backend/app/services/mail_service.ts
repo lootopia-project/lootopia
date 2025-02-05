@@ -1,5 +1,6 @@
 import User from '#models/user'
 import mail from '@adonisjs/mail/services/main'
+import i18nManager from '@adonisjs/i18n/services/main'
 import env from '#start/env'
 
 export default class MailService {
@@ -7,35 +8,41 @@ export default class MailService {
     let subject = ''
     let view = ''
     let templateData: any = {}
-
+    const i18n = i18nManager.locale(user.lang)
     switch (type) {
       case 'inscription':
-        subject = 'Bienvenue sur Lootopia !'
+        subject = i18n.t('_.Welcome to Lootopia!')
         view = 'emails/notification'
         templateData = {
           name: user.name,
-          message: 'Merci de vous être inscrit sur Lootopia.',
+          hello: i18n.t('_.hello'),
+          message: i18n.t('_.Thank you for registering on Lootopia.'),
           objet: subject,
+          lang: user.lang,
         }
         break
 
       case 'recompenses':
-        subject = 'Félicitations pour vos récompenses !'
+        subject = i18n.t('_.Congratulations on your awards!')
         view = 'emails/notification'
         templateData = {
           name: user.name,
-          message: 'Vous avez débloqué de nouvelles récompenses sur Lootopia !',
+          message: i18n.t("_.You've unlocked new rewards on Lootopia!"),
+          hello: i18n.t('_.hello'),
+          lang: user.lang,
           objet: subject,
         }
         break
 
       case 'paiement':
-        subject = 'Confirmation de paiement'
+        subject = i18n.t('_.Payment confirmation')
         view = 'emails/notification'
         templateData = {
           name: user.name,
-          message: 'Votre paiement a été traité avec succès.',
+          message: i18n.t('_.Your payment has been processed successfully.'),
           objet: subject,
+          lang: user.lang,
+          hello: i18n.t('_.hello'),
         }
         break
 

@@ -1,6 +1,7 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import db from '@adonisjs/lucid/services/db'
 import User from '#models/user'
+import i18nManager from '@adonisjs/i18n/services/main'
 import UserFcmToken from '#models/user_fcm_token'
 import fetch from 'node-fetch'
 import admin from 'firebase-admin'
@@ -15,6 +16,8 @@ export default class AuthController {
       const head = await auth
         .use('api')
         .authenticateAsClient(verifyCredentials, [], { expiresIn: '1day' })
+      const lang = i18nManager.locale(verifyCredentials.lang)
+
 
       // Sauvegarder ou mettre à jour le token FCM si fourni
       if (fcmToken) {
@@ -64,8 +67,6 @@ export default class AuthController {
         }
       }
       return response.json(head)
-    } else {
-      return response.unauthorized({ message: 'Invalid credentials' })
     }
   }
 
@@ -96,7 +97,8 @@ export default class AuthController {
   async checkIsLogin({ auth, response }: HttpContext) {
     const user = auth.use('api').user
     if (user) {
-      return response.status(200).json({ message: true })
+      const lang = user.lang
+      return response.status(200).json({ message: true, lang: lang })
     }
     return response.status(200).json({ message: false })
   }

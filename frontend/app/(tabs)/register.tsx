@@ -7,9 +7,10 @@ import {
 import { registerUser } from "@/services/AuthService";
 import { validatePassword } from "@/constants/validatePassword";
 import AXIOS_ERROR from "@/type/request/axios_error";
-import aboutPassword from "@/components/aboutPassword";
+import AboutPassword from "@/components/AboutPassword";
 import { Colors } from "@/constants/Colors";
 import {useErrors} from "@/hooks/providers/ErrorProvider";
+import { useLanguage } from "@/hooks/providers/LanguageProvider";
 
 
 export default function RegisterPage() {
@@ -17,6 +18,7 @@ export default function RegisterPage() {
   const colorScheme = useColorScheme();
   const themeColors = colorScheme === "dark" ? Colors.dark : Colors.light;
   const {setErrorVisible, setErrorMessage} = useErrors();
+  const { i18n } = useLanguage();
   const [formData, setFormData] = useState({
     username: "",
     password: "",
@@ -65,18 +67,17 @@ export default function RegisterPage() {
 
 
         if (response.message === true) {
-          setSuccess("Registration successful!");
+          setSuccess(i18n.t("Registration successful!"));
           setErrorMessage("");
         }
         else{
           setErrorVisible(true);
         }
       } catch (error) {
-        console.error("Error in handleLogin:", error);
         handleSavePasswordError(error);
       }
     } else {      
-      setErrorMessage("Password does not meet requirements.");
+      setErrorMessage(i18n.t("Password does not meet the requirements"));
       setErrorVisible(true);
     }
   };
@@ -85,7 +86,7 @@ export default function RegisterPage() {
     if ((err as AXIOS_ERROR).message) {
       setErrorMessage((err as AXIOS_ERROR).message || "Error connecting");
     } else {
-      setErrorMessage("Error connecting ");
+      setErrorMessage(i18n.t("Error connecting"));
     }
     setErrorVisible(true);
   };
@@ -95,15 +96,15 @@ export default function RegisterPage() {
 
 
       <View style={styles.formContainer}>
-        <Text style={styles.title}>Register</Text>
+        <Text style={styles.title}>{(i18n.t("Register"))}</Text>
 
         {success ? <Text style={styles.successText}>{success}</Text> : null}
 
         <View style={styles.inputContainer}>
-          <Text style={styles.label}>Username</Text>
+          <Text style={styles.label}>{i18n.t("Username")}</Text>
           <TextInput
             style={styles.input}
-            placeholder="Username"
+            placeholder={i18n.t("Username")}
             placeholderTextColor={themeColors.icon}
             value={formData.username || ""}
             onChangeText={(text) => handleChange("username", text)}
@@ -111,10 +112,10 @@ export default function RegisterPage() {
         </View>
 
         <View style={styles.inputContainer}>
-          <Text style={styles.label}>Password</Text>
+          <Text style={styles.label}>{i18n.t("password")}</Text>
           <TextInput
             style={styles.input}
-            placeholder="Password"
+            placeholder={i18n.t("password")}
             placeholderTextColor={themeColors.icon}
             secureTextEntry
             value={formData.password || ""}
@@ -122,12 +123,11 @@ export default function RegisterPage() {
           />
         </View>
 
-        {/* Repeat Password */}
         <View style={styles.inputContainer}>
-          <Text style={styles.label}>Repeat Password</Text>
+          <Text style={styles.label}>{i18n.t("Repeat Password")}</Text>
           <TextInput
             style={styles.input}
-            placeholder="Repeat Password"
+            placeholder={i18n.t("Repeat Password")}
             placeholderTextColor={themeColors.icon}
             secureTextEntry
             value={formData.R_PASSWORD || ""}
@@ -139,14 +139,14 @@ export default function RegisterPage() {
           Keyboard.dismiss();
           handleLogin();
         }}>
-          <Text style={styles.buttonText}>Sign up</Text>
+          <Text style={styles.buttonText}>{i18n.t("Sign up")}</Text>
         </TouchableOpacity>
 
         <View style={styles.passwordValidation}>
-          {aboutPassword(checkPassword)}
+          {AboutPassword(checkPassword)}
         </View>
 
-        <Link href={"/login"} style={styles.link}>Already have an account? Sign in</Link>
+        <Link href={"/login"} style={styles.link}>{i18n.t("Already have an account? Sign in")}</Link>
       </View>
     </KeyboardAvoidingView>
   );

@@ -59,6 +59,9 @@ export default class User extends compose(BaseModel, AuthFinder) {
   @column()
   declare ranking: number
 
+  @column()
+  declare lang: string
+
   @hasMany(() => Notification)
   declare notifications: HasMany<typeof Notification>
 
