@@ -89,7 +89,6 @@ export default class AuthController {
   }
 
   async logout({ auth, response }: HttpContext) {
-    console.log('logout')
     const user = auth.use('api').user
     if (user) {
       db.from('auth_access_tokens').where('tokenable_id', user.id).delete().exec()

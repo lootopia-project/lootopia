@@ -32,15 +32,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         const initializeAuthState = async () => {
             try {
                 const data = await checkIsLogin();
-                console.log(data);
-
                 if (data.message === true) {
-                    console.log("authenticated");
                     setIsAuthenticated(true);
                     await AsyncStorage.setItem("lang", data.lang);
                     changeLanguage(data.lang);
                 } else {
-                    console.log("not authenticated");
                     setIsAuthenticated(false);
                     await AsyncStorage.removeItem("token");
                     if (!publicRoutes.includes(pathName)) {
@@ -48,7 +44,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                     }
                 }
             } catch (error) {
-                console.log("error", error);
                 setIsAuthenticated(false);
                 await AsyncStorage.removeItem("token");
                 if (!publicRoutes.includes(pathName)) {

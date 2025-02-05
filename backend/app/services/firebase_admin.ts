@@ -18,8 +18,6 @@ if (!getApps().length) {
       credential: cert(serviceAccount),
       databaseURL: databaseUrl,
     })
-
-    console.log('✅ Firebase Admin initialisé avec succès')
   } catch (error) {
     console.error("❌ Erreur d'initialisation de Firebase Admin :", error.message)
     throw error

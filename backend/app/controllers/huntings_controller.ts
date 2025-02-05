@@ -17,7 +17,6 @@ export default class HuntingsController {
       const participatedHuntings = await UsersHunting.query()
         .where('user_id', user.id)
         .select('hunting_id')
-      console.log(participatedHuntings)
       // Fusionner les IDs des chasses
       const huntIds = [
         ...organizedHuntings.map((hunting) => hunting.id),
