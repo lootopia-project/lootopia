@@ -21,6 +21,9 @@
     "Same password" : "Same password",
     "Invalid email or password. Please try again." : "Invalid email or password. Please try again.",
     "Sign in": "Sign in",
-    "Don't have an account? Sign up": "Don't have an account? Sign up"
+    "Don't have an account? Sign up": "Don't have an account? Sign up",
+    "404 - Page Not Found": "404 - Page Not Found",
+    "Oops! The page you are looking for doesn't exist.": "Oops! The page you are looking for doesn't exist.",
+    "Go back to Home": "Go back to Home"
   }
   

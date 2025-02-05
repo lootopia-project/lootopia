@@ -21,6 +21,9 @@
     "Same password" : "Même mot de passe",
     "Invalid email or password. Please try again." : "Email ou mot de passe invalide. Veuillez réessayer.",
     "Sign in": "Se connecter",
-    "Don't have an account? Sign up": "Vous n'avez pas de compte ? Inscrivez-vous"
+    "Don't have an account? Sign up": "Vous n'avez pas de compte ? Inscrivez-vous",
+    "404 - Page Not Found": "404 - Page non trouvée",
+    "Oops! The page you are looking for doesn't exist.": "Oups ! La page que vous recherchez n'existe pas.",
+    "Go back to Home": "Retour à l'accueil"
 }
   

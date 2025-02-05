@@ -1,21 +1,21 @@
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { useRouter } from "expo-router";
-
+import { useLanguage } from "@/hooks/providers/LanguageProvider";
 export default function NotFoundScreen() {
   const router = useRouter();
-
+  const { i18n } = useLanguage();
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>404 - Page Not Found</Text>
+      <Text style={styles.title}>{i18n.t("404 - Page Not Found")}</Text>
       <Text style={styles.subtitle}>
-        Oops! The page you are looking for doesn't exist.
+        {i18n.t("Oops! The page you are looking for doesn't exist.")}
       </Text>
       <TouchableOpacity
         style={styles.link}
         onPress={() => router.push("/login")}
       >
-        <Text style={styles.linkText}>Go back to Home</Text>
+        <Text style={styles.linkText}>{i18n.t("Go back to Home")}</Text>
       </TouchableOpacity>
     </View>
   );
