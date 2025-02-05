@@ -2,7 +2,6 @@ import { HttpContext } from '@adonisjs/core/http'
 import Hunting from '#models/hunting'
 import { getLastMessages, getLastMessagesForHunts } from '#services/firebase_service'
 import UsersHunting from '#models/users_hunting'
-import db from '@adonisjs/lucid/services/db'
 
 export default class HuntingsController {
   async getHuntingsParticpatedOrOrganized({ auth, response }: HttpContext) {

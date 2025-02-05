@@ -26,7 +26,7 @@ const loginUser = async (userData: LOGIN): Promise<RETURN> => {
 
             const permission = await Notification.requestPermission();
             if (permission === "granted") {
-                const newFcmToken = await requestFcmToken(); // Récupérer un nouveau token après autorisation
+                const newFcmToken = await requestFcmToken();
                 if (!newFcmToken) {
                     console.warn("Impossible d'obtenir un token FCM après avoir demandé l'autorisation.");
                 }

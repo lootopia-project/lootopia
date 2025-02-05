@@ -9,8 +9,10 @@ import Users from "@/type/feature/auth/users";
 import Messages from "@/type/feature/message/message";
 import { useRouter } from "expo-router";
 import LastMessage from "@/type/feature/message/last_message";
+import {useLanguage} from "@/hooks/providers/LanguageProvider";
 
 const Message = () => {
+    const {i18n} = useLanguage();
     const [messages, setMessages] = useState<Messages[]>([]);
     const [text, setText] = useState<string>("");
     const [user, setUser] = useState<Users>();
@@ -113,7 +115,7 @@ const Message = () => {
                 <View style={styles.container}>
                     <TouchableOpacity style={styles.backButton} onPress={redirectWelcome}>
                         <FontAwesome name="arrow-left" size={20} color="black" />
-                        <Text style={styles.backButtonText}>Retour</Text>
+                        <Text style={styles.backButtonText}>{i18n.t("Back")}</Text>
                     </TouchableOpacity>
 
                     <FlatList
@@ -121,7 +123,7 @@ const Message = () => {
                         keyExtractor={(item) => item?.id.toString()}
                         renderItem={renderItem}
                         ListEmptyComponent={
-                            <Text style={styles.emptyMessage}>Aucune conversation pour l'instant.</Text>
+                            <Text style={styles.emptyMessage}>{i18n.t("No conversations yet.")}</Text>
                         }
                     />
                 </View>
@@ -129,7 +131,7 @@ const Message = () => {
                 <View style={styles.messageContainer}>
                     <TouchableOpacity style={styles.backButton} onPress={handleBackClick}>
                         <FontAwesome name="arrow-left" size={20} color="black" />
-                        <Text style={styles.backButtonText}>Retour</Text>
+                        <Text style={styles.backButtonText}>{i18n.t("Back")}</Text>
                     </TouchableOpacity>
 
                     <FlatList
@@ -147,7 +149,7 @@ const Message = () => {
                                             item.sender === user?.nickname ? styles.messageTextSelf : styles.messageTextOther
                                         }
                                     >
-                                        {item.sender === user?.nickname ? "Vous" : item.sender}: {item.text}
+                                        {item.sender === user?.nickname ? i18n.t("You") : item.sender}: {item.text}
                                     </Text>
                                 </View>
                                 <Text style={styles.messageTimestamp}>
@@ -163,10 +165,10 @@ const Message = () => {
                     <TextInput
                         value={text}
                         onChangeText={setText}
-                        placeholder="Écrire un message..."
+                        placeholder={i18n.t("Write a message")}
                         style={styles.input}
                     />
-                    <Button title="Envoyer" onPress={handleSend} />
+                    <Button title={i18n.t("Send")} onPress={handleSend} />
                 </View>
             )}
         </>

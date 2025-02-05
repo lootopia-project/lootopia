@@ -1,4 +1,4 @@
-import { adminDatabase } from '#services/firebase_admin'
+import admin, { adminDatabase } from '#services/firebase_admin'
 
 export const getLastMessagesForHunts = async (
   huntIds: number[],

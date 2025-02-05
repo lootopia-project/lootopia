@@ -1,5 +1,6 @@
 import admin from 'firebase-admin'
 import User from '#models/user'
+import i18nManager from '@adonisjs/i18n/services/main'
 
 export class NotificationPushService {
   /**
@@ -8,6 +9,8 @@ export class NotificationPushService {
    * @param user Utilisateur qui recevra la notification.
    */
   static async sendPushNotification(type: string, user: User) {
+    const i18n = i18nManager.locale(user.lang)
+
     // Récupérer les jetons FCM de l'utilisateur
     const userTokens = await user.related('fcmTokens').query()
 
@@ -20,18 +23,18 @@ export class NotificationPushService {
     let body = ''
     switch (type) {
       case 'welcome':
-        title = 'Bienvenue sur Lootopia !'
-        body = 'Merci de rejoindre Lootopia. Profitez de votre expérience !'
+        title = i18n.t('Welcome to Lootopia!')
+        body = i18n.t('Thank you for joining Lootopia. Enjoy your experience!')
         break
 
       case 'reward':
-        title = 'Récompenses débloquées !'
-        body = 'Vous avez reçu une nouvelle récompense. Consultez votre profil pour en savoir plus.'
+        title = i18n.t('Rewards unlocked!')
+        body = i18n.t('You have received a new reward. Check your profile for more details.')
         break
 
       case 'payment':
-        title = 'Paiement confirmé'
-        body = 'Votre paiement a été traité avec succès. Merci pour votre confiance.'
+        title = i18n.t('Payment confirmed')
+        body = i18n.t('Your payment has been successfully processed. Thank you for your trust.')
         break
 
       default:

@@ -1,10 +1,10 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import db from '@adonisjs/lucid/services/db'
 import User from '#models/user'
-import i18nManager from '@adonisjs/i18n/services/main'
 import UserFcmToken from '#models/user_fcm_token'
 import fetch from 'node-fetch'
-import admin from 'firebase-admin'
+import admin from '#services/firebase_admin'
+import i18nManager from '@adonisjs/i18n/services/main'
 
 export default class AuthController {
   async login({ request, auth, response }: HttpContext) {
@@ -13,11 +13,10 @@ export default class AuthController {
     const verifyCredentials = await User.verifyCredentials(email, password)
 
     if (verifyCredentials) {
+      const i18n = i18nManager.locale(verifyCredentials.lang)
       const head = await auth
         .use('api')
         .authenticateAsClient(verifyCredentials, [], { expiresIn: '1day' })
-      const lang = i18nManager.locale(verifyCredentials.lang)
-
 
       // Sauvegarder ou mettre à jour le token FCM si fourni
       if (fcmToken) {
@@ -38,8 +37,10 @@ export default class AuthController {
 
             const message = {
               to: expoPushToken,
-              title: 'Connexion réussie',
-              body: `Bonjour ${verifyCredentials.name}, vous êtes maintenant connecté.`,
+              title: i18n.t('Login successful'),
+              body: i18n.t('Hello {name}, you are now logged in.', {
+                name: verifyCredentials.name,
+              }),
             }
 
             const expoResponse = await fetch('https://exp.host/--/api/v2/push/send', {
@@ -54,8 +55,10 @@ export default class AuthController {
           } else if (fcmToken.platform === 'Web') {
             const message = {
               notification: {
-                title: 'Connexion réussie',
-                body: `Bonjour ${verifyCredentials.name}, vous êtes maintenant connecté.`,
+                title: i18n.t('Login successful'),
+                body: i18n.t('Hello {name}, you are now logged in.', {
+                  name: verifyCredentials.name,
+                }),
               },
               token: fcmToken.token,
             }
@@ -86,6 +89,7 @@ export default class AuthController {
   }
 
   async logout({ auth, response }: HttpContext) {
+    console.log('logout')
     const user = auth.use('api').user
     if (user) {
       db.from('auth_access_tokens').where('tokenable_id', user.id).delete().exec()
