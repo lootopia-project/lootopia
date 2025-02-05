@@ -3,7 +3,7 @@ import axios from "axios";
 import AXIOS_ERROR from "@/type/request/axios_error";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import LastMessageHunting from "@/type/feature/message/LastMessageHunting";
-const API_URL=process.env.EXPO_PUBLIC_API_URL_MOBILE as string
+const API_URL=process.env.EXPO_PUBLIC_API_URL as string
 
 
 

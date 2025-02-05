@@ -5,7 +5,7 @@ import LOGIN from '@/type/feature/auth/login';
 import RETURN from '@/type/request/return';
 import { requestFcmToken} from "./firebase";
 
-const API_URL=process.env.EXPO_PUBLIC_API_URL_MOBILE as string
+const API_URL=process.env.EXPO_PUBLIC_API_URL as string
 
 
 const config = {
