@@ -16,19 +16,16 @@ const UsersController = () => import('#controllers/users_controller')
 
 router.post('/login', [AuthController, 'login'])
 router.post('/register', [AuthController, 'register'])
-router.post('/notifications/push', [NotificationController, 'sendPush'])
 
 router
   .group(() => {
     router.post('/logout', [AuthController, 'logout'])
     router.post('/checkIsLogin', [AuthController, 'checkIsLogin'])
     router.get('/UserConnected', [UsersController, 'UserConnected'])
-    router.post('/huntings/create', [HuntingsController, 'createHunting'])
     router.get('/huntings/getAllForMessage', [
       HuntingsController,
       'getHuntingsParticpatedOrOrganized',
     ])
-    router.get('/huntings/getHunting/:id', [HuntingsController, 'getHunting'])
   })
   .use([
     middleware.auth({
