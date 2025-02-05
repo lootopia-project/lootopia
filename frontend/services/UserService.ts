@@ -1,15 +1,10 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
-import {Platform} from "react-native";
+import Users from "@/type/feature/auth/users";
 
 
 // Ajoute une valeur par défaut pour éviter les erreurs
-let API_URL =''
-if (Platform.OS === 'web') {
-    API_URL=process.env.EXPO_PUBLIC_API_URL as string
-}else{
-    API_URL=process.env.EXPO_PUBLIC_API_URL_MOBILE as string
-}
+const API_URL=process.env.EXPO_PUBLIC_API_URL_MOBILE as string
 
 
 export const UserConnected = async () => {
@@ -24,7 +19,7 @@ export const UserConnected = async () => {
         };
 
         const response = await axios.get(`${API_URL}/UserConnected`, config);
-        return response.data as User
+        return response.data as Users
     } catch (err: unknown) {
         console.error("Erreur Axios :", err);
 

@@ -6,13 +6,7 @@ import RETURN from '@/type/request/return';
 import {Platform} from "react-native";
 import { requestFcmToken} from "./firebase";
 
-let API_URL =''
-if (Platform.OS === 'web') {
-    API_URL=process.env.EXPO_PUBLIC_API_URL as string
-}else{
-    API_URL=process.env.EXPO_PUBLIC_API_URL_MOBILE as string
-}
-
+const API_URL=process.env.EXPO_PUBLIC_API_URL_MOBILE as string
 
 
 const config = {
