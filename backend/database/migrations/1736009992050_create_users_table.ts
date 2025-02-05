@@ -19,6 +19,7 @@ export default class extends BaseSchema {
       table.integer('phone').nullable()
       table.integer('crowns').nullable().defaultTo(0)
       table.integer('ranking').nullable()
+      table.string('lang').nullable().defaultTo('en')
     })
   }
 

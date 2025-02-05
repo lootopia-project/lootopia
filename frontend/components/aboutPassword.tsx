@@ -1,13 +1,15 @@
 import {View, Text} from 'react-native';
+import { useLanguage } from "@/hooks/providers/LanguageProvider"
 
-const aboutPassword = (checkPassword:{length: boolean, maj: boolean, min: boolean, special: boolean, same: boolean}) => {
+const AboutPassword = (checkPassword:{length: boolean, maj: boolean, min: boolean, special: boolean, same: boolean}) => {
+    const { i18n } = useLanguage();
     return (
         <View>
-            <Text style={checkPassword.length ? styles.validText : styles.errorText}>At least 10 characters</Text>
-            <Text style={checkPassword.maj ? styles.validText : styles.errorText}>At least one uppercase letter</Text>
-            <Text style={checkPassword.min ? styles.validText : styles.errorText}>At least one lowercase letter</Text>
-            <Text style={checkPassword.special ? styles.validText : styles.errorText}>At least one special character</Text>
-            <Text style={checkPassword.same ? styles.validText : styles.errorText}>Same password</Text>
+            <Text style={checkPassword.length ? styles.validText : styles.errorText}>{i18n.t("At least 10 characters")}</Text>
+            <Text style={checkPassword.maj ? styles.validText : styles.errorText}>{i18n.t("At least one uppercase letter")}</Text>
+            <Text style={checkPassword.min ? styles.validText : styles.errorText}>{i18n.t("At least one lowercase letter")}</Text>
+            <Text style={checkPassword.special ? styles.validText : styles.errorText}>{i18n.t("At least one special character")}</Text>
+            <Text style={checkPassword.same ? styles.validText : styles.errorText}>{i18n.t("Same password")}</Text>
         </View>
     );
 };
@@ -82,4 +84,4 @@ const styles = {
     },
   };
 
-  export default aboutPassword;
+  export default AboutPassword;
