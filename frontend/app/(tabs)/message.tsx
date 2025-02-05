@@ -2,14 +2,14 @@ import React, { useEffect, useState } from "react";
 import { Button, FlatList, Text, TextInput, TouchableOpacity, View, StyleSheet } from "react-native";
 import { getDatabase, onValue, push, ref } from "firebase/database";
 import { fetchTreasureHunt } from "@/services/MessageHunting";
-import { UserConnected } from "@/services/UserService";
 import { FontAwesome } from "@expo/vector-icons";
 import { getHuntingsForMessages } from "@/services/HuntingService";
 import Users from "@/type/feature/auth/users";
 import Messages from "@/type/feature/message/message";
 import { useRouter } from "expo-router";
-import LastMessage from "@/type/feature/message/last_message";
 import {useLanguage} from "@/hooks/providers/LanguageProvider";
+import LastMessageHunting from "@/type/feature/message/LastMessageHunting";
+import LastMessage from "@/type/feature/message/LastMessage";
 
 const Message = () => {
     const {i18n} = useLanguage();
@@ -26,11 +26,11 @@ const Message = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const userConnected = await UserConnected();
-                setUser(userConnected);
+                // const userConnected = await UserConnected();
+                const huntings:LastMessageHunting = await getHuntingsForMessages();
+                setUser(huntings.user);
+                setLastMessage(huntings.lastMessage)
 
-                const huntings = await getHuntingsForMessages();
-                setLastMessage(huntings);
 
                 if (discussionId) {
                     const huntData = await fetchTreasureHunt(discussionId.toString());
@@ -59,6 +59,10 @@ const Message = () => {
             console.error("Erreur lors de l'exécution de fetchData :", error)
         );
     }, [db, discussionId]);
+
+    // console.log(user);
+    console.log(lastMessages);
+
 
     const handleSend = async () => {
         if (text.trim()) {
@@ -94,13 +98,17 @@ const Message = () => {
         <TouchableOpacity style={styles.listItem} onPress={() => handleConversationClick(item.id)}>
             {item.role === "organizer" && <FontAwesome name="star" size={20} color="gold" />}
             <View style={styles.listItemText}>
-                <Text style={styles.listItemSender}>{item.lastMessage?.sender}</Text>
+                <Text style={styles.listItemSender}>
+                    {item.message?.sender || i18n.t("Unknown sender")}
+                </Text>
                 <Text style={styles.listItemMessage} numberOfLines={1} ellipsizeMode="tail">
-                    {item.lastMessage?.text}
+                    {item.message?.text || i18n.t("No message")}
                 </Text>
             </View>
             <Text style={styles.listItemDate}>
-                {item.lastMessage?.date && new Date(item.lastMessage.date).toLocaleDateString()}
+                {item.message?.date
+                    ? new Date(item.message.date).toLocaleDateString()
+                    : i18n.t("No date")}
             </Text>
         </TouchableOpacity>
     );

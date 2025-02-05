@@ -27,26 +27,30 @@ export default class HuntingsController {
       const huntMessages = await getLastMessagesForHunts(huntIds, 1)
 
       // Associer les rôles (organizer/participant) et les derniers messages
-      let hunts = huntIds.map((id) => {
+      let lastMessage = huntIds.map((id) => {
         const role = organizedHuntings.some((hunting) => hunting.id === id)
           ? 'organizer'
           : 'participant'
-        const lastMessage = huntMessages.find((hunt) => hunt.huntId === id)?.lastMessage
-
+        const message = huntMessages.find((hunt) => hunt.huntId === id)?.lastMessage
         return {
           id,
           role,
-          lastMessage,
+          message,
         }
       })
 
-      hunts = hunts.sort((a, b) => {
-        const dateA = a.lastMessage?.date ? new Date(a.lastMessage.date).getTime() : 0
-        const dateB = b.lastMessage?.date ? new Date(b.lastMessage.date).getTime() : 0
+      lastMessage = lastMessage.sort((a, b) => {
+        const dateA = a.message?.date ? new Date(a.message.date).getTime() : 0
+        const dateB = b.message?.date ? new Date(b.message.date).getTime() : 0
         return dateB - dateA // Tri descendant
       })
 
-      return response.ok(hunts)
+      const lastMessageHunting = {
+        lastMessage,
+        user,
+      }
+
+      return response.ok(lastMessageHunting)
     } catch (error) {
       console.error('Erreur lors de la récupération des chasses :', error)
       return response.internalServerError({

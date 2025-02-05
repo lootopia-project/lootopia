@@ -56,7 +56,7 @@ export default class AuthController {
             const message = {
               notification: {
                 title: i18n.t('Login successful'),
-                body: i18n.t('Hello {name}, you are now logged in.', {
+                body: i18n.t('Hello {name}, you are now logged in', {
                   name: verifyCredentials.name,
                 }),
               },

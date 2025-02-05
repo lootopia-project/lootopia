@@ -6,5 +6,7 @@
     "Congratulations on your awards!": "Congratulations on your awards!",
     "You've unlocked new rewards on Lootopia!": "You've unlocked new rewards on Lootopia!",
     "Payment confirmation": "Payment confirmation",
-    "Your payment has been processed successfully.": "Your payment has been processed successfully."
+    "Your payment has been processed successfully.": "Your payment has been processed successfully.",
+    "Login successful": "Login successful",
+    "Hello {name}, you are now logged in.": "Hello {name}, you are now logged in."
 }

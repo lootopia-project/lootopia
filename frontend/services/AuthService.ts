@@ -3,7 +3,6 @@ import axios from 'axios';
 import AXIOS_ERROR from '@/type/request/axios_error';
 import LOGIN from '@/type/feature/auth/login';
 import RETURN from '@/type/request/return';
-import {Platform} from "react-native";
 import { requestFcmToken} from "./firebase";
 
 const API_URL=process.env.EXPO_PUBLIC_API_URL_MOBILE as string

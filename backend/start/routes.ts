@@ -21,7 +21,6 @@ router
   .group(() => {
     router.post('/logout', [AuthController, 'logout'])
     router.post('/checkIsLogin', [AuthController, 'checkIsLogin'])
-    router.get('/UserConnected', [UsersController, 'UserConnected'])
     router.get('/huntings/getAllForMessage', [
       HuntingsController,
       'getHuntingsParticpatedOrOrganized',

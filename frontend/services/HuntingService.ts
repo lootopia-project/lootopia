@@ -2,7 +2,7 @@ import Hunting from "@/type/feature/auth/hunting";
 import axios from "axios";
 import AXIOS_ERROR from "@/type/request/axios_error";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import LastMessage from "@/type/feature/message/last_message";
+import LastMessageHunting from "@/type/feature/message/LastMessageHunting";
 const API_URL=process.env.EXPO_PUBLIC_API_URL_MOBILE as string
 
 
@@ -28,7 +28,7 @@ export const getHunting= async (id: number): Promise<Hunting> => {
     }
 }
 
-export const getHuntingsForMessages = async (): Promise<LastMessage[]> => {
+export const getHuntingsForMessages = async (): Promise<LastMessageHunting> => {
     const token = await AsyncStorage.getItem('token');
     const config = {
         headers: {
@@ -38,8 +38,8 @@ export const getHuntingsForMessages = async (): Promise<LastMessage[]> => {
         withCredentials: true
     }
     try {
-        const response = await axios.get<LastMessage[]>(`${API_URL}/huntings/getAllForMessage`, config)
-        return response.data as LastMessage[]
+        const response = await axios.get<LastMessageHunting>(`${API_URL}/huntings/getAllForMessage`, config)
+        return response.data as LastMessageHunting
     } catch (err: unknown) {
         if ((err as AXIOS_ERROR).message) {
             throw new Error("Error connecting")

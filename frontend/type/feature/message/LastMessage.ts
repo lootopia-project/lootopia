@@ -1,4 +1,4 @@
-interface LastMessage {
+interface LastMessage{
     id: number;
     role: string;
     lastMessage: {
