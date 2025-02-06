@@ -1,4 +1,7 @@
+/* eslint-env serviceworker */
+/* global importScripts, firebase, clients, self */
 // Importer les scripts Firebase
+
 console.log("firebase-messaging-sw.js chargé.");
 
 importScripts('https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js');

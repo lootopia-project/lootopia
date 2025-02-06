@@ -39,10 +39,15 @@ const showNotification = (title: string, body: string) => {
 // Fonction pour gérer les notifications Web avec Firebase
 const requestFcmTokenWeb = async (): Promise<{ platform: string; token: string | null }> => {
     try {
-        if ("serviceWorker" in navigator) {
-            await navigator.serviceWorker
-                .register("./firebase-messaging-sw.js")
-                .then((registration) => {});
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker
+                .register('./firebase-messaging-sw.js')
+                .then((registration) => {})
+                .catch((error) => {
+                    console.error('Erreur lors de l\'enregistrement du Service Worker :', error);
+                });
+        } else {
+            console.warn('Les Service Workers ne sont pas supportés par ce navigateur.');
         }
 
         const messaging = getMessaging(app);
