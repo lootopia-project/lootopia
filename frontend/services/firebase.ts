@@ -5,10 +5,7 @@ import * as Notifications from "expo-notifications";
 import { getDatabase, ref, get, child } from "firebase/database";
 
 import {firebaseConfig} from "@/config/firebaseConfig";
-
-// Configuration Firebase
-
-
+console.log(firebaseConfig);
 
 
 // Initialiser Firebase pour le web

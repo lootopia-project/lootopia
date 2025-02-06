@@ -1,9 +1,10 @@
 export const firebaseConfig = {
-    apiKey: "AIzaSyBK7_L-TtdMuTIzs55HjKntSPnUo0isLIA",
-    authDomain: "lootopia-8fcf2.firebaseapp.com",
-    projectId: "lootopia-8fcf2",
-    storageBucket: "lootopia-8fcf2.firebasestorage.app",
-    messagingSenderId: "958851825460",
-    appId: "1:958851825460:web:552f74f3a8722e68a96f61",
-    databaseURL: "https://lootopia-8fcf2-default-rtdb.firebaseio.com/",
+    apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY,
+    authDomain: process.env.EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN,
+    projectId: process.env.EXPO_PUBLIC_FIREBASE_PROJECT_ID,
+    storageBucket: process.env.EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: process.env.EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+    appId: process.env.EXPO_PUBLIC_FIREBASE_APP_ID,
+    databaseURL: process.env.EXPO_PUBLIC_FIREBASE_DATABASE_URL,
 };
+
