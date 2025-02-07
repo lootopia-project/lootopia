@@ -12,7 +12,7 @@
       "bundleIdentifier": "com.kxm971.frontend",
       "supportsTablet": true,
       "UIBackgroundModes": [
-        "remote-notification",
+        "remote-notification"
       ]
     },
     "android": {
@@ -20,7 +20,7 @@
         "foregroundImage": "",
         "backgroundColor": "#ffffff",
         "permissions": [
-          "NOTIFICATIONS",
+          "NOTIFICATIONS"
         ]
       }
     },
@@ -50,7 +50,7 @@
         "origin": false
       },
       "eas": {
-        "projectId": "f9bfc1e6-34af-4792-9ec7-b0cc930d602f"
+        "projectId": "c91c10bd-a444-49fe-9107-b99e8aa722c8"
       }
     },
     "runtimeVersion": {
@@ -58,6 +58,7 @@
     },
     "updates": {
       "url": "https://u.expo.dev/f9bfc1e6-34af-4792-9ec7-b0cc930d602f"
-    }
+    },
+    "owner": "lootopia_projet"
   }
 }
