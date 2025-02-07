@@ -60,9 +60,6 @@ const Message = () => {
         );
     }, [db, discussionId]);
 
-    // console.log(user);
-    console.log(lastMessages);
-
 
     const handleSend = async () => {
         if (text.trim()) {

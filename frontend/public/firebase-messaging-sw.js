@@ -51,7 +51,6 @@ try {
 
     // Écouter l'événement "notificationclick" pour gérer les actions utilisateur
     self.addEventListener('notificationclick', (event) => {
-        console.log('[firebase-messaging-sw.js] Notification cliquée :', event.notification);
 
         // Fermer la notification
         event.notification.close();
