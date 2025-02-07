@@ -29,10 +29,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const router = useRouter();
     const { changeLanguage } = useLanguage();
     useEffect(() => {
-        const initializeAuthState = async () => {            
+        const initializeAuthState = async () => {
             try {
                 const data = await checkIsLogin();
-                
                 if (data.message === true) {
                     setIsAuthenticated(true);
                     await AsyncStorage.setItem("lang", data.lang);
@@ -43,7 +42,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                     if (!publicRoutes.includes(pathName)) {
                         router.push("/+not-found");
                     }
-                }                
+                }
             } catch (error) {
                 setIsAuthenticated(false);
                 await AsyncStorage.removeItem("token");
@@ -57,9 +56,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }, [pathName]);
 
     const login = async (userData: LOGIN): Promise<RETURN> => {
-        
+
         const data = await loginUser(userData);
-                
+
         await AsyncStorage.setItem("token", data.headers.authorization);
         setIsAuthenticated(true);
         return data;
@@ -93,4 +92,3 @@ export const useAuth = () => {
     }
     return context;
   };
-  

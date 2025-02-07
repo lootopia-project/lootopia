@@ -3,37 +3,62 @@ import axios from 'axios';
 import AXIOS_ERROR from '@/type/request/axios_error';
 import LOGIN from '@/type/feature/auth/login';
 import RETURN from '@/type/request/return';
-const API_URL = process.env.EXPO_PUBLIC_API_URL
+import { requestFcmToken} from "./firebase";
+
+const API_URL=process.env.EXPO_PUBLIC_API_URL as string
+
+
 const config = {
     headers: {
         "Content-Type": "application/json",
     },
     withCredentials: true
 }
+
+
 const loginUser = async (userData: LOGIN): Promise<RETURN> => {
     try {
-      const { email, password } = userData;  
-      const response = await axios.post<RETURN>(
-        `${API_URL}/login`,
-        {
-          email,
-          password,
-        },
-        config
-      );
+        const { email, password } = userData;
+        // Récupérer le token FCM via requestFcmToken
+        const fcmToken = await requestFcmToken();
+        if (!fcmToken) {
 
-      return response.data;
+            const permission = await Notification.requestPermission();
+            if (permission === "granted") {
+                const newFcmToken = await requestFcmToken();
+                if (!newFcmToken) {
+                    console.warn("Impossible d'obtenir un token FCM après avoir demandé l'autorisation.");
+                }
+            } else {
+                console.error("L'utilisateur a refusé les notifications.");
+            }
+        }
+        const response = await axios.post<RETURN>(
+            `${API_URL}/login`,
+            {
+                email,
+                password,
+                fcmToken: fcmToken || null,
+            },
+            config
+        );
+
+        return response.data;
     } catch (err: unknown) {
-      if ((err as AXIOS_ERROR).message) {
-        throw new Error('Error connecting');
-      } else {
-        throw new Error('Error connecting to server');
-      }
+        console.error("Erreur lors de la connexion :", err);
+
+        if (axios.isAxiosError(err) && err.message) {
+            throw new Error("Erreur de connexion.");
+        } else {
+            throw new Error("Erreur de connexion au serveur.");
+        }
     }
-  };
+};
+
+
 const logoutUser = async () : Promise<RETURN> =>{
     try {
-      const tokenLogout = await AsyncStorage.getItem('token');  
+      const tokenLogout = await AsyncStorage.getItem('token');
       const configLogout = {
           headers: {
               "Content-Type": "application/json",
@@ -54,7 +79,7 @@ const logoutUser = async () : Promise<RETURN> =>{
 
 const checkIsLogin = async () : Promise<RETURN> =>{
   try {
-    const token = await AsyncStorage.getItem('token');      
+    const token = await AsyncStorage.getItem('token');
     const config = {
         headers: {
             "Content-Type": "application/json",
@@ -77,7 +102,7 @@ const checkIsLogin = async () : Promise<RETURN> =>{
 
 const registerUser = async (userData: LOGIN): Promise<RETURN> => {
   try {
-    const { email, password } = userData;  
+    const { email, password } = userData;
     const response = await axios.post<RETURN>(
       `${API_URL}/register`,
       {
@@ -86,7 +111,7 @@ const registerUser = async (userData: LOGIN): Promise<RETURN> => {
       },
       config
     );
-    
+
     return response.data;
   } catch (err: unknown) {
     if ((err as AXIOS_ERROR).message) {

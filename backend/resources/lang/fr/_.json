@@ -6,5 +6,12 @@
     "Congratulations on your awards!": "Félicitations pour vos récompenses!",
     "You've unlocked new rewards on Lootopia!": "Vous avez débloqué de nouvelles récompenses sur Lootopia!",
     "Payment confirmation": "Confirmation de paiement",
-    "Your payment has been processed successfully.": "Votre paiement a été traité avec succès."
+    "Your payment has been processed successfully.": "Votre paiement a été traité avec succès.",
+    "Login successful": "Connexion réussie",
+    "Hello {name}, you are now logged in.": "Bonjour {name}, vous êtes maintenant connecté.",
+    "Thank you for joining Lootopia. Enjoy your experience!": "Merci de rejoindre Lootopia. Profitez de votre expérience !",
+    "Rewards unlocked!": "Récompenses débloquées !",
+    "You have received a new reward. Check your profile for more details.": "Vous avez reçu une nouvelle récompense. Consultez votre profil pour en savoir plus.",
+    "Payment confirmed": "Paiement confirmé",
+    "Your payment has been successfully processed. Thank you for your trust.": "Votre paiement a été traité avec succès. Merci pour votre confiance."
 }

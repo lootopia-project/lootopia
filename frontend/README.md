@@ -15,6 +15,7 @@
 
 - `npm start` : to start the frontend server (Expo)
 - `npm run lint` : to lint the code
+- `eas update <name_branch>` : to update the branch with the latest changes from the main branch (main) and publish the changes to the Expo server
 
 ## Structure
 

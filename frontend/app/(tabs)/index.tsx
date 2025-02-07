@@ -10,7 +10,7 @@ export default function HomeScreen() {
   const {i18n} = useLanguage();
   const hangleLogout = async () => {
     try {
-      
+
       const check = await logout();
       if (check.message) {
         router.push("/login");
@@ -19,11 +19,16 @@ export default function HomeScreen() {
       console.error("Error in hangleLogout:", error);
     }
   };
+
+  const handleMessages = () => {
+    router.push("/message");
+  }
   return (
     <>
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Text>{i18n.t("Hello World !")}</Text>
       <Button title={i18n.t("logout")} onPress={hangleLogout} />
+        <Button title={">GO tO mESSAGE"} onPress={handleMessages} />
     </View>
     </>
   );

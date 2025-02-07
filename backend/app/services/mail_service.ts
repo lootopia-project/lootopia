@@ -1,6 +1,7 @@
 import User from '#models/user'
 import mail from '@adonisjs/mail/services/main'
 import i18nManager from '@adonisjs/i18n/services/main'
+import env from '#start/env'
 
 export default class MailService {
   static async sendMail(type: string, user: User) {
@@ -51,7 +52,7 @@ export default class MailService {
 
     await mail.send((message) => {
       message
-        .from('noreply.lootopia@gmail.com')
+        .from(env.get('SMTP_USERNAME'))
         .to(user.email)
         .subject(subject)
         .htmlView(view, templateData)

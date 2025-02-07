@@ -7,10 +7,10 @@ import {
 import { registerUser } from "@/services/AuthService";
 import { validatePassword } from "@/constants/validatePassword";
 import AXIOS_ERROR from "@/type/request/axios_error";
-import AboutPassword from "@/components/AboutPassword";
 import { Colors } from "@/constants/Colors";
 import {useErrors} from "@/hooks/providers/ErrorProvider";
 import { useLanguage } from "@/hooks/providers/LanguageProvider";
+import AboutPassword from "@/components/aboutPassword";
 
 
 export default function RegisterPage() {
@@ -76,7 +76,7 @@ export default function RegisterPage() {
       } catch (error) {
         handleSavePasswordError(error);
       }
-    } else {      
+    } else {
       setErrorMessage(i18n.t("Password does not meet the requirements"));
       setErrorVisible(true);
     }

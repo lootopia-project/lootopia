@@ -9,6 +9,7 @@ import UsersHunting from '#models/users_hunting'
 import Whitelist from '#models/whitelist'
 import Reward from '#models/reward'
 import Hunting from '#models/hunting'
+import UserFcmToken from '#models/user_fcm_token'
 
 const AuthFinder = withAuthFinder(() => hash.use('scrypt'), {
   uids: ['email', 'nickname'],
@@ -75,6 +76,9 @@ export default class User extends compose(BaseModel, AuthFinder) {
 
   @hasMany(() => Hunting)
   declare hunting: HasMany<typeof Hunting>
+
+  @hasMany(() => UserFcmToken)
+  declare fcmTokens: HasMany<typeof UserFcmToken>
 
   static accessTokens = DbAccessTokensProvider.forModel(User)
 }
