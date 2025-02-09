@@ -1,5 +1,13 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, StyleSheet, useColorScheme } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  KeyboardAvoidingView,
+  Platform,
+  useColorScheme,
+} from "react-native";
 import { useAuth } from "@/hooks/providers/AuthProvider";
 import { useErrors } from "@/hooks/providers/ErrorProvider";
 import { useRouter, Link } from "expo-router";
@@ -31,107 +39,84 @@ export default function LoginPage() {
   };
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      style={[styles.container, { backgroundColor: themeColors.background }]}>
-      <View style={styles.formContainer}>
-        <Text style={[styles.title, { color: themeColors.text }]}>{i18n.t("Sign in")}</Text>
-        <View style={styles.inputContainer}>
-          <Text style={[styles.label, { color: themeColors.text }]}>{i18n.t("email")}</Text>
-          <TextInput
-            style={[styles.input, { borderColor: themeColors.icon, color: themeColors.text }]}
-            placeholder={i18n.t("email")}
-            placeholderTextColor={themeColors.icon}
-            value={email}
-            onChangeText={setEmail}
-            keyboardType="email-address"
-            autoCapitalize="none"
-          />
+      <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          className="flex-1 justify-center items-center p-5"
+          style={{ backgroundColor: themeColors.background }}
+      >
+        <View className="w-11/12 bg-white p-6 rounded-lg shadow-lg">
+          {/* Titre */}
+          <Text
+              className="text-2xl font-bold text-center mb-5"
+              style={{ color: themeColors.text }}
+          >
+            {i18n.t("Sign in")}
+          </Text>
+
+          {/* Champ Email */}
+          <View className="mb-4">
+            <Text className="text-lg mb-2" style={{ color: themeColors.text }}>
+              {i18n.t("email")}
+            </Text>
+            <TextInput
+                className="border rounded-lg p-3 text-base"
+                style={{
+                  borderColor: themeColors.icon,
+                  color: themeColors.text,
+                  backgroundColor: themeColors.background,
+                }}
+                placeholder={i18n.t("email")}
+                placeholderTextColor={themeColors.icon}
+                value={email}
+                onChangeText={setEmail}
+                keyboardType="email-address"
+                autoCapitalize="none"
+            />
+          </View>
+
+          {/* Champ Mot de passe */}
+          <View className="mb-4">
+            <Text className="text-lg mb-2" style={{ color: themeColors.text }}>
+              {i18n.t("password")}
+            </Text>
+            <TextInput
+                className="border rounded-lg p-3 text-base"
+                style={{
+                  borderColor: themeColors.icon,
+                  color: themeColors.text,
+                  backgroundColor: themeColors.background,
+                }}
+                placeholder={i18n.t("password")}
+                placeholderTextColor={themeColors.icon}
+                value={password}
+                onChangeText={setPassword}
+                secureTextEntry
+                autoCapitalize="none"
+            />
+          </View>
+
+          {/* Bouton de connexion */}
+          <TouchableOpacity
+              className="bg-blue-500 py-4 rounded-lg"
+              onPress={handleLogin}
+          >
+            <Text
+                className="text-center text-white text-lg font-bold"
+                style={{ color: themeColors.background }}
+            >
+              {i18n.t("login")}
+            </Text>
+          </TouchableOpacity>
+
+          {/* Lien d'inscription */}
+          <Link
+              href="/register"
+              className="mt-5 text-center text-base underline"
+              style={{ color: themeColors.tint }}
+          >
+            {i18n.t("Don't have an account? Sign up")}
+          </Link>
         </View>
-
-        <View style={styles.inputContainer}>
-          <Text style={[styles.label, { color: themeColors.text }]}>{i18n.t("password")}</Text>
-          <TextInput
-            style={[styles.input, { borderColor: themeColors.icon, color: themeColors.text }]}
-            placeholder={i18n.t("password")}
-            placeholderTextColor={themeColors.icon}
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry
-            autoCapitalize="none"
-          />
-        </View>
-
-        <TouchableOpacity style={[styles.button, { backgroundColor: themeColors.tint }]} onPress={handleLogin}>
-          <Text style={[styles.buttonText, { color: themeColors.background }]}>{i18n.t("login")}</Text>
-        </TouchableOpacity>
-
-        <Link href={"/register"} style={[styles.link, { color: themeColors.tint }]}>
-          {i18n.t("Don't have an account? Sign up")}
-        </Link>
-      </View>
-    </KeyboardAvoidingView>
+      </KeyboardAvoidingView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 20,
-  },
-  formContainer: {
-    width: "90%",
-    backgroundColor: "#fff",
-    padding: 20,
-    borderRadius: 10,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: "bold",
-    textAlign: "center",
-    marginBottom: 20,
-  },
-  inputContainer: {
-    marginBottom: 16,
-  },
-  label: {
-    fontSize: 18,
-    marginBottom: 8,
-  },
-  input: {
-    borderWidth: 1,
-    borderRadius: 8,
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    fontSize: 16,
-    backgroundColor: "#fff",
-  },
-  button: {
-    padding: 14,
-    borderRadius: 8,
-    alignItems: "center",
-    marginTop: 20,
-  },
-  buttonText: {
-    fontSize: 18,
-    fontWeight: "bold",
-  },
-  errorText: {
-    fontSize: 14,
-    textAlign: "center",
-    marginBottom: 10,
-  },
-  link: {
-    marginTop: 20,
-    fontSize: 16,
-    textAlign: "center",
-    textDecorationLine: "underline",
-  },
-});
