@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, FlatList, Text, TextInput, TouchableOpacity, View, StyleSheet } from "react-native";
+import { Button, FlatList, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { getDatabase, onValue, push, ref } from "firebase/database";
 import { fetchTreasureHunt } from "@/services/MessageHunting";
 import { FontAwesome } from "@expo/vector-icons";
@@ -7,12 +7,12 @@ import { getHuntingsForMessages } from "@/services/HuntingService";
 import Users from "@/type/feature/auth/users";
 import Messages from "@/type/feature/message/message";
 import { useRouter } from "expo-router";
-import {useLanguage} from "@/hooks/providers/LanguageProvider";
+import { useLanguage } from "@/hooks/providers/LanguageProvider";
 import LastMessageHunting from "@/type/feature/message/LastMessageHunting";
 import LastMessage from "@/type/feature/message/LastMessage";
 
 const Message = () => {
-    const {i18n} = useLanguage();
+    const { i18n } = useLanguage();
     const [messages, setMessages] = useState<Messages[]>([]);
     const [text, setText] = useState<string>("");
     const [user, setUser] = useState<Users>();
@@ -26,11 +26,9 @@ const Message = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                // const userConnected = await UserConnected();
-                const huntings:LastMessageHunting = await getHuntingsForMessages();
+                const huntings: LastMessageHunting = await getHuntingsForMessages();
                 setUser(huntings.user);
-                setLastMessage(huntings.lastMessage)
-
+                setLastMessage(huntings.lastMessage);
 
                 if (discussionId) {
                     const huntData = await fetchTreasureHunt(discussionId.toString());
@@ -55,11 +53,8 @@ const Message = () => {
             }
         };
 
-        fetchData().catch((error) =>
-            console.error("Erreur lors de l'exécution de fetchData :", error)
-        );
+        fetchData().catch((error) => console.error("Erreur lors de l'exécution de fetchData :", error));
     }, [db, discussionId]);
-
 
     const handleSend = async () => {
         if (text.trim()) {
@@ -92,17 +87,20 @@ const Message = () => {
     };
 
     const renderItem = ({ item }: { item: LastMessage }) => (
-        <TouchableOpacity style={styles.listItem} onPress={() => handleConversationClick(item.id)}>
+        <TouchableOpacity
+            className="flex-row items-center p-3 border-b border-gray-300"
+            onPress={() => handleConversationClick(item.id)}
+        >
             {item.role === "organizer" && <FontAwesome name="star" size={20} color="gold" />}
-            <View style={styles.listItemText}>
-                <Text style={styles.listItemSender}>
+            <View className="flex-1 ml-3">
+                <Text className="font-bold text-base text-black">
                     {item.message?.sender || i18n.t("Unknown sender")}
                 </Text>
-                <Text style={styles.listItemMessage} numberOfLines={1} ellipsizeMode="tail">
+                <Text className="text-sm text-gray-600" numberOfLines={1} ellipsizeMode="tail">
                     {item.message?.text || i18n.t("No message")}
                 </Text>
             </View>
-            <Text style={styles.listItemDate}>
+            <Text className="text-sm text-gray-400 ml-2">
                 {item.message?.date
                     ? new Date(item.message.date).toLocaleDateString()
                     : i18n.t("No date")}
@@ -117,10 +115,10 @@ const Message = () => {
     return (
         <>
             {!discussionClicked ? (
-                <View style={styles.container}>
-                    <TouchableOpacity style={styles.backButton} onPress={redirectWelcome}>
+                <View className="flex-1 bg-gray-100 p-4">
+                    <TouchableOpacity className="flex-row items-center mb-4" onPress={redirectWelcome}>
                         <FontAwesome name="arrow-left" size={20} color="black" />
-                        <Text style={styles.backButtonText}>{i18n.t("Back")}</Text>
+                        <Text className="ml-2 text-lg font-bold text-black">{i18n.t("Back")}</Text>
                     </TouchableOpacity>
 
                     <FlatList
@@ -128,15 +126,15 @@ const Message = () => {
                         keyExtractor={(item) => item?.id.toString()}
                         renderItem={renderItem}
                         ListEmptyComponent={
-                            <Text style={styles.emptyMessage}>{i18n.t("No conversations yet.")}</Text>
+                            <Text className="text-center text-gray-500 mt-10">{i18n.t("No conversations yet.")}</Text>
                         }
                     />
                 </View>
             ) : (
-                <View style={styles.messageContainer}>
-                    <TouchableOpacity style={styles.backButton} onPress={handleBackClick}>
+                <View className="flex-1 bg-gray-100 p-4">
+                    <TouchableOpacity className="flex-row items-center mb-4" onPress={handleBackClick}>
                         <FontAwesome name="arrow-left" size={20} color="black" />
-                        <Text style={styles.backButtonText}>{i18n.t("Back")}</Text>
+                        <Text className="ml-2 text-lg font-bold text-black">{i18n.t("Back")}</Text>
                     </TouchableOpacity>
 
                     <FlatList
@@ -146,22 +144,23 @@ const Message = () => {
                         )}
                         keyExtractor={(item) => item.id}
                         renderItem={({ item }) => (
-                            <View style={styles.messageItem}>
-                                <View style={styles.messageItemSender}>
+                            <View className="flex-row justify-between items-center mb-2">
+                                <View className="flex-row items-center">
                                     {item.sender === organizerId && <FontAwesome name="star" size={16} color="gold" />}
                                     <Text
-                                        style={
-                                            item.sender === user?.nickname ? styles.messageTextSelf : styles.messageTextOther
-                                        }
+                                        className={`font-bold ${
+                                            item.sender === user?.nickname ? "text-blue-500" : "text-gray-800"
+                                        }`}
                                     >
                                         {item.sender === user?.nickname ? i18n.t("You") : item.sender}: {item.text}
                                     </Text>
                                 </View>
-                                <Text style={styles.messageTimestamp}>
-                                    {item.timestamp && new Date(item.timestamp).toLocaleTimeString([], {
-                                        hour: "2-digit",
-                                        minute: "2-digit",
-                                    })}
+                                <Text className="text-sm text-gray-500">
+                                    {item.timestamp &&
+                                        new Date(item.timestamp).toLocaleTimeString([], {
+                                            hour: "2-digit",
+                                            minute: "2-digit",
+                                        })}
                                 </Text>
                             </View>
                         )}
@@ -171,7 +170,7 @@ const Message = () => {
                         value={text}
                         onChangeText={setText}
                         placeholder={i18n.t("Write a message")}
-                        style={styles.input}
+                        className="border border-gray-300 rounded-lg p-3 bg-white mb-4"
                     />
                     <Button title={i18n.t("Send")} onPress={handleSend} />
                 </View>
@@ -179,88 +178,5 @@ const Message = () => {
         </>
     );
 };
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: "#f3f4f6",
-        paddingHorizontal: 16,
-        paddingTop: 40, // Ajout de padding en haut pour espacement sur mobile
-    },
-    backButton: {
-        flexDirection: "row",
-        alignItems: "center",
-        marginBottom: 16,
-        paddingVertical: 10, // Espacement vertical pour rendre le bouton plus accessible
-    },
-    backButtonText: {
-        fontSize: 18,
-        fontWeight: "bold",
-        marginLeft: 8, // Espacement entre l'icône et le texte
-    },
-    listItem: {
-        flexDirection: "row",
-        alignItems: "center",
-        padding: 12,
-        borderBottomWidth: 1,
-        borderColor: "#e5e7eb",
-    },
-    listItemText: {
-        flex: 1,
-    },
-    listItemSender: {
-        fontSize: 16,
-        fontWeight: "bold",
-    },
-    listItemMessage: {
-        color: "#6b7280",
-    },
-    listItemDate: {
-        color: "#9ca3af",
-        fontSize: 14,
-        marginLeft: 8,
-    },
-    messageContainer: {
-        flex: 1,
-        paddingHorizontal: 16,
-        paddingTop: 40, // Assurez-vous que le haut est également espacé ici
-        backgroundColor: "#f3f4f6",
-    },
-    messageItem: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-        marginBottom: 8,
-    },
-    messageItemSender: {
-        flexDirection: "row",
-        alignItems: "center",
-    },
-    messageTextSelf: {
-        color: "#2563eb",
-        fontWeight: "bold",
-    },
-    messageTextOther: {
-        color: "#374151",
-    },
-    messageTimestamp: {
-        color: "#9ca3af",
-        fontSize: 14,
-    },
-    input: {
-        borderWidth: 1,
-        borderColor: "#d1d5db",
-        borderRadius: 8,
-        padding: 8,
-        marginBottom: 16,
-        backgroundColor: "white",
-    },
-    emptyMessage: {
-        textAlign: "center",
-        color: "#6b7280",
-        marginTop: 10,
-    },
-});
-
 
 export default Message;
