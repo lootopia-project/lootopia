@@ -23,9 +23,19 @@ jobs:
       - name: Install Netlify CLI
         run: npm install -g netlify-cli
         working-directory: frontend
-        
+
       - name: Deploy to Netlify
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-        run: netlify deploy --dir=dist --site=${{ secrets.SITE_ID }} --prod 
+        run: netlify deploy --dir=dist --site=${{ secrets.SITE_ID }} --prod
         working-directory: frontend
+
+
+    env:
+      EXPO_PUBLIC_FIREBASE_API_KEY: ${{ secrets.EXPO_PUBLIC_FIREBASE_API_KEY }}
+      EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN: ${{ secrets.EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN }}
+      EXPO_PUBLIC_FIREBASE_DATABASE_URL: ${{ secrets.EXPO_PUBLIC_FIREBASE_DATABASE_URL }}
+      EXPO_PUBLIC_FIREBASE_PROJECT_ID: ${{ secrets.EXPO_PUBLIC_FIREBASE_PROJECT_ID }}
+      EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET: ${{ secrets.EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET }}
+      EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID }}
+      EXPO_PUBLIC_FIREBASE_APP_ID: ${{ secrets.EXPO_PUBLIC_FIREBASE_APP_ID }}
