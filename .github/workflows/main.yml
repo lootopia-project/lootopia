@@ -12,6 +12,17 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
+      - name: Affichage des variables Firebase
+        run: |
+          echo "🔍 Vérification des variables d'environnement Firebase..."
+          echo "EXPO_PUBLIC_FIREBASE_API_KEY is set"
+          echo "EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN is set"
+          echo "EXPO_PUBLIC_FIREBASE_DATABASE_URL is set"
+          echo "EXPO_PUBLIC_FIREBASE_PROJECT_ID is set"
+          echo "EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET is set"
+          echo "EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID is set"
+          echo "EXPO_PUBLIC_FIREBASE_APP_ID is set"
+
       - name: Install dependencies (Expo web project)
         run: npm install
         working-directory: frontend
@@ -29,3 +40,12 @@ jobs:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
         run: netlify deploy --dir=dist --site=${{ secrets.SITE_ID }} --prod
         working-directory: frontend
+
+    env:
+      EXPO_PUBLIC_FIREBASE_API_KEY: ${{ secrets.EXPO_PUBLIC_FIREBASE_API_KEY }}
+      EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN: ${{ secrets.EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN }}
+      EXPO_PUBLIC_FIREBASE_DATABASE_URL: ${{ secrets.EXPO_PUBLIC_FIREBASE_DATABASE_URL }}
+      EXPO_PUBLIC_FIREBASE_PROJECT_ID: ${{ secrets.EXPO_PUBLIC_FIREBASE_PROJECT_ID }}
+      EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET: ${{ secrets.EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET }}
+      EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID }}
+      EXPO_PUBLIC_FIREBASE_APP_ID: ${{ secrets.EXPO_PUBLIC_FIREBASE_APP_ID }}
