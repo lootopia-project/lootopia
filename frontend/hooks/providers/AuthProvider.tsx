@@ -60,7 +60,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         const data = await loginUser(userData);
 
         await AsyncStorage.setItem("token", data.headers.authorization);
-        setIsAuthenticated(true);
         return data;
     };
 
