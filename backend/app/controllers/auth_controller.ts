@@ -38,8 +38,8 @@ export default class AuthController {
 
             const message = {
               to: expoPushToken,
-              title: i18n.t('Login successful'),
-              body: i18n.t('Hello {name}, you are now logged in.', {
+              title: i18n.t('_.Login successful'),
+              body: i18n.t('_.Hello {name}, you are now logged in.', {
                 name: verifyCredentials.name,
               }),
             }
@@ -58,10 +58,8 @@ export default class AuthController {
           } else if (fcmToken.platform === 'Web') {
             const message = {
               notification: {
-                title: i18n.t('Login successful'),
-                body: i18n.t('Hello {name}, you are now logged in', {
-                  name: verifyCredentials.name,
-                }),
+                title: i18n.t('_.Login successful'),
+                body: i18n.t('_.You are now logged in'),
               },
               token: fcmToken.token,
             }

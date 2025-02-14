@@ -71,12 +71,12 @@ export default class UsersController {
     if (updatedUser) {
       return {
         success: true,
-        message: i18n.t('User updated'),
+        message: i18n.t('_.User updated'),
       }
     } else {
       return {
         success: false,
-        message: i18n.t('User not updated'),
+        message: i18n.t('_.User not updated'),
       }
     }
   }
@@ -91,12 +91,12 @@ export default class UsersController {
 
       return response.ok({
         success: true,
-        message: i18n.t('Password updated'),
+        message: i18n.t('_.Password updated'),
       })
     } catch {
       return response.ok({
         success: false,
-        message: i18n.t('Invalid current password'),
+        message: i18n.t('_.Invalid current password'),
       })
     }
   }

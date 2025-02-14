@@ -1,5 +1,5 @@
 import { useEffect, useState} from "react";
-import { Text, ScrollView } from "react-native";
+import {Text, ScrollView, View} from "react-native";
 import InfoEditUser from "@/type/feature/user/InfoEditUser";
 import {getInfoUser, updateInfoUser, updatePassword} from "@/services/UsersService";
 import { useLanguage } from "@/hooks/providers/LanguageProvider";
@@ -97,28 +97,37 @@ const EditUser = () => {
     };
 
         return (
-        <ScrollView className="p-6 bg-gray-100 min-h-screen" contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', alignItems: 'center', paddingBottom: 50 }}>
-            <Text className="text-2xl font-bold mb-4">{i18n.t("Edit User")}</Text>
-            <FormEditUser
-                infoEditUser={infoEditUser}
-                handleChange={handleChange}
-                handleFileChange={handleFileChange}
-                setModalVisible={setModalVisible}
-                submit={submit}
-            />
+            <ScrollView
+                className="p-6 bg-gray-100 min-h-screen"
+                contentContainerStyle={{ flexGrow: 1 }}
+            >
+                <Text className="text-2xl font-bold mb-4 text-center">{i18n.t("Edit User")}</Text>
 
-            <ModalChangePassword
-                isVisible={isModalVisible}
-                onClose={() => setModalVisible(false)}
-                onChange={(name: string, value: string) =>
-                setChangePassword(prevState => ({ ...prevState, [name]: value }))}
-                onSubmit={changePasswordSubmit}
-                changePassword={changePassword}
-            />
-            <Success visible={isSuccessVisible} onClose={() => setSuccessVisible(false)} successMessage={message} />
-            <Errors visible={isErrorVisible} onClose={() => setErrorVisible(false)} errorMessage={message} />
-        </ScrollView>
-    );
+                <View className="w-full flex justify-center items-center">
+                    <FormEditUser
+                        infoEditUser={infoEditUser}
+                        handleChange={handleChange}
+                        handleFileChange={handleFileChange}
+                        setModalVisible={setModalVisible}
+                        submit={submit}
+                    />
+                </View>
+
+                <ModalChangePassword
+                    isVisible={isModalVisible}
+                    onClose={() => setModalVisible(false)}
+                    onChange={(name: string, value: string) =>
+                        setChangePassword(prevState => ({ ...prevState, [name]: value }))
+                    }
+                    onSubmit={changePasswordSubmit}
+                    changePassword={changePassword}
+                />
+
+                <Success visible={isSuccessVisible} onClose={() => setSuccessVisible(false)} successMessage={message} />
+                <Errors visible={isErrorVisible} onClose={() => setErrorVisible(false)} errorMessage={message} />
+            </ScrollView>
+
+        );
 };
 
 export default EditUser;

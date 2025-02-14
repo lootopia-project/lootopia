@@ -8,7 +8,6 @@
     "Payment confirmation": "Confirmation de paiement",
     "Your payment has been processed successfully.": "Votre paiement a été traité avec succès.",
     "Login successful": "Connexion réussie",
-    "Hello {name}, you are now logged in.": "Bonjour {name}, vous êtes maintenant connecté.",
     "Thank you for joining Lootopia. Enjoy your experience!": "Merci de rejoindre Lootopia. Profitez de votre expérience !",
     "Rewards unlocked!": "Récompenses débloquées !",
     "You have received a new reward. Check your profile for more details.": "Vous avez reçu une nouvelle récompense. Consultez votre profil pour en savoir plus.",
@@ -16,5 +15,6 @@
     "Your payment has been successfully processed. Thank you for your trust.": "Votre paiement a été traité avec succès. Merci pour votre confiance.",
     "User updated": "Utilisateur mis à jour",
     "Password updated": "Mot de passe mis à jour",
-    "Invalid current password": "Mot de passe actuel invalide"
+    "Invalid current password": "Mot de passe actuel invalide",
+    "You are now logged in": "Vous êtes maintenant connecté"
 }
