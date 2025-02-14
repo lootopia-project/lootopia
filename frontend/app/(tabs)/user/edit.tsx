@@ -5,7 +5,6 @@ import {getInfoUser, updateInfoUser, updatePassword} from "@/services/UsersServi
 import { useLanguage } from "@/hooks/providers/LanguageProvider";
 import * as ImagePicker from "expo-image-picker";
 import Return from "@/type/request/return";
-import validatePassword from "@/constants/validatePassword";
 import Errors from "@/components/Errors";
 import Success from "@/components/Success";
 import ModalChangePassword from "@/components/me/ModalChangePassword";

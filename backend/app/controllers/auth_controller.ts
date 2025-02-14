@@ -46,7 +46,7 @@ export default class AuthController {
 
             const expoResponse = await axios.post(
               'https://exp.host/--/api/v2/push/send',
-              message, // Axios convertit automatiquement l'objet en JSON
+              message,
               {
                 headers: {
                   'Content-Type': 'application/json',
