@@ -12,7 +12,7 @@ export default class extends BaseSchema {
       table.string('surname').nullable()
       table.boolean('is_partner').nullable().defaultTo(false)
       table.string('img').nullable()
-      table.string('nickname').nullable()
+      table.string('nickname').nullable().unique()
       table.string('two_factor_secret', 500).nullable()
       table.string('two_factor_recovery_codes', 500).nullable()
       table.boolean('is_two_factor_enabled').defaultTo(false)
@@ -20,6 +20,7 @@ export default class extends BaseSchema {
       table.integer('crowns').nullable().defaultTo(0)
       table.integer('ranking').nullable()
       table.string('lang').nullable().defaultTo('en')
+      table.boolean('check_mail').defaultTo(false)
     })
   }
 
