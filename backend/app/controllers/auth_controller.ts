@@ -5,7 +5,7 @@ import UserFcmToken from '#models/user_fcm_token'
 import fetch from 'node-fetch'
 import admin from '#services/firebase_admin'
 import i18nManager from '@adonisjs/i18n/services/main'
-import axios from "axios";
+import axios from 'axios'
 
 export default class AuthController {
   async login({ request, auth, response }: HttpContext) {
@@ -38,31 +38,28 @@ export default class AuthController {
 
             const message = {
               to: expoPushToken,
-              title: i18n.t('Login successful'),
-              body: i18n.t('Hello {name}, you are now logged in.', {
+              title: i18n.t('_.Login successful'),
+              body: i18n.t('_.Hello {name}, you are now logged in.', {
                 name: verifyCredentials.name,
               }),
             }
 
             const expoResponse = await axios.post(
-                'https://exp.host/--/api/v2/push/send',
-                message, // Axios convertit automatiquement l'objet en JSON
-                {
-                  headers: {
-                    'Content-Type': 'application/json',
-                  },
-                }
-            );
+              'https://exp.host/--/api/v2/push/send',
+              message,
+              {
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+              }
+            )
 
-           expoResponse.data;
-
+            expoResponse.data
           } else if (fcmToken.platform === 'Web') {
             const message = {
               notification: {
-                title: i18n.t('Login successful'),
-                body: i18n.t('Hello {name}, you are now logged in', {
-                  name: verifyCredentials.name,
-                }),
+                title: i18n.t('_.Login successful'),
+                body: i18n.t('_.You are now logged in'),
               },
               token: fcmToken.token,
             }

@@ -8,10 +8,13 @@
     "Payment confirmation": "Payment confirmation",
     "Your payment has been processed successfully.": "Your payment has been processed successfully.",
     "Login successful": "Login successful",
-    "Hello {name}, you are now logged in.": "Hello {name}, you are now logged in.",
     "Thank you for joining Lootopia. Enjoy your experience!": "Thank you for joining Lootopia. Enjoy your experience!",
     "Rewards unlocked!": "Rewards unlocked!",
     "You have received a new reward. Check your profile for more details.": "You have received a new reward. Check your profile for more details.",
     "Payment confirmed": "Payment confirmed",
-    "Your payment has been successfully processed. Thank you for your trust.": "Your payment has been successfully processed. Thank you for your trust."
+    "Your payment has been successfully processed. Thank you for your trust.": "Your payment has been successfully processed. Thank you for your trust.",
+    "User updated": "User updated",
+    "Password updated": "Password updated",
+    "Invalid current password": "Invalid current password",
+    "You are now logged in": "You are now logged in"
 }
