@@ -9,6 +9,7 @@
 
 import router from '@adonisjs/core/services/router'
 import { middleware } from '#start/kernel'
+import DoubleAuthsController from "#controllers/double_auths_controller";
 const AuthController = () => import('#controllers/auth_controller')
 const NotificationController = () => import('#controllers/notification_controller')
 const HuntingsController = () => import('#controllers/huntings_controller')
@@ -28,6 +29,8 @@ router
     router.get('/users/getInfoUser', [UsersController, 'getInfoUser'])
     router.post('/users/updateInfoUser', [UsersController, 'updateInfoUser'])
     router.post('/users/updatePassword', [UsersController, 'updatePassword'])
+      router.post('/users/toggleDoubleAuth', [DoubleAuthsController, 'toggleTwoFactorAuth'])
+      router.get('/users/isTwoFactorEnabled', [DoubleAuthsController, 'isTwoFactorEnabled'])
   })
   .use([
     middleware.auth({

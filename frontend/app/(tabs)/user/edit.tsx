@@ -72,7 +72,6 @@ const EditUser = () => {
 
     const submit = async () => {
         const response:Return=await updateInfoUser(infoEditUser);
-        console.log(response);
         handleResponse(response);
     }
 
@@ -96,6 +95,7 @@ const EditUser = () => {
     };
 
         return (
+            <>
             <ScrollView
                 className="p-6 bg-gray-100 min-h-screen"
                 contentContainerStyle={{ flexGrow: 1 }}
@@ -126,6 +126,7 @@ const EditUser = () => {
                 <Errors visible={isErrorVisible} onClose={() => setErrorVisible(false)} errorMessage={message} />
             </ScrollView>
 
+            </>
         );
 };
 
