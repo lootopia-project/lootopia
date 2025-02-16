@@ -19,7 +19,7 @@
     "At least one lowercase letter" : "At least one lowercase letter",
     "At least one special character" : "At least one special character",
     "Same password" : "Same password",
-    "Invalid email or password. Please try again." : "Invalid email or password. Please try again.",
+    "Invalid email or password" : "Invalid email or password. Please try again.",
     "Sign in": "Sign in",
     "Don't have an account? Sign up": "Don't have an account? Sign up",
     "404 - Page Not Found": "404 - Page Not Found",
@@ -52,5 +52,7 @@
     "User updated": "User updated",
     "English": "English",
     "French": "French",
-    "Password": "Password"
+    "Password": "Password",
+    "Personnal information": "Personnal informations",
+    "Messages": "Messages"
   }

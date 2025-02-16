@@ -19,7 +19,7 @@
     "At least one lowercase letter" : "Au moins une lettre minuscule",
     "At least one special character" : "Au moins un caractère spécial",
     "Same password" : "Même mot de passe",
-    "Invalid email or password. Please try again." : "Email ou mot de passe invalide. Veuillez réessayer.",
+    "Invalid email or password" : "Email ou mot de passe invalide. Veuillez réessayer.",
     "Sign in": "Se connecter",
     "Don't have an account? Sign up": "Vous n'avez pas de compte ? Inscrivez-vous",
     "404 - Page Not Found": "404 - Page non trouvée",
@@ -52,6 +52,7 @@
     "User updated": "Utilisateur mis à jour",
     "English": "Anglais",
     "French": "Français",
-    "Password": "Mot de passe"
-
+    "Password": "Mot de passe",
+    "Personnal information": "Informations personnelles",
+    "Messages": "Messages"
 }

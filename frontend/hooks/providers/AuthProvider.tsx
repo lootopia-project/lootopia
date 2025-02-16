@@ -35,6 +35,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                 if (data.message === true) {
                     setIsAuthenticated(true);
                     await AsyncStorage.setItem("lang", data.lang);
+                    await AsyncStorage.setItem("img", data.img);
                     changeLanguage(data.lang);
                 } else {
                     setIsAuthenticated(false);
