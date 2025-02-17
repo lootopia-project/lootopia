@@ -5,16 +5,15 @@ import {getInfoUser, updateInfoUser, updatePassword} from "@/services/UsersServi
 import { useLanguage } from "@/hooks/providers/LanguageProvider";
 import * as ImagePicker from "expo-image-picker";
 import Return from "@/type/request/return";
-import Errors from "@/components/Errors";
 import Success from "@/components/Success";
 import ModalChangePassword from "@/components/user/ModalChangePassword";
 import FormEditUser from "@/components/user/FormEditUser";
-
+import { useErrors } from "@/hooks/providers/ErrorProvider";
 const EditUser = () => {
     const { i18n } = useLanguage();
     const [isModalVisible, setModalVisible] = useState(false);
     const [isSuccessVisible, setSuccessVisible] = useState(false);
-    const [isErrorVisible, setErrorVisible] = useState(false);
+    const { setErrorVisible, setErrorMessage } = useErrors();
     const [message, setMessage] = useState("");
     const [infoEditUser, setInfoEditUser] = useState<InfoEditUser>({
         id: 0,
@@ -72,32 +71,24 @@ const EditUser = () => {
 
     const submit = async () => {
         const response:Return=await updateInfoUser(infoEditUser);
-        console.log(response);
         handleResponse(response);
     }
 
     const changePasswordSubmit = async () => {
-        console.log(changePassword);
 
         const response:Return=await updatePassword(changePassword.currentPassword, changePassword.newPassword);
-        console.log(response);
         handleResponse(response);
     }
 
     const handleResponse = (response: Return) => {
         setMessage(response.message);
-        if (response.success) {
-            setSuccessVisible(true);
-            setTimeout(() => setSuccessVisible(false), 2000);
-        } else {
-            setErrorVisible(true);
-            setTimeout(() => setErrorVisible(false), 2000);
-        }
+        setErrorMessage(response.message);
+        setErrorVisible(!response.success);
     };
 
         return (
             <ScrollView
-                className="p-6 bg-gray-100 min-h-screen"
+                className="p-6 bg-gray-100"
                 contentContainerStyle={{ flexGrow: 1 }}
             >
                 <Text className="text-2xl font-bold mb-4 text-center">{i18n.t("Edit User")}</Text>
@@ -123,7 +114,6 @@ const EditUser = () => {
                 />
 
                 <Success visible={isSuccessVisible} onClose={() => setSuccessVisible(false)} successMessage={message} />
-                <Errors visible={isErrorVisible} onClose={() => setErrorVisible(false)} errorMessage={message} />
             </ScrollView>
 
         );

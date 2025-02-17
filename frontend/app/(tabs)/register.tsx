@@ -90,7 +90,7 @@ export default function RegisterPage() {
         setErrorVisible(true);
       }
     } else {
-      setErrorMessage(i18n.t("Password does not meet the requirements"));
+      setErrorMessage(i18n.t("Password does not meet requirements"));
       setErrorVisible(true);
     }
   };
@@ -111,7 +111,6 @@ export default function RegisterPage() {
               <Text className="text-sm text-green-600 text-center mb-5">{success}</Text>
           ) : null}
 
-          {/* Champ Nom d'utilisateur */}
           <View className="mb-4">
             <Text className="text-lg text-brown-800 mb-2">{i18n.t("Username")}</Text>
             <TextInput
@@ -123,7 +122,6 @@ export default function RegisterPage() {
             />
           </View>
 
-          {/* Champ Mot de passe */}
           <View className="mb-4">
             <Text className="text-lg text-brown-800 mb-2">{i18n.t("Password")}</Text>
             <TextInput
@@ -136,7 +134,6 @@ export default function RegisterPage() {
             />
           </View>
 
-          {/* Champ Répéter Mot de passe */}
           <View className="mb-4">
             <Text className="text-lg text-brown-800 mb-2">{i18n.t("Repeat Password")}</Text>
             <TextInput
@@ -149,7 +146,6 @@ export default function RegisterPage() {
             />
           </View>
 
-          {/* Bouton d'inscription */}
           <TouchableOpacity
               className="bg-yellow-500 py-3 rounded-lg"
               onPress={() => {
@@ -162,10 +158,8 @@ export default function RegisterPage() {
             </Text>
           </TouchableOpacity>
 
-          {/* Validation du mot de passe */}
           <View className="mt-4">{AboutPassword(checkPassword)}</View>
 
-          {/* Lien de connexion */}
           <Link
               href={"/login"}
               className="mt-5 text-center text-yellow-600 underline text-base"
