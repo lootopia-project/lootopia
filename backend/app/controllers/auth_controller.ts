@@ -102,7 +102,7 @@ export default class AuthController {
     const user = auth.use('api').user
     if (user) {
       const lang = user.lang
-      return response.status(200).json({ message: true, lang: lang })
+      return response.status(200).json({ message: true, lang: lang, img: user.img })
     }
     return response.status(200).json({ message: false })
   }

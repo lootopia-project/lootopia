@@ -8,6 +8,7 @@ interface ReturnWithErrors {
 
 interface ReturnWithToken {
     token: string;
+    img: string;
 }
 
 interface returnWIthBooleanAndMessage {

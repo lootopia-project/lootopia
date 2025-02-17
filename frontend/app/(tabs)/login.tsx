@@ -33,7 +33,7 @@ export default function LoginPage() {
         router.push("/");
       }
     } catch (err) {
-      setErrorMessage(i18n.t("Invalid email or password. Please try again."));
+      setErrorMessage(i18n.t("Invalid email or password"));
       setErrorVisible(true);
     }
   };

@@ -9,7 +9,7 @@ export default function NotFoundScreen() {
     <View style={styles.container}>
       <Text style={styles.title}>{i18n.t("404 - Page Not Found")}</Text>
       <Text style={styles.subtitle}>
-        {i18n.t("Oops! The page you are looking for doesn't exist.")}
+        {i18n.t("Oops")}
       </Text>
       <TouchableOpacity
         style={styles.link}
