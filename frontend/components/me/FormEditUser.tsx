@@ -1,7 +1,8 @@
-import { View, Text, TextInput, Switch, TouchableOpacity } from "react-native";
+import { View, Text, TextInput, Switch, TouchableOpacity,Image } from "react-native";
 import { ExclamationCircleIcon } from "react-native-heroicons/solid";
 import { useLanguage } from "@/hooks/providers/LanguageProvider";
 import {Picker} from "@react-native-picker/picker";
+
 
 const FormEditUser = ({ infoEditUser, handleChange, handleFileChange, setModalVisible, submit }) => {
     const { i18n } = useLanguage();
@@ -11,7 +12,11 @@ const FormEditUser = ({ infoEditUser, handleChange, handleFileChange, setModalVi
             <TouchableOpacity onPress={handleFileChange} className="flex justify-center items-center mt-4">
                 <View style={{ width: 100, height: 100, backgroundColor: '#E5E7EB', borderRadius: 50, overflow: 'hidden', alignItems: 'center', justifyContent: 'center' }}>
                     {infoEditUser.img ? (
-                        <img src={infoEditUser.img} alt="user" className="w-24 h-24 rounded-full border-2 border-gray-300" />
+                        <Image
+                            style={{ width: 200, height: 200, resizeMode: "contain", marginTop: 20 }}
+                            source={{ uri: infoEditUser.img }}
+                        />
+                
                     ) : (
                         <Text className="text-gray-500">{i18n.t("Upload Image")}</Text>
                     )}

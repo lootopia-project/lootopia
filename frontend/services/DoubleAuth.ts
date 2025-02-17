@@ -45,3 +45,24 @@ export const toggleDoubleAuth = async (isTwoFactorEnabled:boolean): Promise<QrCo
         }
     }
 }
+
+export const validateTwoFactorCode = async (otpCode:string): Promise<Return> => {
+    const token = await AsyncStorage.getItem('token');
+    const config = {
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": token ? `${token}` : '',
+        },
+        withCredentials: true
+    }
+    try {
+        const response=await axios.post(`${API_URL}/users/validateTwoFactorCode`, {otpCode}, config)
+        return response.data
+    } catch (err: unknown) {
+        if ((err as AXIOS_ERROR).message) {
+            throw new Error("Error connecting")
+        } else {
+            throw new Error("Error connecting to server")
+        }
+    }
+}

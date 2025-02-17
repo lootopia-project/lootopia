@@ -3,6 +3,7 @@ import cryptoRandomString from "crypto-random-string";
 import User from "#models/user";
 import twoFactor from 'node-2fa'
 import QRCode from 'qrcode'
+import { log } from "console";
 
 
 export default class DoubleAuthsController {
@@ -11,10 +12,6 @@ export default class DoubleAuthsController {
     async toggleTwoFactorAuth({auth, response,request}: HttpContext) {
         const user = auth.use('api').user
         user.isTwoFactorEnabled = request.input('isTwoFactorEnabled')
-
-        // if (isTwoFactorEnabled) {
-        //     return response.status(200).json({message: '2FA Activé'})
-        // }
         if (user) {
             if (user.isTwoFactorEnabled) {
                 user.twoFactorSecret = this.generateSecret(user)
@@ -66,4 +63,29 @@ export default class DoubleAuthsController {
         const svg = await QRCode.toDataURL(url)
         return { svg, url }
     }
+
+    protected async checkDoubleAuth({ request, auth, response }: HttpContext) {
+        console.log('checkDoubleAuth')
+        const { otpCode } = request.only(['otpCode']);
+        const user = auth.use('api').user;
+        console.log(otpCode);
+        if (user) {
+            if (otpCode) {
+                const isValid = twoFactor.verifyToken(user.twoFactorSecret as string, otpCode);
+                console.log(isValid);
+                if (isValid?.delta === 0) {
+                    user.isTwoFactorEnabled = true;
+                    await user.save();
+                    return response.status(200).json({ message: true });
+                }
+                else{
+                    user.isTwoFactorEnabled = false;
+                    await user.save();
+                    return response.status(200).json({ message: false });
+                }
+            }
+        }
+        return response.status(401).json({ message: 'Unauthorized' });
+    }
+
 }

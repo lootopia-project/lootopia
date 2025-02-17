@@ -51,5 +51,6 @@
     "Passwords match": "Les mots de passe correspondent",
     "User updated": "Utilisateur mis à jour",
     "English": "Anglais",
-    "French": "Français"
+    "French": "Français",
+    "Multi-Factor Authentication": "Authentification multi-facteurs"
 }
