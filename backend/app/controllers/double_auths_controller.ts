@@ -4,6 +4,7 @@ import User from "#models/user";
 import twoFactor from 'node-2fa'
 import QRCode from 'qrcode'
 import { log } from "console";
+import { sendNotification } from "#services/send_notification_service";
 
 
 export default class DoubleAuthsController {
@@ -11,17 +12,25 @@ export default class DoubleAuthsController {
 
     async toggleTwoFactorAuth({auth, response,request}: HttpContext) {
         const user = auth.use('api').user
-        user.isTwoFactorEnabled = request.input('isTwoFactorEnabled')
+        // console.log(user)
+        const isTwoFactorEnabled = request.input('isTwoFactorEnabled')
         if (user) {
-            if (user.isTwoFactorEnabled) {
+            if (isTwoFactorEnabled) {
+                console.log('enable')
                 user.twoFactorSecret = this.generateSecret(user)
                 user.twoFactorRecoveryCodes = await this.generateRecoveryCodes()
+                console.log(user.twoFactorSecret)
+                console.log(user.twoFactorRecoveryCodes)
                 await user.save()
                 const qrCode = await this.generateQrCode(user)
+                console.log(qrCode)
                 return response.status(200).json({code: qrCode})
             } else {
+                console.log('disable')
+                user.isTwoFactorEnabled=false
                 user.twoFactorSecret = null
                 user.twoFactorRecoveryCodes = null
+            
                 await user.save()
                 return response.status(200).json({message: '2FA Désactivé'})
             }
@@ -64,7 +73,7 @@ export default class DoubleAuthsController {
         return { svg, url }
     }
 
-    protected async checkDoubleAuth({ request, auth, response }: HttpContext) {
+     async validateTwoFactorCode({ request, auth, response }: HttpContext) {
         console.log('checkDoubleAuth')
         const { otpCode } = request.only(['otpCode']);
         const user = auth.use('api').user;
@@ -86,6 +95,25 @@ export default class DoubleAuthsController {
             }
         }
         return response.status(401).json({ message: 'Unauthorized' });
+    }
+
+    async checkDoubleAuth({ request, response,auth }: HttpContext) {
+        console.log('checkDoubleAuth')
+        const {otpCode,email,fcmToken} = request.all()
+        const user = await User.findBy('email', email)
+        if (user) {
+            const isValid = twoFactor.verifyToken(user.twoFactorSecret as string, otpCode);
+            console.log(isValid);
+            if (isValid?.delta === 0) {
+                const head = await auth.use('api').authenticateAsClient(user, [], { expiresIn: '1day' })
+                sendNotification(fcmToken, user,'Login successful','You are now logged in')
+                
+
+                return response.status(200).json({ message: head });
+            }
+            return response.status(200).json({ message: false });
+        }
+
     }
 
 }

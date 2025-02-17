@@ -28,7 +28,13 @@ export default function LoginPage() {
   const handleLogin = async () => {
     try {
       const check = await login({ email, password });
-      if (check) {
+      console.log("check", check);
+      if (check.message === "2FA") {
+        console.log("2FA");
+         router.push("/2fa");
+     }
+      else if (check) {
+        console.log()
         setErrorMessage("");
         router.push("/");
       }

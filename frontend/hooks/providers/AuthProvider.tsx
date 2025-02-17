@@ -4,8 +4,16 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import LOGIN from "@/type/feature/auth/login";
 import RETURN from "@/type/request/return";
 import AUTH_CONTEXT_TYPE from "@/type/feature/auth/auth_context_type";
+
+interface AUTH_CONTEXT_TYPE {
+    isAuthenticated: boolean;
+    login: (userData: LOGIN) => Promise<RETURN>;
+    logout: () => Promise<RETURN>;
+    checkDoubleAuth: (otpCode: string) => Promise<RETURN>;
+}
 import { useRouter, usePathname } from "expo-router";
 import { useLanguage } from "@/hooks/providers/LanguageProvider";
+import { CheckDoubleAuth } from "@/services/DoubleAuth";
 
 const defaultContextValue: AUTH_CONTEXT_TYPE = {
     isAuthenticated: false,
@@ -17,10 +25,14 @@ const defaultContextValue: AUTH_CONTEXT_TYPE = {
         await Promise.resolve();
         return { message: "" };
     },
+    checkDoubleAuth: async (): Promise<RETURN> => {
+        await Promise.resolve();
+        return { message: "" };
+    },
 
 };
 
-const publicRoutes = ["/+not-found", "/login", "/register"];
+const publicRoutes = ["/+not-found", "/login", "/register", "/2fa"];
 const AUTH_CONTEXT = createContext(defaultContextValue);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
@@ -60,7 +72,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
         const data = await loginUser(userData);
 
-        await AsyncStorage.setItem("token", data.headers.authorization);
+        if(data.message!=="2FA"){
+         await AsyncStorage.setItem("token", data.headers.authorization);
+        }else{
+            await AsyncStorage.setItem("email", userData.email);
+        }
         return data;
     };
 
@@ -72,12 +88,26 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         }
         return result;
     };
+
+    const checkDoubleAuth = async (otpCode: string): Promise<RETURN> => {
+        const email = await AsyncStorage.getItem("email");
+        const result = await CheckDoubleAuth(otpCode, email!);
+        console.log(result.message.headers.authorization);
+        if (result.message) {
+            console.log("2FA activated successfully "+result.message.headers.authorization);
+            await AsyncStorage.setItem("token", result.message.headers.authorization);
+            setIsAuthenticated(true);
+        }
+        return result;
+    }
+
     return (
         <AUTH_CONTEXT.Provider
             value={{
                 isAuthenticated,
                 login,
-                logout
+                logout,
+                checkDoubleAuth,
             }}
         >
             {children}

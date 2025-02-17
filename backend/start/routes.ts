@@ -16,21 +16,22 @@ const UsersController = () => import('#controllers/users_controller')
 
 router.post('/login', [AuthController, 'login'])
 router.post('/register', [AuthController, 'register'])
+router.post('/users/checkDoubleAuth', [DoubleAuthsController, 'checkDoubleAuth'])
 
 router
-  .group(() => {
-    router.post('/logout', [AuthController, 'logout'])
+.group(() => {
+  router.post('/logout', [AuthController, 'logout'])
+  router.get('/huntings/getAllForMessage', [
+    HuntingsController,
+    'getHuntingsParticpatedOrOrganized',
+  ])
     router.post('/checkIsLogin', [AuthController, 'checkIsLogin'])
-    router.get('/huntings/getAllForMessage', [
-      HuntingsController,
-      'getHuntingsParticpatedOrOrganized',
-    ])
     router.get('/users/getInfoUser', [UsersController, 'getInfoUser'])
     router.post('/users/updateInfoUser', [UsersController, 'updateInfoUser'])
     router.post('/users/updatePassword', [UsersController, 'updatePassword'])
     router.post('/users/toggleDoubleAuth', [DoubleAuthsController, 'toggleTwoFactorAuth'])
     router.get('/users/isTwoFactorEnabled', [DoubleAuthsController, 'isTwoFactorEnabled'])
-    router.post('/users/validateTwoFactorCode', [DoubleAuthsController, 'checkDoubleAuth'])
+    router.post('/users/validateTwoFactorCode', [DoubleAuthsController, 'validateTwoFactorCode'])
   })
   .use([
     middleware.auth({

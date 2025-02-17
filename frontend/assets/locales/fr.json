@@ -55,5 +55,12 @@
     "Password": "Mot de passe",
     "Personnal information": "Informations personnelles",
     "Messages": "Messages",
-    "Multi-Factor Authentication": "Authentification multi-facteurs"
+    "Multi-Factor Authentication": "Authentification multi-facteurs",
+    "Enter the 6-digit code from your authenticator app": "Entrez le code à 6 chiffres de votre application d'authentification",
+    "For account": "Pour le compte",
+    "Verify Code": "Vérifier le code",
+    "An error occurred. Please try again later.": "Une erreur s'est produite. Veuillez réessayer plus tard.",
+    "Code must be 6 digits": "Le code doit être composé de 6 chiffres",
+    "Incorrect code. Please try again.": "Code incorrect. Veuillez réessayer.",
+    "Error. Please try again.": "Erreur. Veuillez réessayer."
 }

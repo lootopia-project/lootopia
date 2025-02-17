@@ -6,15 +6,21 @@ import fetch from 'node-fetch'
 import admin from '#services/firebase_admin'
 import i18nManager from '@adonisjs/i18n/services/main'
 import axios from 'axios'
+import { sendNotification } from '#services/send_notification_service'
 
 export default class AuthController {
   async login({ request, auth, response }: HttpContext) {
     const { email, password, fcmToken } = request.all()
+    console.log(email, password, fcmToken)
 
     const verifyCredentials = await User.verifyCredentials(email, password)
 
     if (verifyCredentials) {
       const i18n = i18nManager.locale(verifyCredentials.lang)
+
+      if(verifyCredentials.isTwoFactorEnabled){
+        return response.status(200).json({message: '2FA'})
+      }
       const head = await auth
         .use('api')
         .authenticateAsClient(verifyCredentials, [], { expiresIn: '1day' })
@@ -27,48 +33,7 @@ export default class AuthController {
           { fcmToken } // Données à mettre à jour
         )
 
-        try {
-          if (fcmToken.platform === 'Mobile') {
-            // Envoi via Expo pour les appareils mobiles
-            const expoPushToken = fcmToken.token
-
-            if (!expoPushToken.startsWith('ExponentPushToken')) {
-              throw new Error('Le token Expo Push fourni est invalide.')
-            }
-
-            const message = {
-              to: expoPushToken,
-              title: i18n.t('_.Login successful'),
-              body: i18n.t('_.Hello {name}, you are now logged in.', {
-                name: verifyCredentials.name,
-              }),
-            }
-
-            const expoResponse = await axios.post(
-              'https://exp.host/--/api/v2/push/send',
-              message,
-              {
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-              }
-            )
-
-            expoResponse.data
-          } else if (fcmToken.platform === 'Web') {
-            const message = {
-              notification: {
-                title: i18n.t('_.Login successful'),
-                body: i18n.t('_.You are now logged in'),
-              },
-              token: fcmToken.token,
-            }
-
-            await admin.messaging().send(message)
-          }
-        } catch (error) {
-          console.error("Erreur lors de l'envoi de la notification :", error.message || error)
-        }
+        sendNotification(fcmToken, verifyCredentials,'Login successful','You are now logged in')
       }
       return response.json(head)
     }

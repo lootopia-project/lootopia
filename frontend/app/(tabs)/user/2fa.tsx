@@ -3,20 +3,23 @@ import { View, Text, Switch, Image, TouchableOpacity, TextInput } from "react-na
 import Return from "@/type/request/return";
 import { doubleAuthEnable, toggleDoubleAuth,validateTwoFactorCode } from "@/services/DoubleAuth";
 import { useLanguage } from "@/hooks/providers/LanguageProvider";
-
+import { useErrors } from '@/hooks/providers/ErrorProvider'
+import AsyncStorage from "@react-native-async-storage/async-storage";
 const MFA = () => {
     const { i18n } = useLanguage();
     
     const [isTwoFactorEnabled, setIsTwoFactorEnabled] = useState<boolean>(false);
     const [qrCode, setQrCode] = useState<string | null>(null);
     const [otpCode, setOtpCode] = useState<string>(""); // Champ pour entrer le code 2FA
+    const { setErrorMessage, setErrorVisible } = useErrors();
     const [validationMessage, setValidationMessage] = useState<string | null>(null);
-
+    const [email , setEmail] = useState<string >("");
     useEffect(() => {
         const fetchData = async () => {
             try {
+                const email =await AsyncStorage.getItem("email")
+                setEmail(email)
                 const response: Return = await doubleAuthEnable();
-                console.log(response);
                 setIsTwoFactorEnabled(response.message); 
             } catch (error) {
                 console.error("Erreur lors de la récupération des données :", error);
@@ -27,15 +30,18 @@ const MFA = () => {
     }, []);
 
     const toggleTwoFactorAuth = async (value: boolean) => {
-        setIsTwoFactorEnabled(value);
+        console.log(value)
+        if (value === !isTwoFactorEnabled){
+            setIsTwoFactorEnabled(false);
+        }
         try {
+            console.log("bvalue "+value)
             const response: { svg: string, url: string } = await toggleDoubleAuth(value);
-            console.log(response);
 
             if (value) {
-                setQrCode(response.code.svg);  // Stocke le QR code si 2FA activé
+                setQrCode(response.code.svg);  
             } else {
-                setQrCode(null); // Supprime le QR code si 2FA désactivé
+                setQrCode(null); 
             }
 
         } catch (error) {
@@ -45,21 +51,25 @@ const MFA = () => {
 
     const validateCode = async () => {
         if (otpCode.length !== 6 || isNaN(Number(otpCode))) {
-            setValidationMessage("Le code doit être un nombre de 6 chiffres.");
+            setErrorMessage(i18n.t("Code must be 6 digits"));
+            setErrorVisible(true);
             return;
         }
 
         try {
-            const response: Return = await validateTwoFactorCode(otpCode);
+            const response: Return = await validateTwoFactorCode(otpCode,email);
             if (response.message) {
+                setTimeout(async () => {
+                    setIsTwoFactorEnabled(true);
+                }, 3000); 
                 setValidationMessage("✅ Authentification activée avec succès !");
             } else {
-                console.log(response);
-                setValidationMessage("❌ Code incorrect, veuillez réessayer.");
+                setErrorMessage(i18n.t("Incorrect code. Please try again"));
+                setErrorVisible(true);
             }
         } catch (error) {
-            setValidationMessage("❌ Une erreur est survenue.");
-            console.error("Erreur lors de la validation du code 2FA :", error);
+            setErrorMessage("Error. Please try again");
+            setErrorVisible(true);
         }
     };
 
@@ -74,7 +84,7 @@ const MFA = () => {
                 />
             </View>
 
-            {isTwoFactorEnabled && qrCode && (
+            {qrCode && !isTwoFactorEnabled&& (
                 <View className="mt-4 items-center">
                     <Text className="text-lg mb-2">Scannez ce QR Code avec Google Authenticator :</Text>
                     <Image
@@ -82,7 +92,6 @@ const MFA = () => {
                         source={{ uri: qrCode }}
                     />
 
-                    {/* Champ de saisie du code 2FA */}
                     <TextInput
                         className="bg-gray-100 p-3 rounded-lg mt-4 text-center text-lg"
                         style={{ width: 150 }}
@@ -93,7 +102,6 @@ const MFA = () => {
                         onChangeText={(text) => setOtpCode(text)}
                     />
 
-                    {/* Bouton de validation */}
                     <TouchableOpacity 
                         className="bg-blue-500 p-3 rounded-lg mt-4"
                         style={{ width: 150 }}
@@ -102,7 +110,6 @@ const MFA = () => {
                         <Text className="text-white text-center">Valider</Text>
                     </TouchableOpacity>
 
-                    {/* Message de validation */}
                     {validationMessage && (
                         <Text className="mt-2 text-lg font-semibold text-center">
                             {validationMessage}
