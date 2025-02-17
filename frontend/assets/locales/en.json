@@ -54,5 +54,11 @@
     "French": "French",
     "Password": "Password",
     "Personnal information": "Personnal informations",
-    "Messages": "Messages"
+    "Messages": "Messages",
+    "An error occurred while sending the message.": "An error occurred while sending the message.",
+    "An error occurred while fetching data": "An error occurred while fetching data.",
+    "An error occurred while logging out.": "An error occurred while logging out.",
+    "Check your email": "Check your email",
+    "Please check your email": "Please check your email for further instructions."
+
   }

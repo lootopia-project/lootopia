@@ -3,85 +3,99 @@ import { generateRandomImageName, uploadBase64ImageToAzureStorage } from '#servi
 import env from '#start/env'
 import User from '#models/user'
 import i18nManager from '@adonisjs/i18n/services/main'
+import MailService from '#services/mail_service'
 const AZURE_ACCOUNT_NAME = env.get('AZURE_ACCOUNT_NAME') || ''
 const AZURE_ACCOUNT_KEY = env.get('AZURE_ACCOUNT_KEY') || ''
 const AZURE_CONTAINER_PROFIL_IMAGE = env.get('AZURE_CONTAINER_PROFIL_IMAGE') || ''
 
 export default class UsersController {
-  async getInfoUser({ auth }: HttpContext) {
+  async getInfoUser({ auth, response }: HttpContext) {
     const user = auth.user
-    return {
-      id: user.id,
-      email: user.email,
-      name: user.name,
-      surname: user.surname,
-      isPartner: user.isPartner,
-      img: user.img,
-      nickname: user.nickname,
-      isTwoFactorEnabled: user.isTwoFactorEnabled,
-      phone: user.phone,
-      lang: user.lang,
-      checkMail: user.checkMail,
+    if (user) {
+      return response.json({
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        surname: user.surname,
+        isPartner: user.isPartner,
+        img: user.img,
+        nickname: user.nickname,
+        isTwoFactorEnabled: user.isTwoFactorEnabled,
+        phone: user.phone,
+        lang: user.lang,
+        checkMail: user.checkMail,
+      })
     }
+    return response.json({
+      success: false,
+      message: 'User not found',
+    })
   }
 
   async updateInfoUser({ response, auth, request }: HttpContext) {
     const user = auth.user
-    const i18n = i18nManager.locale(user.lang)
-    const {
-      email,
-      name,
-      surname,
-      isPartner,
-      img,
-      nickname,
-      isTwoFactorEnabled,
-      phone,
-      lang,
-      checkMail,
-    } = request.body()
-
-    let image = img
-    if (img.includes('data:image')) {
-      const matches = img.match(/^data:image\/(\w+);base64,/)
-      //
-      const extension = matches[1]
-      image = await uploadBase64ImageToAzureStorage(
+    if (user) {
+      const i18n = i18nManager.locale(user.lang)
+      const {
+        email,
+        name,
+        surname,
+        isPartner,
         img,
-        generateRandomImageName(extension),
-        AZURE_ACCOUNT_NAME,
-        AZURE_ACCOUNT_KEY,
-        AZURE_CONTAINER_PROFIL_IMAGE
-      )
-    }
+        nickname,
+        isTwoFactorEnabled,
+        phone,
+        lang,
+        checkMail,
+      } = request.body()
 
-    user.email = email
-    user.name = name
-    user.img = image
-    user.surname = surname
-    user.isPartner = isPartner
-    user.nickname = nickname
-    user.isTwoFactorEnabled = isTwoFactorEnabled
-    user.phone = phone
-    user.lang = lang
-    user.checkMail = checkMail
-
-    const updatedUser = await user.save()
-
-    if (updatedUser) {
-      return {
-        success: true,
-        message: i18n.t('_.User updated'),
+      let image = img
+      if (img.includes('data:image')) {
+        const matches = img.match(/^data:image\/(\w+);base64,/)
+        const extension = matches[1]
+        image = await uploadBase64ImageToAzureStorage(
+          img,
+          generateRandomImageName(extension),
+          AZURE_ACCOUNT_NAME,
+          AZURE_ACCOUNT_KEY,
+          AZURE_CONTAINER_PROFIL_IMAGE
+        )
       }
-    } else {
-      return {
-        success: false,
-        message: i18n.t('_.User not updated'),
+
+      user.email = email
+      user.name = name
+      user.img = image
+      user.surname = surname
+      user.isPartner = isPartner
+      user.nickname = nickname
+      user.isTwoFactorEnabled = isTwoFactorEnabled
+      user.phone = phone
+      user.lang = lang
+      user.checkMail = checkMail
+
+      const updatedUser = await user.save()
+
+      if (updatedUser) {
+        return {
+          success: true,
+          message: i18n.t('_.User updated'),
+        }
+      } else {
+        return response.json({
+          success: false,
+          message: i18n.t('_.User not updated'),
+        })
       }
     }
   }
   async updatePassword({ response, auth, request }: HttpContext) {
     const user = auth.user
+    if (!user) {
+      return response.json({
+        success: false,
+        message: 'User not found',
+      })
+    }
     const i18n = i18nManager.locale(user.lang)
     const { currentPassword, newPassword } = request.only(['currentPassword', 'newPassword'])
     try {
@@ -99,5 +113,20 @@ export default class UsersController {
         message: i18n.t('_.Invalid current password'),
       })
     }
+  }
+  async CheckMail({ response, auth, request }: HttpContext) {
+    const user = auth.user
+    if (user) {
+      const i18n = i18nManager.locale(user.lang)
+      MailService.sendMail('checkMail', user) 
+      return response.json({
+        success: true,
+        message: i18n.t('_.Check your email')
+      })
+    }
+    return response.json({
+      success: false,
+      message: 'User not found',
+    })    
   }
 }

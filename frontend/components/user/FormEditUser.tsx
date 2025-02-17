@@ -4,10 +4,13 @@ import { useLanguage } from "@/hooks/providers/LanguageProvider";
 import {Picker} from "@react-native-picker/picker";
 import FormEditUserProps from "@/type/feature/user/FormEditUserProps";
 import { useState } from "react";
-// import CheckMail from "./CheckMail";
+import CheckMail from "./CheckMail";
 const FormEditUser: React.FC<FormEditUserProps> = ({ infoEditUser, handleChange, handleFileChange, setModalVisible, submit }) => {
     const { i18n } = useLanguage();
     const [checkMail, setCheckMail] = useState(false);
+    const hangleCheckMail = () => {
+        setCheckMail(!checkMail);
+    }
     return (
         <View className="bg-white p-8 rounded-lg shadow-lg w-full max-w-3xl flex flex-col items-center text-center">
             <TouchableOpacity onPress={handleFileChange} className="flex justify-center items-center mt-4">
@@ -22,7 +25,7 @@ const FormEditUser: React.FC<FormEditUserProps> = ({ infoEditUser, handleChange,
             <View className="grid grid-cols-2 sm:grid-cols-1 gap-6 w-full mt-6">
                 <Text className="mb-1 font-semibold flex flex-row items-center">
                     {i18n.t("Email")}
-                    {!infoEditUser.checkMail && <ExclamationCircleIcon  className="w-5 h-5 text-red-500 ml-2" />}
+                    {!infoEditUser.checkMail && <TouchableOpacity><ExclamationCircleIcon onPress={hangleCheckMail} className="w-5 h-5 text-red-500 ml-2" /></TouchableOpacity>}
                 </Text>
                 <TextInput
                     className="bg-gray-100 border border-gray-300 p-3 rounded-lg w-full focus:border-blue-500 focus:ring-2 focus:ring-blue-300"
@@ -97,6 +100,7 @@ const FormEditUser: React.FC<FormEditUserProps> = ({ infoEditUser, handleChange,
             <TouchableOpacity className="bg-blue-500 p-4 rounded-lg mt-6 w-full" onPress={() => submit()}>
                 <Text className="text-white text-center">{i18n.t("Save Changes")}</Text>
             </TouchableOpacity>
+            {checkMail && <CheckMail handleCheckMail={hangleCheckMail}/>}
         </View>
     );
 };

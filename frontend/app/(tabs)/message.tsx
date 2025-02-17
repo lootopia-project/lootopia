@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Button, FlatList, Text, TextInput, TouchableOpacity, View } from "react-native";
-import { getDatabase, onValue, push, ref } from "firebase/database";
+import { getDatabase, onValue, push, ref, set } from "firebase/database";
 import { fetchTreasureHunt } from "@/services/MessageHunting";
 import { FontAwesome } from "@expo/vector-icons";
 import { getHuntingsForMessages } from "@/services/HuntingService";
@@ -10,6 +10,7 @@ import { useRouter } from "expo-router";
 import { useLanguage } from "@/hooks/providers/LanguageProvider";
 import LastMessageHunting from "@/type/feature/message/LastMessageHunting";
 import LastMessage from "@/type/feature/message/LastMessage";
+import { useErrors } from "@/hooks/providers/ErrorProvider";
 
 const Message = () => {
     const { i18n } = useLanguage();
@@ -22,6 +23,7 @@ const Message = () => {
     const [discussionId, setDiscussionId] = useState<number | null>(null);
     const db = getDatabase();
     const router = useRouter();
+    const { setErrorMessage, setErrorVisible } = useErrors();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -49,11 +51,12 @@ const Message = () => {
                     });
                 }
             } catch (error) {
-                console.error("Erreur lors de la récupération des données :", error);
+                setErrorMessage(i18n.t("An error occurred while fetching data"));
+                setErrorVisible(true);
             }
         };
 
-        fetchData().catch((error) => console.error("Erreur lors de l'exécution de fetchData :", error));
+        fetchData();
     }, [db, discussionId]);
 
     const handleSend = async () => {
@@ -69,7 +72,8 @@ const Message = () => {
                 await push(messagesRef, message);
                 setText("");
             } catch (error) {
-                console.error("Erreur lors de l'envoi du message :", error);
+                setErrorMessage(i18n.t("An error occurred while sending the message."));
+                setErrorVisible(true);
             }
         } else {
             console.warn("⚠️ Message vide. Rien n'a été envoyé.");

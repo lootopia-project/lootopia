@@ -16,5 +16,8 @@
     "User updated": "User updated",
     "Password updated": "Password updated",
     "Invalid current password": "Invalid current password",
-    "You are now logged in": "You are now logged in"
+    "You are now logged in": "You are now logged in",
+    "Check your email": "Check your email",
+    "Please check your email for further instructions.": "Please check your email for further instructions.",
+    "Check": "Check"
 }

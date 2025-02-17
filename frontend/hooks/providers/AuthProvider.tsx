@@ -20,7 +20,7 @@ const defaultContextValue: AUTH_CONTEXT_TYPE = {
 
 };
 
-const publicRoutes = ["/+not-found", "/login", "/register"];
+const publicRoutes = ["/+not-found", "/login", "/register", "/user/checkMail"];
 const AUTH_CONTEXT = createContext(defaultContextValue);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
@@ -40,14 +40,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                 } else {
                     setIsAuthenticated(false);
                     await AsyncStorage.removeItem("token");
-                    if (!publicRoutes.includes(pathName)) {
+                    const isPublic = publicRoutes.some((route) => {
+                        return pathName === route || pathName.startsWith("/user/checkMail/");
+                      })
+                    if (!isPublic) {
                         router.push("/+not-found");
                     }
                 }
             } catch (error) {
                 setIsAuthenticated(false);
                 await AsyncStorage.removeItem("token");
-                if (!publicRoutes.includes(pathName)) {
+                const isPublic = publicRoutes.some((route) => {
+                    return pathName === route || pathName.startsWith("/user/checkMail/");
+                })                
+                if (!isPublic) {
                     router.push("/+not-found");
                 }
             }

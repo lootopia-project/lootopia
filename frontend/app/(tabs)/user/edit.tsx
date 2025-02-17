@@ -42,11 +42,12 @@ const EditUser = () => {
                 const infoUser: InfoEditUser = await getInfoUser();
                 setInfoEditUser(infoUser);
             } catch (error) {
-                console.error("Erreur lors de la récupération des données :", error);
+                setErrorMessage(i18n.t("An error occurred while fetching data"));
+                setErrorVisible(true);
             }
         };
 
-        fetchData().catch((error) => console.error("Erreur lors de l'exécution de fetchData :", error));
+        fetchData()
     }, []);
 
     const handleChange = (name: keyof InfoEditUser, value: string | boolean) => {

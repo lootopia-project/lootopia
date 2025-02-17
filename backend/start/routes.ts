@@ -28,6 +28,7 @@ router
     router.get('/users/getInfoUser', [UsersController, 'getInfoUser'])
     router.post('/users/updateInfoUser', [UsersController, 'updateInfoUser'])
     router.post('/users/updatePassword', [UsersController, 'updatePassword'])
+    router.post('/users/CheckMail', [UsersController, 'CheckMail'])
   })
   .use([
     middleware.auth({

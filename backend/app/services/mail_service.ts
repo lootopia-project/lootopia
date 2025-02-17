@@ -2,6 +2,9 @@ import User from '#models/user'
 import mail from '@adonisjs/mail/services/main'
 import i18nManager from '@adonisjs/i18n/services/main'
 import env from '#start/env'
+import AuthAccessToken from '#models/auth_access_token'
+import { DateTime } from 'luxon';
+import { TokenService } from '#services/token_service'
 
 export default class MailService {
   static async sendMail(type: string, user: User) {
@@ -45,6 +48,33 @@ export default class MailService {
           hello: i18n.t('_.hello'),
         }
         break
+      case 'checkMail':
+        const nowLuxon = DateTime.now();
+        const expires24HLuxon = nowLuxon.plus({ hours: 24 });
+
+        const authAccessToken = await AuthAccessToken.create(
+          {
+            tokenableId: user.id,
+            type: 'check_mail',
+            hash: TokenService.generateRandomToken(),
+            createdAt: nowLuxon,
+            expiresAt: expires24HLuxon,
+            abilities: ""
+          }
+        )
+        subject = i18n.t('_.Check your email')
+        view = 'emails/checkMail'
+        templateData = {
+          name: user.name,
+          message: i18n.t('_.Please check your email for further instructions.'),
+          object: subject,
+          lang: user.lang,
+          hello: i18n.t('_.hello'),
+          url: `${env.get('FRONT_URL')}/user/checkMail?token=${authAccessToken.hash}`,
+          url_text: i18n.t('_.Check'),
+        }
+        break;
+
 
       default:
         throw new Error(`Type d'email inconnu : ${type}`)

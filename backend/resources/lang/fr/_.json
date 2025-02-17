@@ -16,5 +16,8 @@
     "User updated": "Utilisateur mis à jour",
     "Password updated": "Mot de passe mis à jour",
     "Invalid current password": "Mot de passe actuel invalide",
-    "You are now logged in": "Vous êtes maintenant connecté"
+    "You are now logged in": "Vous êtes maintenant connecté",
+    "Check your email": "Vérifiez votre e-mail",
+    "Please check your email for further instructions.": "Veuillez consulter votre e-mail pour plus d'instructions.",
+    "Check": "Vérifier"
 }
