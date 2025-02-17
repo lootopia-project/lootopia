@@ -2,12 +2,10 @@
 /* global importScripts, firebase, clients, self */
 // Importer les scripts Firebase
 
-console.log("firebase-messaging-sw.js chargé.");
 
 importScripts('https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js');
 importScripts('https://www.gstatic.com/firebasejs/9.15.0/firebase-messaging-compat.js');
 
-console.log('[firebase-messaging-sw.js] Initialisation en cours...');
 
 try {
     // Configuration Firebase
@@ -26,15 +24,12 @@ try {
 
     // Récupérer une instance de Firebase Messaging
     const messaging = firebase.messaging();
-    console.log('[firebase-messaging-sw.js] Initialisation réussie !');
 
     // Gérer les messages reçus en arrière-plan
     messaging.onBackgroundMessage((payload) => {
-        console.log('[firebase-messaging-sw.js] Message reçu en arrière-plan :', payload);
 
         // Vérifier que la notification existe dans le payload
         if (payload.notification) {
-            console.log('[firebase-messaging-sw.js] Notification trouvée dans le payload :', payload.notification);
 
             const notificationTitle = payload.notification.title || 'Notification';
             const notificationOptions = {

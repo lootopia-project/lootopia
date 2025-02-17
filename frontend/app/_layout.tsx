@@ -2,7 +2,7 @@ import { Slot } from "expo-router";
 import { AuthProvider } from "@/hooks/providers/AuthProvider";
 import { ErrorProvider } from "@/hooks/providers/ErrorProvider";
 import { LanguageProvider } from "@/hooks/providers/LanguageProvider";
-import LanguageSwitcher from "@/components/lang";
+import Navbar from "@/components/navbar";
 import "../global.css";
 
 export default function RootLayout() {
@@ -10,10 +10,10 @@ export default function RootLayout() {
     <LanguageProvider>
       <AuthProvider>
         <ErrorProvider>
-          <LanguageSwitcher />
-          <Slot />
+            <Navbar />
+            <Slot />
         </ErrorProvider>
       </AuthProvider>
     </LanguageProvider>
-  )
+  );
 }
