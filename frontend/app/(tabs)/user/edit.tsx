@@ -7,8 +7,8 @@ import * as ImagePicker from "expo-image-picker";
 import Return from "@/type/request/return";
 import Errors from "@/components/Errors";
 import Success from "@/components/Success";
-import ModalChangePassword from "@/components/me/ModalChangePassword";
-import FormEditUser from "@/components/me/FormEditUser";
+import ModalChangePassword from "@/components/user/ModalChangePassword";
+import FormEditUser from "@/components/user/FormEditUser";
 
 const EditUser = () => {
     const { i18n } = useLanguage();
