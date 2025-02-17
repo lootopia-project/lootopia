@@ -2,38 +2,32 @@ import type { HttpContext } from '@adonisjs/core/http'
 import db from '@adonisjs/lucid/services/db'
 import User from '#models/user'
 import UserFcmToken from '#models/user_fcm_token'
-import fetch from 'node-fetch'
-import admin from '#services/firebase_admin'
 import i18nManager from '@adonisjs/i18n/services/main'
-import axios from 'axios'
 import { sendNotification } from '#services/send_notification_service'
 
 export default class AuthController {
   async login({ request, auth, response }: HttpContext) {
     const { email, password, fcmToken } = request.all()
-    console.log(email, password, fcmToken)
 
     const verifyCredentials = await User.verifyCredentials(email, password)
 
     if (verifyCredentials) {
       const i18n = i18nManager.locale(verifyCredentials.lang)
 
-      if(verifyCredentials.isTwoFactorEnabled){
-        return response.status(200).json({message: '2FA'})
+      if (verifyCredentials.isTwoFactorEnabled) {
+        return response.status(200).json({ message: '2FA' })
       }
       const head = await auth
         .use('api')
         .authenticateAsClient(verifyCredentials, [], { expiresIn: '1day' })
 
-      // Sauvegarder ou mettre à jour le token FCM si fourni
       if (fcmToken) {
-        // Mettre à jour ou créer un token FCM associé à l'utilisateur
         await UserFcmToken.updateOrCreate(
           { userId: verifyCredentials.id }, // Critères de recherche
           { fcmToken } // Données à mettre à jour
         )
 
-        sendNotification(fcmToken, verifyCredentials,'Login successful','You are now logged in')
+        sendNotification(fcmToken, verifyCredentials, 'Login successful', 'You are now logged in')
       }
       return response.json(head)
     }
@@ -71,7 +65,4 @@ export default class AuthController {
     }
     return response.status(200).json({ message: false })
   }
-
-
-
 }

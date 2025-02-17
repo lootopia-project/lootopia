@@ -1,6 +1,6 @@
-interface fcmToken{
-    platform: string;
-    token: string;
+interface FcmToken {
+  platform: string
+  token: string
 }
 
-export default fcmToken
+export default FcmToken

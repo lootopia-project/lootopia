@@ -4,16 +4,17 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import LOGIN from "@/type/feature/auth/login";
 import RETURN from "@/type/request/return";
 import AUTH_CONTEXT_TYPE from "@/type/feature/auth/auth_context_type";
+import { useRouter, usePathname } from "expo-router";
+import { useLanguage } from "@/hooks/providers/LanguageProvider";
+import { CheckDoubleAuth, CheckRecoveryCode } from "@/services/DoubleAuth";
 
 interface AUTH_CONTEXT_TYPE {
     isAuthenticated: boolean;
     login: (userData: LOGIN) => Promise<RETURN>;
     logout: () => Promise<RETURN>;
     checkDoubleAuth: (otpCode: string) => Promise<RETURN>;
+    checkRecoveryCode: (recoveryCode: string) => Promise<RETURN>;
 }
-import { useRouter, usePathname } from "expo-router";
-import { useLanguage } from "@/hooks/providers/LanguageProvider";
-import { CheckDoubleAuth } from "@/services/DoubleAuth";
 
 const defaultContextValue: AUTH_CONTEXT_TYPE = {
     isAuthenticated: false,
@@ -30,9 +31,14 @@ const defaultContextValue: AUTH_CONTEXT_TYPE = {
         return { message: "" };
     },
 
+    checkRecoveryCode: async (): Promise<RETURN> => {
+        await Promise.resolve();
+        return { message: "" };
+    }
+
 };
 
-const publicRoutes = ["/+not-found", "/login", "/register", "/2fa"];
+const publicRoutes = ["/+not-found", "/login", "/register", "/2fa", "/recoveryCode"];
 const AUTH_CONTEXT = createContext(defaultContextValue);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
@@ -96,6 +102,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         if (result.message) {
             console.log("2FA activated successfully "+result.message.headers.authorization);
             await AsyncStorage.setItem("token", result.message.headers.authorization);
+            AsyncStorage.removeItem("email");
+            setIsAuthenticated(true);
+        }
+        return result;
+    }
+
+    const checkRecoveryCode = async (recoveryCode: string): Promise<RETURN> => {
+        const email = await AsyncStorage.getItem("email");
+        const result = await CheckRecoveryCode(recoveryCode, email);
+        if (result.message) {
+            await AsyncStorage.setItem("token", result.message.headers.authorization);
+            AsyncStorage.removeItem("email");
             setIsAuthenticated(true);
         }
         return result;
@@ -108,6 +126,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                 login,
                 logout,
                 checkDoubleAuth,
+                checkRecoveryCode
             }}
         >
             {children}

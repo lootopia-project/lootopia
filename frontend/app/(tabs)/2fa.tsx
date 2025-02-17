@@ -13,7 +13,6 @@ const MFA = () => {
     
     const [otpCode, setOtpCode] = useState<string>("");
     const [email, setEmail] = useState<string | null>(null);
-    // const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const { setErrorMessage, setErrorVisible } = useErrors();
 
@@ -33,6 +32,7 @@ const MFA = () => {
     const handleValidateCode = async () => {
         if (otpCode.length !== 6 || isNaN(Number(otpCode))) {
             setErrorMessage(i18n.t("Code must be 6 digits."));
+            setErrorVisible(true);
             return;
         }
 
@@ -40,7 +40,6 @@ const MFA = () => {
         try {
             const response = await checkDoubleAuth(otpCode);
             if (response.message) {
-                console.log("✅ 2FA activated successfully");
                 router.push("/");  // Redirige vers la page principale
             } else {
                 setErrorMessage(i18n.t("Invalid code. Please try again."));
@@ -62,7 +61,6 @@ const MFA = () => {
                 {i18n.t("Enter the 6-digit code from your authenticator app")}
             </Text>
 
-            {/* Affichage de l'email récupéré */}
             {email && <Text className="text-center text-gray-500 mb-2">{i18n.t("For account")}: {email}</Text>}
 
             <TextInput
@@ -74,15 +72,23 @@ const MFA = () => {
                 onChangeText={setOtpCode}
             />
 
-            {/* {errorMessage && <Text className="text-red-500 mt-3">{errorMessage}</Text>} */}
-
             <TouchableOpacity
                 className={`bg-blue-500 p-4 rounded-lg mt-6 w-64 ${isLoading ? "opacity-50" : ""}`}
                 onPress={handleValidateCode}
                 disabled={isLoading}
             >
                 <Text className="text-white text-center text-lg">
-                    {isLoading ? i18n.t("Validating...") : i18n.t("Verify Code")}
+                    {isLoading ? i18n.t("Validating") : i18n.t("Verify Code")}
+                </Text>
+            </TouchableOpacity>
+
+            {/* 🔹 Nouveau bouton pour entrer un code de secours */}
+            <TouchableOpacity
+                className="bg-gray-500 p-4 rounded-lg mt-4 w-64"
+                onPress={() => router.push("/recoveryCode")}
+            >
+                <Text className="text-white text-center text-lg">
+                    {i18n.t("Enter a Recovery Code")}
                 </Text>
             </TouchableOpacity>
         </View>

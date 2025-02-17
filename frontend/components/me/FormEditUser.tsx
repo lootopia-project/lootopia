@@ -1,4 +1,4 @@
-import { View, Text, TextInput, Switch, TouchableOpacity,Image } from "react-native";
+import { View, Text, TextInput, TouchableOpacity,Image } from "react-native";
 import { ExclamationCircleIcon } from "react-native-heroicons/solid";
 import { useLanguage } from "@/hooks/providers/LanguageProvider";
 import {Picker} from "@react-native-picker/picker";

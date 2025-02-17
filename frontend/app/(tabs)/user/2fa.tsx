@@ -1,49 +1,48 @@
 import { useEffect, useState } from "react";
-import { View, Text, Switch, Image, TouchableOpacity, TextInput } from "react-native";
+import { View, Text, Switch, Image, TouchableOpacity, TextInput, Modal, ScrollView } from "react-native";
 import Return from "@/type/request/return";
-import { doubleAuthEnable, toggleDoubleAuth,validateTwoFactorCode } from "@/services/DoubleAuth";
+import { doubleAuthEnable, toggleDoubleAuth, validateTwoFactorCode, RecoveryCode } from "@/services/DoubleAuth";
 import { useLanguage } from "@/hooks/providers/LanguageProvider";
-import { useErrors } from '@/hooks/providers/ErrorProvider'
+import { useErrors } from "@/hooks/providers/ErrorProvider";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+
 const MFA = () => {
     const { i18n } = useLanguage();
-    
+    const { setErrorMessage, setErrorVisible } = useErrors();
+
     const [isTwoFactorEnabled, setIsTwoFactorEnabled] = useState<boolean>(false);
     const [qrCode, setQrCode] = useState<string | null>(null);
-    const [otpCode, setOtpCode] = useState<string>(""); // Champ pour entrer le code 2FA
-    const { setErrorMessage, setErrorVisible } = useErrors();
+    const [otpCode, setOtpCode] = useState<string>("");
+    const [email, setEmail] = useState<string>("");
+    const [recoveryCodes, setRecoveryCodes] = useState<string[]>([""]);
+    const [isModalVisible, setModalVisible] = useState<boolean>(false);
     const [validationMessage, setValidationMessage] = useState<string | null>(null);
-    const [email , setEmail] = useState<string >("");
+
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const email =await AsyncStorage.getItem("email")
-                setEmail(email)
+                const storedEmail = await AsyncStorage.getItem("email");
+                if (storedEmail) setEmail(storedEmail);
+
                 const response: Return = await doubleAuthEnable();
-                setIsTwoFactorEnabled(response.message); 
+                setIsTwoFactorEnabled(response.message);
             } catch (error) {
                 console.error("Erreur lors de la récupération des données :", error);
             }
         };
-
         fetchData().catch((error) => console.error("Erreur lors de l'exécution de fetchData :", error));
     }, []);
 
     const toggleTwoFactorAuth = async (value: boolean) => {
-        console.log(value)
-        if (value === !isTwoFactorEnabled){
-            setIsTwoFactorEnabled(false);
-        }
+        if (value === !isTwoFactorEnabled) setIsTwoFactorEnabled(false);
+
         try {
-            console.log("bvalue "+value)
             const response: { svg: string, url: string } = await toggleDoubleAuth(value);
-
             if (value) {
-                setQrCode(response.code.svg);  
+                setQrCode(response.code.svg);
             } else {
-                setQrCode(null); 
+                setQrCode(null);
             }
-
         } catch (error) {
             console.error("Erreur lors de la mise à jour du 2FA :", error);
         }
@@ -57,11 +56,9 @@ const MFA = () => {
         }
 
         try {
-            const response: Return = await validateTwoFactorCode(otpCode,email);
+            const response: Return = await validateTwoFactorCode(otpCode, email);
             if (response.message) {
-                setTimeout(async () => {
-                    setIsTwoFactorEnabled(true);
-                }, 3000); 
+                setTimeout(() => setIsTwoFactorEnabled(true), 3000);
                 setValidationMessage("✅ Authentification activée avec succès !");
             } else {
                 setErrorMessage(i18n.t("Incorrect code. Please try again"));
@@ -73,24 +70,44 @@ const MFA = () => {
         }
     };
 
+    const fetchRecoveryCodes = async () => {
+        try {
+            const response:string[] = await RecoveryCode(); // Récupère la réponse brute    
+            let parsedCodes = response;
+                if (typeof response === "string") {
+                try {
+                    parsedCodes = JSON.parse(    response.replace(/{/g, "[").replace(/}/g, "]").replace(/;/g, ","));
+                } catch (error) {
+                    console.error("❌ Erreur lors du parsing JSON des recovery codes :", error);
+                    setErrorMessage(i18n.t("Invalid recovery codes format"));
+                    setErrorVisible(true);
+                    return;
+                }
+            }
+            setRecoveryCodes(parsedCodes);
+            setModalVisible(true);
+        } catch (error) {
+            console.error("❌ Erreur lors de la récupération des codes de secours :", error);
+            setErrorMessage(i18n.t("Failed to fetch recovery codes"));
+            setErrorVisible(true);
+        }
+    };
+    
+    
+    
+
     return (
         <View className="flex flex-col items-center justify-center p-6">
             <Text className="text-xl font-bold mb-4">{i18n.t('Multi-Factor Authentication')}</Text>
             <View className="flex flex-row items-center space-x-4 mb-4">
                 <Text className="text-lg">{isTwoFactorEnabled ? "2FA Activé" : "2FA Désactivé"}</Text>
-                <Switch
-                    value={isTwoFactorEnabled}
-                    onValueChange={(newValue) => toggleTwoFactorAuth(newValue)}
-                />
+                <Switch value={isTwoFactorEnabled} onValueChange={(newValue) => toggleTwoFactorAuth(newValue)} />
             </View>
 
-            {qrCode && !isTwoFactorEnabled&& (
+            {qrCode && !isTwoFactorEnabled && (
                 <View className="mt-4 items-center">
                     <Text className="text-lg mb-2">Scannez ce QR Code avec Google Authenticator :</Text>
-                    <Image
-                        style={{ width: 200, height: 200, resizeMode: "contain", marginTop: 10 }}
-                        source={{ uri: qrCode }}
-                    />
+                    <Image style={{ width: 200, height: 200, resizeMode: "contain", marginTop: 10 }} source={{ uri: qrCode }} />
 
                     <TextInput
                         className="bg-gray-100 p-3 rounded-lg mt-4 text-center text-lg"
@@ -102,21 +119,44 @@ const MFA = () => {
                         onChangeText={(text) => setOtpCode(text)}
                     />
 
-                    <TouchableOpacity 
-                        className="bg-blue-500 p-3 rounded-lg mt-4"
-                        style={{ width: 150 }}
-                        onPress={validateCode}
-                    >
+                    <TouchableOpacity className="bg-blue-500 p-3 rounded-lg mt-4" style={{ width: 150 }} onPress={validateCode}>
                         <Text className="text-white text-center">Valider</Text>
                     </TouchableOpacity>
 
-                    {validationMessage && (
-                        <Text className="mt-2 text-lg font-semibold text-center">
-                            {validationMessage}
-                        </Text>
-                    )}
+                    {validationMessage && <Text className="mt-2 text-lg font-semibold text-center">{validationMessage}</Text>}
                 </View>
             )}
+
+            {/* Bouton pour afficher les codes de secours */}
+            {isTwoFactorEnabled && (
+                <TouchableOpacity className="bg-gray-600 p-3 rounded-lg mt-6" style={{ width: 200 }} onPress={fetchRecoveryCodes}>
+                    <Text className="text-white text-center">Afficher les codes de secours</Text>
+                </TouchableOpacity>
+            )}
+
+            {/* Modal pour afficher les codes de secours */}
+            <Modal visible={isModalVisible} transparent={true} animationType="slide">
+                <View className="flex-1 justify-center items-center bg-black bg-opacity-50">
+                    <View className="bg-white p-6 rounded-lg w-80">
+                        <Text className="text-lg font-semibold mb-4">Codes de secours</Text>
+                        <ScrollView>
+                            {recoveryCodes.length > 0 ? (
+                                recoveryCodes.map((code, index) => (
+                                    <Text key={index} className="text-center text-lg p-2 bg-gray-100 mb-2 rounded-lg">
+                                        {code}
+                                    </Text>
+                                ))
+                            ) : (
+                                <Text className="text-center">Aucun code disponible</Text>
+                            )}
+                        </ScrollView>
+
+                        <TouchableOpacity className="bg-red-500 p-3 rounded-lg mt-4" onPress={() => setModalVisible(false)}>
+                            <Text className="text-white text-center">Fermer</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </Modal> 
         </View>
     );
 };

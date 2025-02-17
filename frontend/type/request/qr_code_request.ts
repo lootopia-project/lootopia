@@ -1,3 +1,0 @@
-interface QrCodeRequest{
-    code:QrCo
-}

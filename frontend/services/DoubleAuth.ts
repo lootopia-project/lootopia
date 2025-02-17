@@ -102,3 +102,61 @@ export const CheckDoubleAuth = async (otpCode:string,email:string): Promise<Retu
         }
     }
 }
+
+
+export const CheckRecoveryCode = async (recoveryCode:string,email:string): Promise<Return> => {
+    const config = {
+        headers: {
+            "Content-Type": "application/json",
+        },
+        withCredentials: true
+    }
+
+    const fcmToken = await requestFcmToken();
+    
+    if (!fcmToken) {
+
+        const permission = await Notification.requestPermission();
+        if (permission === "granted") {
+            const newFcmToken = await requestFcmToken();
+            if (!newFcmToken) {
+                console.warn("Impossible d'obtenir un token FCM après avoir demandé l'autorisation.");
+            }
+        } else {
+            console.error("L'utilisateur a refusé les notifications.");
+        }
+    }
+
+    try {
+        const response=await axios.post(`${API_URL}/users/checkRecoveryCode`, {recoveryCode,email,fcmToken}, config)
+        return response.data
+    } catch (err: unknown) {
+        if ((err as AXIOS_ERROR).message) {
+            throw new Error("Error connecting")
+        } else {
+            throw new Error("Error connecting to server")
+        }
+    }
+}
+
+export const RecoveryCode = async () => {
+    const token = await AsyncStorage.getItem('token');
+    const config = {
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": token ? `${token}` : '',
+        },
+        withCredentials: true
+    }
+    try {
+        const response=await axios.get<string[]>(`${API_URL}/users/recoveryCode`, config)
+
+        return response.data
+    } catch (err: unknown) {
+        if ((err as AXIOS_ERROR).message) {
+            throw new Error("Error connecting")
+        } else {
+            throw new Error("Error connecting to server")
+        }
+    }
+}

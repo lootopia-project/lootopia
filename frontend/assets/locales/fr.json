@@ -62,5 +62,12 @@
     "An error occurred. Please try again later.": "Une erreur s'est produite. Veuillez réessayer plus tard.",
     "Code must be 6 digits": "Le code doit être composé de 6 chiffres",
     "Incorrect code. Please try again.": "Code incorrect. Veuillez réessayer.",
-    "Error. Please try again.": "Erreur. Veuillez réessayer."
+    "Error. Please try again.": "Erreur. Veuillez réessayer.",
+    "Validating": "Validation en cours",
+    "Failed to fetch recovery codes": "Impossible de récupérer les codes de récupération",
+    "Enter a Recovery Code": "Entrez un code de récupération",
+    "Enter your backup recovery code below to authenticate": "Entrez votre code de récupération de secours ci-dessous pour vous authentifier",
+    "Recovery code validated successfully": "Code de récupération validé avec succès",
+    "Enter Recovery Code": "Entrez le code de récupération",
+    "An error occurred. Please try again.": "Une erreur s'est produite. Veuillez réessayer."
 }

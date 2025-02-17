@@ -10,6 +10,7 @@ import Whitelist from '#models/whitelist'
 import Reward from '#models/reward'
 import Hunting from '#models/hunting'
 import UserFcmToken from '#models/user_fcm_token'
+import encryption from '@adonisjs/core/services/encryption'
 
 const AuthFinder = withAuthFinder(() => hash.use('scrypt'), {
   uids: ['email', 'nickname'],
@@ -44,8 +45,12 @@ export default class User extends compose(BaseModel, AuthFinder) {
   @column()
   declare twoFactorSecret: string
 
-  @column()
-  declare twoFactorRecoveryCodes: string
+  @column({
+    serializeAs: null,
+    prepare: (value: string[]) => encryption.encrypt(JSON.stringify(value)),
+    consume: (value: string) => JSON.parse(encryption.decrypt(value) as string),
+  })
+  declare twoFactorRecoveryCodes: string[]
 
   @column()
   declare isTwoFactorEnabled: boolean
