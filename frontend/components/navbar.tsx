@@ -7,7 +7,7 @@ import { useAuth } from "@/hooks/providers/AuthProvider";
 import { useRouter } from "expo-router";
 import { useLanguage } from "@/hooks/providers/LanguageProvider";
 import LanguageSwitcher from "./lang";
-
+import { useErrors } from "@/hooks/providers/ErrorProvider";
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const { width } = useWindowDimensions();
@@ -18,6 +18,7 @@ const Navbar = () => {
   const router = useRouter();
   const { i18n } = useLanguage();
   const [img, setImg] = useState("");
+  const { setErrorMessage, setErrorVisible } = useErrors();
   const handleMessages = () => {
     router.push("/message");
   }
@@ -41,7 +42,8 @@ const Navbar = () => {
         router.push("/login");
       }
     } catch (error) {
-      console.error("Error in hangleLogout:", error);
+      setErrorMessage(i18n.t("An error occurred while logging out."));
+      setErrorVisible(true);
     }
   };
   return (

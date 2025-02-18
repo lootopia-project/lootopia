@@ -97,7 +97,7 @@ export default class DoubleAuthsController {
     }
   }
 
-  protected async recoveryCode({ auth, response }: HttpContext) {
+  async recoveryCode({ auth, response }: HttpContext) {
     const user = auth.use('api').user
     if (user) {
       return response.status(200).json(user.twoFactorRecoveryCodes)
@@ -105,7 +105,7 @@ export default class DoubleAuthsController {
     return response.status(401).json({ message: 'Unauthorized' })
   }
 
-  protected async checkRecoveryCode({ request, response, auth }: HttpContext) {
+  async checkRecoveryCode({ request, response, auth }: HttpContext) {
     const { recoveryCode, email, fcmToken } = request.only(['recoveryCode', 'email', 'fcmToken'])
     const user = await User.findBy('email', email)
     if (user) {

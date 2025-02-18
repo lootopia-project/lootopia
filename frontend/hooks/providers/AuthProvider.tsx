@@ -8,14 +8,6 @@ import { useRouter, usePathname } from "expo-router";
 import { useLanguage } from "@/hooks/providers/LanguageProvider";
 import { CheckDoubleAuth, CheckRecoveryCode } from "@/services/DoubleAuth";
 
-interface AUTH_CONTEXT_TYPE {
-    isAuthenticated: boolean;
-    login: (userData: LOGIN) => Promise<RETURN>;
-    logout: () => Promise<RETURN>;
-    checkDoubleAuth: (otpCode: string) => Promise<RETURN>;
-    checkRecoveryCode: (recoveryCode: string) => Promise<RETURN>;
-}
-
 const defaultContextValue: AUTH_CONTEXT_TYPE = {
     isAuthenticated: false,
     login: async (): Promise<RETURN> => {
@@ -38,7 +30,7 @@ const defaultContextValue: AUTH_CONTEXT_TYPE = {
 
 };
 
-const publicRoutes = ["/+not-found", "/login", "/register", "/2fa", "/recoveryCode"];
+const publicRoutes = ["/+not-found", "/login", "/register", "/2fa", "/recoveryCode", "/user/checkMail"];
 const AUTH_CONTEXT = createContext(defaultContextValue);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
@@ -58,21 +50,27 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                 } else {
                     setIsAuthenticated(false);
                     await AsyncStorage.removeItem("token");
-                    if (!publicRoutes.includes(pathName)) {
+                    const isPublic = publicRoutes.some((route) => {
+                        return pathName === route || pathName.startsWith("/user/checkMail/");
+                      })
+                    if (!isPublic) {
                         router.push("/+not-found");
                     }
                 }
             } catch (error) {
                 setIsAuthenticated(false);
                 await AsyncStorage.removeItem("token");
-                if (!publicRoutes.includes(pathName)) {
+                const isPublic = publicRoutes.some((route) => {
+                    return pathName === route || pathName.startsWith("/user/checkMail/");
+                })                
+                if (!isPublic) {
                     router.push("/+not-found");
                 }
             }
         };
 
         initializeAuthState();
-    }, [pathName]);
+    }, [pathName,changeLanguage,router]);
 
     const login = async (userData: LOGIN): Promise<RETURN> => {
 
@@ -98,9 +96,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const checkDoubleAuth = async (otpCode: string): Promise<RETURN> => {
         const email = await AsyncStorage.getItem("email");
         const result = await CheckDoubleAuth(otpCode, email!);
-        console.log(result.message.headers.authorization);
         if (result.message) {
-            console.log("2FA activated successfully "+result.message.headers.authorization);
             await AsyncStorage.setItem("token", result.message.headers.authorization);
             AsyncStorage.removeItem("email");
             setIsAuthenticated(true);

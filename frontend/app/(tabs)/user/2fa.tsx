@@ -31,7 +31,7 @@ const MFA = () => {
                 setErrorVisible(true);            }
         };
         fetchData()
-    }, []);
+    }, [i18n, setErrorMessage, setErrorVisible]);
 
     const toggleTwoFactorAuth = async (value: boolean) => {
         if (value === !isTwoFactorEnabled) setIsTwoFactorEnabled(false);
@@ -80,7 +80,6 @@ const MFA = () => {
                         response.replace(/{/g, "[").replace(/}/g, "]").replace(/;/g, ",")
                          );
                 } catch (error) {
-                    console.error("❌ Erreur lors du parsing JSON des recovery codes :", error);
                     setErrorMessage(i18n.t("Invalid recovery codes format"));
                     setErrorVisible(true);
                     return;
@@ -89,7 +88,6 @@ const MFA = () => {
             setRecoveryCodes(parsedCodes);
             setModalVisible(true);
         } catch (error) {
-            console.error("❌ Erreur lors de la récupération des codes de secours :", error);
             setErrorMessage(i18n.t("Failed to fetch recovery codes"));
             setErrorVisible(true);
         }
@@ -108,7 +106,7 @@ const MFA = () => {
 
             {qrCode && !isTwoFactorEnabled && (
                 <View className="mt-4 items-center">
-                    <Text className="text-lg mb-2">Scannez ce QR Code avec Google Authenticator :</Text>
+                    <Text className="text-lg mb-2">{i18n.t("Scan this QR Code with an authentication application")} :</Text>
                     <Image style={{ width: 200, height: 200, resizeMode: "contain", marginTop: 10 }} source={{ uri: qrCode }} />
 
                     <TextInput
@@ -122,7 +120,7 @@ const MFA = () => {
                     />
 
                     <TouchableOpacity className="bg-blue-500 p-3 rounded-lg mt-4" style={{ width: 150 }} onPress={validateCode}>
-                        <Text className="text-white text-center">Valider</Text>
+                        <Text className="text-white text-center">{i18n.t("Validate")}</Text>
                     </TouchableOpacity>
 
                     {validationMessage && <Text className="mt-2 text-lg font-semibold text-center">{validationMessage}</Text>}
@@ -131,14 +129,14 @@ const MFA = () => {
 
             {isTwoFactorEnabled && (
                 <TouchableOpacity className="bg-gray-600 p-3 rounded-lg mt-6" style={{ width: 200 }} onPress={fetchRecoveryCodes}>
-                    <Text className="text-white text-center">Afficher les codes de secours</Text>
+                    <Text className="text-white text-center">{i18n.t("Display emergency codes")}</Text>
                 </TouchableOpacity>
             )}
 
             <Modal visible={isModalVisible} transparent={true} animationType="slide">
                 <View className="flex-1 justify-center items-center bg-black bg-opacity-50">
                     <View className="bg-white p-6 rounded-lg w-80">
-                        <Text className="text-lg font-semibold mb-4">Codes de secours</Text>
+                        <Text className="text-lg font-semibold mb-4">{i18n.t("Emergency codes")}</Text>
                         <ScrollView>
                             {recoveryCodes.length > 0 ? (
                                 recoveryCodes.map((code, index) => (
@@ -147,12 +145,12 @@ const MFA = () => {
                                     </Text>
                                 ))
                             ) : (
-                                <Text className="text-center">Aucun code disponible</Text>
+                                <Text className="text-center">{i18n.t("No code available")}</Text>
                             )}
                         </ScrollView>
 
                         <TouchableOpacity className="bg-red-500 p-3 rounded-lg mt-4" onPress={() => setModalVisible(false)}>
-                            <Text className="text-white text-center">Fermer</Text>
+                            <Text className="text-white text-center">{i18n.t("Close")}</Text>
                         </TouchableOpacity>
                     </View>
                 </View>

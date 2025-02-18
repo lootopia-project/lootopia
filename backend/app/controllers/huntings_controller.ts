@@ -1,6 +1,6 @@
 import { HttpContext } from '@adonisjs/core/http'
 import Hunting from '#models/hunting'
-import { getLastMessages, getLastMessagesForHunts } from '#services/firebase_service'
+import { getLastMessagesForHunts } from '#services/firebase_service'
 import UsersHunting from '#models/users_hunting'
 
 export default class HuntingsController {
@@ -21,10 +21,8 @@ export default class HuntingsController {
         ...participatedHuntings.map((userHunting) => userHunting.huntingId),
       ]
 
-      // Récupérer les derniers messages pour chaque chasse
       const huntMessages = await getLastMessagesForHunts(huntIds, 1)
 
-      // Associer les rôles (organizer/participant) et les derniers messages
       let lastMessage = huntIds.map((id) => {
         const role = organizedHuntings.some((hunting) => hunting.id === id)
           ? 'organizer'
@@ -40,7 +38,7 @@ export default class HuntingsController {
       lastMessage = lastMessage.sort((a, b) => {
         const dateA = a.message?.date ? new Date(a.message.date).getTime() : 0
         const dateB = b.message?.date ? new Date(b.message.date).getTime() : 0
-        return dateB - dateA // Tri descendant
+        return dateB - dateA
       })
 
       const lastMessageHunting = {

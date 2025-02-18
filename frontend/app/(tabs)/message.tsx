@@ -10,6 +10,7 @@ import { useRouter } from "expo-router";
 import { useLanguage } from "@/hooks/providers/LanguageProvider";
 import LastMessageHunting from "@/type/feature/message/LastMessageHunting";
 import LastMessage from "@/type/feature/message/LastMessage";
+import { useErrors } from "@/hooks/providers/ErrorProvider";
 
 const Message = () => {
     const { i18n } = useLanguage();
@@ -22,6 +23,7 @@ const Message = () => {
     const [discussionId, setDiscussionId] = useState<number | null>(null);
     const db = getDatabase();
     const router = useRouter();
+    const { setErrorMessage, setErrorVisible } = useErrors();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -49,12 +51,13 @@ const Message = () => {
                     });
                 }
             } catch (error) {
-                console.error("Erreur lors de la récupération des données :", error);
+                setErrorMessage(i18n.t("An error occurred while fetching data"));
+                setErrorVisible(true);
             }
         };
 
-        fetchData().catch((error) => console.error("Erreur lors de l'exécution de fetchData :", error));
-    }, [db, discussionId]);
+        fetchData();
+    }, [db, discussionId, i18n, setErrorMessage, setErrorVisible]);
 
     const handleSend = async () => {
         if (text.trim()) {
@@ -69,10 +72,12 @@ const Message = () => {
                 await push(messagesRef, message);
                 setText("");
             } catch (error) {
-                console.error("Erreur lors de l'envoi du message :", error);
+                setErrorMessage(i18n.t("An error occurred while sending the message."));
+                setErrorVisible(true);
             }
         } else {
-            console.warn("⚠️ Message vide. Rien n'a été envoyé.");
+            setErrorMessage(i18n.t("Message vide. Rien n'a été envoyé."));
+            setErrorVisible(true);
         }
     };
 
@@ -126,7 +131,7 @@ const Message = () => {
                         keyExtractor={(item) => item?.id.toString()}
                         renderItem={renderItem}
                         ListEmptyComponent={
-                            <Text className="text-center text-gray-500 mt-10">{i18n.t("No conversations yet.")}</Text>
+                            <Text className="text-center text-gray-500 mt-10">{i18n.t("No conversations")}</Text>
                         }
                     />
                 </View>
