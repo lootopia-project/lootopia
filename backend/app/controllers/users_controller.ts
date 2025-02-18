@@ -119,34 +119,41 @@ export default class UsersController {
     const user = auth.user
     if (user) {
       const i18n = i18nManager.locale(user.lang)
-      MailService.sendMail('checkMail', user) 
+      MailService.sendMail('checkMail', user)
       return response.json({
         success: true,
-        message: i18n.t('_.Check your email')
+        message: i18n.t('_.Check your email'),
       })
     }
     return response.json({
       success: false,
       message: 'User not found',
-    })    
+    })
   }
 
   async CheckMailToken({ response, request }: HttpContext) {
     const { mailToken } = request.only(['mailToken'])
-    const auth_access_token = await AuthAccessToken.query().preload("user").where('hash', mailToken).andWhere("expires_at",">",new Date()).first()        
-    if (auth_access_token) {
-      const i18n = i18nManager.locale(auth_access_token.user.lang)
-      auth_access_token.user.checkMail = true
-      await auth_access_token.user.save()
-      await AuthAccessToken.query().where('tokenable_id', auth_access_token.user.id).andWhere("type","check_mail").delete()
+    const AUTH_ACCESS_TOKEN = await AuthAccessToken.query()
+      .preload('user')
+      .where('hash', mailToken)
+      .andWhere('expires_at', '>', new Date())
+      .first()
+    if (AUTH_ACCESS_TOKEN) {
+      const i18n = i18nManager.locale(AUTH_ACCESS_TOKEN.user.lang)
+      AUTH_ACCESS_TOKEN.user.checkMail = true
+      await AUTH_ACCESS_TOKEN.user.save()
+      await AuthAccessToken.query()
+        .where('tokenable_id', AUTH_ACCESS_TOKEN.user.id)
+        .andWhere('type', 'check_mail')
+        .delete()
       return response.json({
         success: true,
-        message: i18n.t('_.Email verified')
+        message: i18n.t('_.Email verified'),
       })
     }
     return response.json({
       success: false,
-      message: "User or token not found",
+      message: 'User or token not found',
     })
   }
 }

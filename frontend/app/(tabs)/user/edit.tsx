@@ -48,7 +48,7 @@ const EditUser = () => {
         };
 
         fetchData()
-    }, []);
+    }, [i18n, setErrorMessage, setErrorVisible]);
 
     const handleChange = (name: keyof InfoEditUser, value: string | boolean) => {
         setInfoEditUser(prevState => ({

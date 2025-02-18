@@ -8,14 +8,6 @@ import { useRouter, usePathname } from "expo-router";
 import { useLanguage } from "@/hooks/providers/LanguageProvider";
 import { CheckDoubleAuth, CheckRecoveryCode } from "@/services/DoubleAuth";
 
-interface AUTH_CONTEXT_TYPE {
-    isAuthenticated: boolean;
-    login: (userData: LOGIN) => Promise<RETURN>;
-    logout: () => Promise<RETURN>;
-    checkDoubleAuth: (otpCode: string) => Promise<RETURN>;
-    checkRecoveryCode: (recoveryCode: string) => Promise<RETURN>;
-}
-
 const defaultContextValue: AUTH_CONTEXT_TYPE = {
     isAuthenticated: false,
     login: async (): Promise<RETURN> => {
@@ -78,7 +70,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         };
 
         initializeAuthState();
-    }, [pathName]);
+    }, [pathName,changeLanguage,router]);
 
     const login = async (userData: LOGIN): Promise<RETURN> => {
 

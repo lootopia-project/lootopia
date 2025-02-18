@@ -8,7 +8,7 @@ export default class AuthAccessToken extends BaseModel {
   declare id: number
 
   @column()
-  declare tokenableId: number 
+  declare tokenableId: number
 
   @column()
   declare type: string
@@ -36,5 +36,4 @@ export default class AuthAccessToken extends BaseModel {
 
   @belongsTo(() => User, { foreignKey: 'tokenableId' })
   declare user: BelongsTo<typeof User>
-  
 }

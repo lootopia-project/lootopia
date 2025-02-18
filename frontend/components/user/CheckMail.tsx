@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
-import { View, Text, TouchableOpacity, GestureResponderEvent, Modal } from 'react-native'
-import CheckMailProps from '@/type/feature/user/checkMailProps'
+import React from 'react'
+import { View, Text, TouchableOpacity, Modal } from 'react-native'
+import CheckMailProps from '@/type/feature/user/CheckMailProps'
 import { useLanguage } from '@/hooks/providers/LanguageProvider'
 import { CheckMail as CheckMailMethod } from '@/services/UsersService'
 import { useErrors } from '@/hooks/providers/ErrorProvider'
@@ -16,7 +16,7 @@ const CheckMail: React.FC<CheckMailProps> = ({ handleCheckMail }) => {
         }
     }
     return (
-        <Modal id='truc' className="">
+        <Modal>
             <View className='flex-1 justify-center items-center'>
                 <View className="bg-white p-6 rounded shadow-lg w-11/12 max-w-sm">
                     <TouchableOpacity onPress={handleCheckMail}>

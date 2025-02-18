@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Button, FlatList, Text, TextInput, TouchableOpacity, View } from "react-native";
-import { getDatabase, onValue, push, ref, set } from "firebase/database";
+import { getDatabase, onValue, push, ref } from "firebase/database";
 import { fetchTreasureHunt } from "@/services/MessageHunting";
 import { FontAwesome } from "@expo/vector-icons";
 import { getHuntingsForMessages } from "@/services/HuntingService";
@@ -57,7 +57,7 @@ const Message = () => {
         };
 
         fetchData();
-    }, [db, discussionId]);
+    }, [db, discussionId, i18n, setErrorMessage, setErrorVisible]);
 
     const handleSend = async () => {
         if (text.trim()) {
@@ -130,7 +130,7 @@ const Message = () => {
                         keyExtractor={(item) => item?.id.toString()}
                         renderItem={renderItem}
                         ListEmptyComponent={
-                            <Text className="text-center text-gray-500 mt-10">{i18n.t("No conversations yet.")}</Text>
+                            <Text className="text-center text-gray-500 mt-10">{i18n.t("No conversations")}</Text>
                         }
                     />
                 </View>

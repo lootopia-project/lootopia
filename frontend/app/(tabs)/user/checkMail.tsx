@@ -23,7 +23,7 @@ const CheckMail = () => {
             setErrorMessage(i18n.t('An error occurred while fetching data'))
             setErrorVisible(true)
         }
-    }, [token])
+    }, [token, i18n, setErrorMessage, setErrorVisible])
 
     return (
         <View className='d-flex justify-center items-center'>
