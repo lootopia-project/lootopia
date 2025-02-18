@@ -133,9 +133,7 @@ export default class UsersController {
 
   async CheckMailToken({ response, request }: HttpContext) {
     const { mailToken } = request.only(['mailToken'])
-    const auth_access_token = await AuthAccessToken.query().preload("user").where('hash', mailToken).andWhere("expires_at",">",new Date()).first()    
-    const i18n = i18nManager.locale("fr")
-    
+    const auth_access_token = await AuthAccessToken.query().preload("user").where('hash', mailToken).andWhere("expires_at",">",new Date()).first()        
     if (auth_access_token) {
       const i18n = i18nManager.locale(auth_access_token.user.lang)
       auth_access_token.user.checkMail = true

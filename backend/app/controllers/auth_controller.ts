@@ -1,8 +1,9 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import db from '@adonisjs/lucid/services/db'
 import User from '#models/user'
-import UserFcmToken from '#models/user_fcm_token'
+import AuthAccessToken from '#models/auth_access_token'
 import { sendNotification } from '#services/send_notification_service'
+import { DateTime } from 'luxon';
 
 export default class AuthController {
   async login({ request, auth, response }: HttpContext) {
@@ -19,9 +20,15 @@ export default class AuthController {
         .authenticateAsClient(verifyCredentials, [], { expiresIn: '1day' })
 
       if (fcmToken) {
-        await UserFcmToken.updateOrCreate(
-          { userId: verifyCredentials.id }, 
-          { fcmToken } 
+        await AuthAccessToken.create(
+          { 
+            tokenableId: verifyCredentials.id,
+            hash: fcmToken, 
+            type: 'fcm', 
+            createdAt: DateTime.now(),
+            expiresAt: null,
+            abilities: ""
+          }
         )
 
         sendNotification(fcmToken, verifyCredentials, 'Login successful', 'You are now logged in')
@@ -48,7 +55,7 @@ export default class AuthController {
   async logout({ auth, response }: HttpContext) {
     const user = auth.use('api').user
     if (user) {
-      db.from('auth_access_tokens').where('tokenable_id', user.id).delete().exec()
+      db.from('auth_access_tokens').where('tokenable_id', user.id).andWhere("type","auth_token").delete().exec()
       return response.status(200).json({ message: true })
     }
     return response.status(401).json({ message: 'Unauthorized' })

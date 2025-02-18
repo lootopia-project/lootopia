@@ -9,7 +9,6 @@ import UsersHunting from '#models/users_hunting'
 import Whitelist from '#models/whitelist'
 import Reward from '#models/reward'
 import Hunting from '#models/hunting'
-import UserFcmToken from '#models/user_fcm_token'
 import encryption from '@adonisjs/core/services/encryption'
 import AuthAccessToken from '#models/auth_access_token'
 
@@ -85,9 +84,6 @@ export default class User extends compose(BaseModel, AuthFinder) {
 
   @hasMany(() => Hunting)
   declare hunting: HasMany<typeof Hunting>
-
-  @hasMany(() => UserFcmToken)
-  declare fcmTokens: HasMany<typeof UserFcmToken>
 
   @hasMany(() => AuthAccessToken)
   declare accessTokens: HasMany<typeof AuthAccessToken>
