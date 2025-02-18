@@ -4,6 +4,7 @@ import env from '#start/env'
 import User from '#models/user'
 import i18nManager from '@adonisjs/i18n/services/main'
 import MailService from '#services/mail_service'
+import AuthAccessToken from '#models/auth_access_token'
 const AZURE_ACCOUNT_NAME = env.get('AZURE_ACCOUNT_NAME') || ''
 const AZURE_ACCOUNT_KEY = env.get('AZURE_ACCOUNT_KEY') || ''
 const AZURE_CONTAINER_PROFIL_IMAGE = env.get('AZURE_CONTAINER_PROFIL_IMAGE') || ''
@@ -114,7 +115,7 @@ export default class UsersController {
       })
     }
   }
-  async CheckMail({ response, auth, request }: HttpContext) {
+  async CheckMail({ response, auth }: HttpContext) {
     const user = auth.user
     if (user) {
       const i18n = i18nManager.locale(user.lang)
@@ -128,5 +129,26 @@ export default class UsersController {
       success: false,
       message: 'User not found',
     })    
+  }
+
+  async CheckMailToken({ response, request }: HttpContext) {
+    const { mailToken } = request.only(['mailToken'])
+    const auth_access_token = await AuthAccessToken.query().preload("user").where('hash', mailToken).andWhere("expires_at",">",new Date()).first()    
+    const i18n = i18nManager.locale("fr")
+    
+    if (auth_access_token) {
+      const i18n = i18nManager.locale(auth_access_token.user.lang)
+      auth_access_token.user.checkMail = true
+      await auth_access_token.user.save()
+      await AuthAccessToken.query().where('tokenable_id', auth_access_token.user.id).andWhere("type","check_mail").delete()
+      return response.json({
+        success: true,
+        message: i18n.t('_.Email verified')
+      })
+    }
+    return response.json({
+      success: false,
+      message: "User or token not found",
+    })
   }
 }

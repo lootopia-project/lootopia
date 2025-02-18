@@ -104,9 +104,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const checkDoubleAuth = async (otpCode: string): Promise<RETURN> => {
         const email = await AsyncStorage.getItem("email");
         const result = await CheckDoubleAuth(otpCode, email!);
-        console.log(result.message.headers.authorization);
         if (result.message) {
-            console.log("2FA activated successfully "+result.message.headers.authorization);
             await AsyncStorage.setItem("token", result.message.headers.authorization);
             AsyncStorage.removeItem("email");
             setIsAuthenticated(true);

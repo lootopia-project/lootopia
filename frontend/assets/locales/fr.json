@@ -76,5 +76,6 @@
     "An error occurred while fetching data":"Une erreur s'est produite lors de la récupération des données.",
     "An error occurred while logging out.":"Une erreur s'est produite lors de la déconnexion.",
     "Check your email":"Vérifiez votre email",
-    "Please check your email":"Veuillez vérifier votre email pour plus d'instructions."
+    "Please check your email":"Veuillez vérifier votre email pour plus d'instructions.",
+    "User or token not found":"Utilisateur ou token introuvable"
 }

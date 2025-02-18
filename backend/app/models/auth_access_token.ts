@@ -34,7 +34,7 @@ export default class AuthAccessToken extends BaseModel {
   @column.dateTime()
   declare expiresAt: DateTime | null
 
-  @belongsTo(() => User)
+  @belongsTo(() => User, { foreignKey: 'tokenableId' })
   declare user: BelongsTo<typeof User>
   
 }

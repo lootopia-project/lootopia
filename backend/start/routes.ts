@@ -18,6 +18,7 @@ router.post('/login', [AuthController, 'login'])
 router.post('/register', [AuthController, 'register'])
 router.post('/users/checkDoubleAuth', [DoubleAuthsController, 'checkDoubleAuth'])
 router.post('/users/checkRecoveryCode', [DoubleAuthsController, 'checkRecoveryCode'])
+router.post('/users/CheckMailToken', [UsersController, 'CheckMailToken'])
 
 router
   .group(() => {
@@ -35,7 +36,6 @@ router
     router.post('/users/validateTwoFactorCode', [DoubleAuthsController, 'validateTwoFactorCode'])
     router.get('/users/recoveryCode', [DoubleAuthsController, 'recoveryCode'])
     router.post('/users/CheckMail', [UsersController, 'CheckMail'])
-
   })
   .use([
     middleware.auth({
