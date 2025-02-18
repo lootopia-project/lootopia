@@ -11,14 +11,12 @@ export class NotificationPushService {
   static async sendPushNotification(type: string, user: User) {
     const i18n = i18nManager.locale(user.lang)
 
-    // Récupérer les jetons FCM de l'utilisateur
     const userTokens = await user.related('fcmTokens').query()
 
     if (userTokens.length === 0) {
       throw new Error(`Aucun jeton FCM trouvé pour l'utilisateur ${user.id}`)
     }
 
-    // Définir le titre et le message en fonction du type
     let title = ''
     let body = ''
     switch (type) {
@@ -41,7 +39,6 @@ export class NotificationPushService {
         throw new Error(`Type de notification inconnu : ${type}`)
     }
 
-    // Préparer les notifications pour chaque jeton
     const messages = userTokens.map((token) => ({
       token: token.fcmToken,
       notification: {
@@ -53,7 +50,6 @@ export class NotificationPushService {
       },
     }))
 
-    // Envoyer les notifications via Firebase Admin SDK
     try {
       const responses = await Promise.all(
         messages.map((message) => admin.messaging().send(message))
