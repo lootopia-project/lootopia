@@ -30,7 +30,7 @@ const MFA = () => {
                 setErrorMessage(i18n.t("Error. Please try again"));
                 setErrorVisible(true);            }
         };
-        fetchData().catch((error) => console.error("Erreur lors de l'exécution de fetchData :", error));
+        fetchData()
     }, []);
 
     const toggleTwoFactorAuth = async (value: boolean) => {
