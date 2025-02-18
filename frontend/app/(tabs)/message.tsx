@@ -76,7 +76,8 @@ const Message = () => {
                 setErrorVisible(true);
             }
         } else {
-            console.warn("⚠️ Message vide. Rien n'a été envoyé.");
+            setErrorMessage(i18n.t("Message vide. Rien n'a été envoyé."));
+            setErrorVisible(true);
         }
     };
 

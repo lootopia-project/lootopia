@@ -80,7 +80,6 @@ const MFA = () => {
                         response.replace(/{/g, "[").replace(/}/g, "]").replace(/;/g, ",")
                          );
                 } catch (error) {
-                    console.error("❌ Erreur lors du parsing JSON des recovery codes :", error);
                     setErrorMessage(i18n.t("Invalid recovery codes format"));
                     setErrorVisible(true);
                     return;
@@ -89,7 +88,6 @@ const MFA = () => {
             setRecoveryCodes(parsedCodes);
             setModalVisible(true);
         } catch (error) {
-            console.error("❌ Erreur lors de la récupération des codes de secours :", error);
             setErrorMessage(i18n.t("Failed to fetch recovery codes"));
             setErrorVisible(true);
         }

@@ -83,6 +83,6 @@
     "Display emergency codes": "Afficher les codes de secours",
     "Emergency codes": "Codes de secours",
     "No code available": "Aucun code disponible",
-    "Close": "Fermer"
-
+    "Close": "Fermer",
+    "Empty message. Nothing has been sent.": "Message vide. Rien n'a été envoyé."
 }
