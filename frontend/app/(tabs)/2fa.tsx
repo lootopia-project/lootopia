@@ -40,7 +40,7 @@ const MFA = () => {
         try {
             const response = await checkDoubleAuth(otpCode);
             if (response.message) {
-                router.push("/");  // Redirige vers la page principale
+                router.push("/");  
             } else {
                 setErrorMessage(i18n.t("Invalid code. Please try again."));
                 setErrorVisible(true);
@@ -82,7 +82,6 @@ const MFA = () => {
                 </Text>
             </TouchableOpacity>
 
-            {/* 🔹 Nouveau bouton pour entrer un code de secours */}
             <TouchableOpacity
                 className="bg-gray-500 p-4 rounded-lg mt-4 w-64"
                 onPress={() => router.push("/recoveryCode")}

@@ -35,7 +35,6 @@ const MFA = () => {
 
     const toggleTwoFactorAuth = async (value: boolean) => {
         if (value === !isTwoFactorEnabled) setIsTwoFactorEnabled(false);
-
         try {
             const response: { svg: string, url: string } = await toggleDoubleAuth(value);
             if (value) {
@@ -59,24 +58,26 @@ const MFA = () => {
             const response: Return = await validateTwoFactorCode(otpCode, email);
             if (response.message) {
                 setTimeout(() => setIsTwoFactorEnabled(true), 3000);
-                setValidationMessage("✅ Authentification activée avec succès !");
+                setValidationMessage(i18n.t("Authentification successfull"));
             } else {
                 setErrorMessage(i18n.t("Incorrect code. Please try again"));
                 setErrorVisible(true);
             }
         } catch (error) {
-            setErrorMessage("Error. Please try again");
+            setErrorMessage(i18n.t("Error. Please try again"));
             setErrorVisible(true);
         }
     };
 
     const fetchRecoveryCodes = async () => {
         try {
-            const response:string[] = await RecoveryCode(); // Récupère la réponse brute    
+            const response:string[] = await RecoveryCode(); 
             let parsedCodes = response;
                 if (typeof response === "string") {
                 try {
-                    parsedCodes = JSON.parse(    response.replace(/{/g, "[").replace(/}/g, "]").replace(/;/g, ","));
+                    parsedCodes = JSON.parse(
+                        response.replace(/{/g, "[").replace(/}/g, "]").replace(/;/g, ",")
+                         );
                 } catch (error) {
                     console.error("❌ Erreur lors du parsing JSON des recovery codes :", error);
                     setErrorMessage(i18n.t("Invalid recovery codes format"));
@@ -127,14 +128,12 @@ const MFA = () => {
                 </View>
             )}
 
-            {/* Bouton pour afficher les codes de secours */}
             {isTwoFactorEnabled && (
                 <TouchableOpacity className="bg-gray-600 p-3 rounded-lg mt-6" style={{ width: 200 }} onPress={fetchRecoveryCodes}>
                     <Text className="text-white text-center">Afficher les codes de secours</Text>
                 </TouchableOpacity>
             )}
 
-            {/* Modal pour afficher les codes de secours */}
             <Modal visible={isModalVisible} transparent={true} animationType="slide">
                 <View className="flex-1 justify-center items-center bg-black bg-opacity-50">
                     <View className="bg-white p-6 rounded-lg w-80">

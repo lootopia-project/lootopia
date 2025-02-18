@@ -24,6 +24,7 @@ export default class DoubleAuthsController {
         return response.status(200).json({ message: '2FA Désactivé' })
       }
     }
+    return response.status(401).json({ message: 'Unauthorized' })
   }
 
   async isTwoFactorEnabled({ auth, response }: HttpContext) {
@@ -97,7 +98,6 @@ export default class DoubleAuthsController {
   }
 
   protected async recoveryCode({ auth, response }: HttpContext) {
-    console.log('recoveryCode')
     const user = auth.use('api').user
     if (user) {
       return response.status(200).json(user.twoFactorRecoveryCodes)

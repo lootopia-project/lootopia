@@ -2,7 +2,6 @@ import type { HttpContext } from '@adonisjs/core/http'
 import db from '@adonisjs/lucid/services/db'
 import User from '#models/user'
 import UserFcmToken from '#models/user_fcm_token'
-import i18nManager from '@adonisjs/i18n/services/main'
 import { sendNotification } from '#services/send_notification_service'
 
 export default class AuthController {
@@ -12,8 +11,6 @@ export default class AuthController {
     const verifyCredentials = await User.verifyCredentials(email, password)
 
     if (verifyCredentials) {
-      const i18n = i18nManager.locale(verifyCredentials.lang)
-
       if (verifyCredentials.isTwoFactorEnabled) {
         return response.status(200).json({ message: '2FA' })
       }
