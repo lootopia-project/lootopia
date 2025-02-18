@@ -35,7 +35,6 @@ const RecoveryCode = () => {
         } catch (error) {
             setErrorMessage(i18n.t("An error occurred. Please try again."));
             setErrorVisible(true);
-            console.error("Erreur lors de la validation du code de récupération :", error);
         } finally {
             setIsLoading(false);
         }

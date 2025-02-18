@@ -31,7 +31,7 @@ export default function LoginPage() {
       if (check.message === "2FA") {
          router.push("/2fa");
      }
-      else if (check.message) {
+      else if (check.headers) {
         setErrorMessage("");
         router.push("/");
       }

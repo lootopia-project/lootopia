@@ -20,8 +20,8 @@ export default class AuthController {
 
       if (fcmToken) {
         await UserFcmToken.updateOrCreate(
-          { userId: verifyCredentials.id }, // Critères de recherche
-          { fcmToken } // Données à mettre à jour
+          { userId: verifyCredentials.id }, 
+          { fcmToken } 
         )
 
         sendNotification(fcmToken, verifyCredentials, 'Login successful', 'You are now logged in')

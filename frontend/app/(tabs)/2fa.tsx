@@ -16,14 +16,14 @@ const MFA = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const { setErrorMessage, setErrorVisible } = useErrors();
 
-    // 🔹 Récupération de l'email stocké dans AsyncStorage
     useEffect(() => {
         const fetchEmail = async () => {
             try {
                 const storedEmail = await AsyncStorage.getItem("email");
                 setEmail(storedEmail || "");
             } catch (error) {
-                console.error("Erreur lors de la récupération de l'email :", error);
+                setErrorMessage(i18n.t("An error occurred. Please try again."));
+                setErrorVisible(true);  
             }
         };
         fetchEmail();
@@ -31,7 +31,7 @@ const MFA = () => {
 
     const handleValidateCode = async () => {
         if (otpCode.length !== 6 || isNaN(Number(otpCode))) {
-            setErrorMessage(i18n.t("Code must be 6 digits."));
+            setErrorMessage(i18n.t("Code must be 6 digits"));
             setErrorVisible(true);
             return;
         }
@@ -48,7 +48,6 @@ const MFA = () => {
         } catch (error) {
             setErrorVisible(true);
             setErrorMessage(i18n.t("An error occurred. Please try again."));
-            console.error("Erreur de validation 2FA :", error);
         } finally {
             setIsLoading(false);
         }

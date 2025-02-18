@@ -14,7 +14,6 @@ export const sendNotification = async (
 
   try {
     if (fcmData.platform === 'Mobile') {
-      // Envoi via Expo pour les appareils mobiles
       const expoPushToken = fcmData.token
 
       if (!expoPushToken.startsWith('ExponentPushToken')) {

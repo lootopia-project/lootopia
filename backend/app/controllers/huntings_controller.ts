@@ -11,13 +11,11 @@ export default class HuntingsController {
     }
 
     try {
-      // Récupération des chasses organisées
       const organizedHuntings = await Hunting.query().where('userId', user.id).select('id')
 
       const participatedHuntings = await UsersHunting.query()
         .where('user_id', user.id)
         .select('hunting_id')
-      // Fusionner les IDs des chasses
       const huntIds = [
         ...organizedHuntings.map((hunting) => hunting.id),
         ...participatedHuntings.map((userHunting) => userHunting.huntingId),
