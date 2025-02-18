@@ -54,5 +54,22 @@
     "French": "Français",
     "Password": "Mot de passe",
     "Personnal information": "Informations personnelles",
-    "Messages": "Messages"
+    "Messages": "Messages",
+    "Multi-Factor Authentication": "Authentification multi-facteurs",
+    "Enter the 6-digit code from your authenticator app": "Entrez le code à 6 chiffres de votre application d'authentification",
+    "For account": "Pour le compte",
+    "Verify Code": "Vérifier le code",
+    "An error occurred. Please try again later.": "Une erreur s'est produite. Veuillez réessayer plus tard.",
+    "Code must be 6 digits": "Le code doit être composé de 6 chiffres",
+    "Incorrect code. Please try again": "Code incorrect. Veuillez réessayer",
+    "Error. Please try again.": "Erreur. Veuillez réessayer.",
+    "Validating": "Validation en cours",
+    "Failed to fetch recovery codes": "Impossible de récupérer les codes de récupération",
+    "Enter a Recovery Code": "Entrez un code de récupération",
+    "Enter your backup recovery code below to authenticate": "Entrez votre code de récupération de secours ci-dessous pour vous authentifier",
+    "Recovery code validated successfully": "Code de récupération validé avec succès",
+    "Enter Recovery Code": "Entrez le code de récupération",
+    "An error occurred. Please try again.": "Une erreur s'est produite. Veuillez réessayer.",
+    "Error. Please try again": "Erreur. Veuillez réessayer",
+    "Authentification successfull": "Authentification réussie"
 }

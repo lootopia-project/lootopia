@@ -69,3 +69,5 @@ export const updatePassword = async (currentPassword: string, newPassword: strin
     }
 
 }
+
+

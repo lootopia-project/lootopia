@@ -87,6 +87,7 @@ const EditUser = () => {
     };
 
         return (
+            <>
             <ScrollView
                 className="p-6 bg-gray-100"
                 contentContainerStyle={{ flexGrow: 1 }}
@@ -116,6 +117,7 @@ const EditUser = () => {
                 <Success visible={isSuccessVisible} onClose={() => setSuccessVisible(false)} successMessage={message} />
             </ScrollView>
 
+            </>
         );
 };
 
