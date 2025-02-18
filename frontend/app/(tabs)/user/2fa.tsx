@@ -27,8 +27,8 @@ const MFA = () => {
                 const response: Return = await doubleAuthEnable();
                 setIsTwoFactorEnabled(response.message);
             } catch (error) {
-                console.error("Erreur lors de la récupération des données :", error);
-            }
+                setErrorMessage(i18n.t("Error. Please try again"));
+                setErrorVisible(true);            }
         };
         fetchData().catch((error) => console.error("Erreur lors de l'exécution de fetchData :", error));
     }, []);
@@ -43,8 +43,9 @@ const MFA = () => {
                 setQrCode(null);
             }
         } catch (error) {
-            console.error("Erreur lors de la mise à jour du 2FA :", error);
-        }
+            setErrorMessage(i18n.t("Error. Please try again"));
+            setErrorVisible(true);       
+         }
     };
 
     const validateCode = async () => {
