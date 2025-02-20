@@ -10,7 +10,7 @@ import ModalChangePassword from "@/components/me/ModalChangePassword";
 import FormEditUser from "@/components/me/FormEditUser";
 import { useErrors } from "@/hooks/providers/ErrorProvider";
 const EditUser = () => {
-    const { i18n } = useLanguage();
+    const { i18n,changeLanguage } = useLanguage();
     const [isModalVisible, setModalVisible] = useState(false);
     const [isSuccessVisible, setSuccessVisible] = useState(false);
     const { setErrorVisible, setErrorMessage } = useErrors();
@@ -80,7 +80,10 @@ const EditUser = () => {
         handleResponse(response);
     }
 
-    const handleResponse = (response: Return) => {
+    const handleResponse = (response: Return) => {       
+        if (response.success) {
+            changeLanguage(infoEditUser.lang);
+        }
         setMessage(response.message);
         setErrorMessage(response.message);
         setErrorVisible(!response.success);

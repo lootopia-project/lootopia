@@ -9,6 +9,7 @@ import {
   Platform,
   Keyboard,
   useColorScheme,
+  ScrollView,
 } from "react-native";
 import { registerUser } from "@/services/AuthService";
 import { validatePassword } from "@/constants/validatePassword";
@@ -97,10 +98,13 @@ export default function RegisterPage() {
 
   return (
       <KeyboardAvoidingView
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
-          className="flex-1 justify-center items-center bg-[#fdf5e6] p-5"
-          style={{ backgroundColor: themeColors.background }}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        className="flex-1 bg-[#fdf5e6]" 
+        style={{ backgroundColor: themeColors.background }}
       >
+        <ScrollView
+          className="flex-1 p-5"
+          contentContainerStyle={{ alignItems: "center", justifyContent: "center"}}>
         <View className="w-11/12 bg-white p-6 rounded-lg shadow-md">
           {/* Titre */}
           <Text className="text-2xl font-bold text-center mb-5 text-brown-800">
@@ -167,6 +171,7 @@ export default function RegisterPage() {
             {i18n.t("Already have an account? Sign in")}
           </Link>
         </View>
+      </ScrollView>
       </KeyboardAvoidingView>
   );
 }

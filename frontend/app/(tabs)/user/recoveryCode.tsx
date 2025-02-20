@@ -33,7 +33,7 @@ const RecoveryCode = () => {
                 setErrorVisible(true);
             }
         } catch (error) {
-            setErrorMessage(i18n.t("An error occurred. Please try again."));
+            setErrorMessage(i18n.t("An error occurred"));
             setErrorVisible(true);
         } finally {
             setIsLoading(false);
