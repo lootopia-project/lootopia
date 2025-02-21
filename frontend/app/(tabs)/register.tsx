@@ -101,7 +101,6 @@ export default function RegisterPage() {
       <ImageBackground
         className="flex-1" 
         source={{ uri : "https://lootopia.blob.core.windows.net/lootopia-photos/word_background.png"}}
-        // resizeMode="contain"
         >
         <ScrollView
           className="flex-1 p-5"

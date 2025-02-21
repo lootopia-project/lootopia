@@ -46,7 +46,6 @@ export default function LoginPage() {
   return (
     <ImageBackground
       style={{ flex: 1, backgroundColor: themeColors.background }}
-      // behavior={Platform.OS === "ios" ? "padding" : "height"}
       source={{uri: "https://lootopia.blob.core.windows.net/lootopia-photos/map_background.png"}}
       resizeMode="cover"
       >
