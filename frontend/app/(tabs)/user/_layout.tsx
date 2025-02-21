@@ -4,7 +4,7 @@ import Navbar from "@/components/user/navbar";
 
 export default function RootLayout() {
     const { width } = useWindowDimensions();
-    const isWeb = (Platform.OS == 'web' && width > 768) ? true : false;
+    const isWeb = (Platform.OS ==='web' && width > 768) ? true : false;
 
     return (
         <View style={{ flex: 1, flexDirection: "row" }}>

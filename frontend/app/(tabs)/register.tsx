@@ -5,24 +5,18 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  KeyboardAvoidingView,
-  Platform,
   Keyboard,
-  useColorScheme,
   ScrollView,
   ImageBackground,
 } from "react-native";
 import { registerUser } from "@/services/AuthService";
 import { validatePassword } from "@/constants/validatePassword";
-import { Colors } from "@/constants/Colors";
 import { useErrors } from "@/hooks/providers/ErrorProvider";
 import { useLanguage } from "@/hooks/providers/LanguageProvider";
 import AboutPassword from "@/components/aboutPassword";
 
 export default function RegisterPage() {
   const [success, setSuccess] = useState("");
-  const colorScheme = useColorScheme();
-  const themeColors = colorScheme === "dark" ? Colors.dark : Colors.light;
   const { setErrorVisible, setErrorMessage } = useErrors();
   const { i18n } = useLanguage();
 
