@@ -6,8 +6,8 @@ import { useLanguage } from "@/hooks/providers/LanguageProvider";
 import * as ImagePicker from "expo-image-picker";
 import Return from "@/type/request/return";
 import Success from "@/components/Success";
-import ModalChangePassword from "@/components/me/ModalChangePassword";
-import FormEditUser from "@/components/me/FormEditUser";
+import ModalChangePassword from "@/components/user/ModalChangePassword";
+import FormEditUser from "@/components/user/FormEditUser";
 import { useErrors } from "@/hooks/providers/ErrorProvider";
 const EditUser = () => {
     const { i18n } = useLanguage();
@@ -42,12 +42,13 @@ const EditUser = () => {
                 const infoUser: InfoEditUser = await getInfoUser();
                 setInfoEditUser(infoUser);
             } catch (error) {
-                console.error("Erreur lors de la récupération des données :", error);
+                setErrorMessage(i18n.t("An error occurred while fetching data"));
+                setErrorVisible(true);
             }
         };
 
-        fetchData().catch((error) => console.error("Erreur lors de l'exécution de fetchData :", error));
-    }, []);
+        fetchData()
+    }, [i18n, setErrorMessage, setErrorVisible]);
 
     const handleChange = (name: keyof InfoEditUser, value: string | boolean) => {
         setInfoEditUser(prevState => ({

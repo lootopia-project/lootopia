@@ -26,7 +26,7 @@
     "Oops": "Oups ! La page que vous recherchez n'existe pas.",
     "Go back to Home": "Retour à l'accueil",
     "Back": "Retour",
-    "No conversations yet.": "Aucune conversation pour l'instant.",
+    "No conversations": "Aucune conversation pour l'instant.",
     "Write a message": "Écrire un message",
     "Send": "Envoyer",
     "You": "Vous",
@@ -71,5 +71,18 @@
     "Enter Recovery Code": "Entrez le code de récupération",
     "An error occurred. Please try again.": "Une erreur s'est produite. Veuillez réessayer.",
     "Error. Please try again": "Erreur. Veuillez réessayer",
-    "Authentification successfull": "Authentification réussie"
+    "Authentification successfull": "Authentification réussie",
+    "An error occurred while sending the message.":"Une erreur s'est produite lors de l'envoi du message.",
+    "An error occurred while fetching data":"Une erreur s'est produite lors de la récupération des données.",
+    "An error occurred while logging out.":"Une erreur s'est produite lors de la déconnexion.",
+    "Check your email":"Vérifiez votre email",
+    "Please check your email":"Veuillez vérifier votre email pour plus d'instructions.",
+    "User or token not found":"Utilisateur ou token introuvable",
+    "Scan this QR Code with an authentication application":"Scannez ce QR Code avec une application d'authentification",
+    "Validate": "Valider",
+    "Display emergency codes": "Afficher les codes de secours",
+    "Emergency codes": "Codes de secours",
+    "No code available": "Aucun code disponible",
+    "Close": "Fermer",
+    "Empty message. Nothing has been sent.": "Message vide. Rien n'a été envoyé."
 }

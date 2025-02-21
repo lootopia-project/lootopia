@@ -6,7 +6,7 @@ import Return from "@/type/request/return";
 
 const API_URL=process.env.EXPO_PUBLIC_API_URL as string
 
-export const getInfoUser= async (): Promise<InfoEditUser> => {
+const getInfoUser= async (): Promise<InfoEditUser> => {
     const token = await AsyncStorage.getItem('token');
     const config = {
         headers: {
@@ -27,7 +27,7 @@ export const getInfoUser= async (): Promise<InfoEditUser> => {
     }
 }
 
-export const updateInfoUser = async (infoEditUser: InfoEditUser): Promise<Return> => {
+const updateInfoUser = async (infoEditUser: InfoEditUser): Promise<Return> => {
     const token = await AsyncStorage.getItem('token');
     const config = {
         headers: {
@@ -48,7 +48,7 @@ export const updateInfoUser = async (infoEditUser: InfoEditUser): Promise<Return
     }
 }
 
-export const updatePassword = async (currentPassword: string, newPassword: string): Promise<Return> => {
+const updatePassword = async (currentPassword: string, newPassword: string): Promise<Return> => {
     const token = await AsyncStorage.getItem('token');
     const config = {
         headers: {
@@ -70,4 +70,45 @@ export const updatePassword = async (currentPassword: string, newPassword: strin
 
 }
 
+const CheckMail = async (): Promise<Return> => {
+    const token = await AsyncStorage.getItem('token');
+    const config = {
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": token ? `${token}` : '',
+        },
+        withCredentials: true
+    }
+    try {
+        const response=await axios.post(`${API_URL}/users/CheckMail`, {} ,config)
+        return response.data
+    } catch (err: unknown) {
+        if ((err as AXIOS_ERROR).message) {
+            throw new Error("Error connecting")
+        } else {
+            throw new Error("Error connecting to server")
+        }
+    }
+} 
 
+const CheckMailToken = async (mailToken:string| null): Promise<Return> => {
+    const token = await AsyncStorage.getItem('token');
+    const config = {
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": token ? `${token}` : '',
+        },
+        withCredentials: true
+    }
+    try {
+        const response=await axios.post(`${API_URL}/users/CheckMailToken`, {mailToken:mailToken} ,config)
+        return response.data
+    } catch (err: unknown) {
+        if ((err as AXIOS_ERROR).message) {
+            throw new Error("Error connecting")
+        } else {
+            throw new Error("Error connecting to server")
+        }
+    }
+} 
+export { getInfoUser, updateInfoUser, updatePassword, CheckMail, CheckMailToken }
