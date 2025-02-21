@@ -30,7 +30,7 @@ const defaultContextValue: AUTH_CONTEXT_TYPE = {
 
 };
 
-const publicRoutes = ["/+not-found", "/login", "/register", "/2fa", "/recoveryCode", "/user/checkMail"];
+const publicRoutes = ["/+not-found", "/login", "/register", "/2fa", "/user/recoveryCode","/", "/user/checkMail"];
 const AUTH_CONTEXT = createContext(defaultContextValue);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
@@ -106,7 +106,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     const checkRecoveryCode = async (recoveryCode: string): Promise<RETURN> => {
         const email = await AsyncStorage.getItem("email");
-        const result = await CheckRecoveryCode(recoveryCode, email);
+        const result = await CheckRecoveryCode(recoveryCode, email as string);
         if (result.message) {
             await AsyncStorage.setItem("token", result.message.headers.authorization);
             AsyncStorage.removeItem("email");

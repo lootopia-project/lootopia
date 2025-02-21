@@ -22,7 +22,7 @@ const MFA = () => {
                 const storedEmail = await AsyncStorage.getItem("email");
                 setEmail(storedEmail || "");
             } catch (error) {
-                setErrorMessage(i18n.t("An error occurred. Please try again."));
+                setErrorMessage(i18n.t("An error occurred"));
                 setErrorVisible(true);  
             }
         };
@@ -47,7 +47,7 @@ const MFA = () => {
             }
         } catch (error) {
             setErrorVisible(true);
-            setErrorMessage(i18n.t("An error occurred. Please try again."));
+            setErrorMessage(i18n.t("An error occurred"));
         } finally {
             setIsLoading(false);
         }
@@ -83,7 +83,7 @@ const MFA = () => {
 
             <TouchableOpacity
                 className="bg-gray-500 p-4 rounded-lg mt-4 w-64"
-                onPress={() => router.push("/recoveryCode")}
+                onPress={() => router.push("/user/recoveryCode")}
             >
                 <Text className="text-white text-center text-lg">
                     {i18n.t("Enter a Recovery Code")}

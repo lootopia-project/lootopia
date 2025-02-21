@@ -5,22 +5,18 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  KeyboardAvoidingView,
-  Platform,
   Keyboard,
-  useColorScheme,
+  ScrollView,
+  ImageBackground,
 } from "react-native";
 import { registerUser } from "@/services/AuthService";
 import { validatePassword } from "@/constants/validatePassword";
-import { Colors } from "@/constants/Colors";
 import { useErrors } from "@/hooks/providers/ErrorProvider";
 import { useLanguage } from "@/hooks/providers/LanguageProvider";
 import AboutPassword from "@/components/aboutPassword";
 
 export default function RegisterPage() {
   const [success, setSuccess] = useState("");
-  const colorScheme = useColorScheme();
-  const themeColors = colorScheme === "dark" ? Colors.dark : Colors.light;
   const { setErrorVisible, setErrorMessage } = useErrors();
   const { i18n } = useLanguage();
 
@@ -96,14 +92,16 @@ export default function RegisterPage() {
   };
 
   return (
-      <KeyboardAvoidingView
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
-          className="flex-1 justify-center items-center bg-[#fdf5e6] p-5"
-          style={{ backgroundColor: themeColors.background }}
-      >
-        <View className="w-11/12 bg-white p-6 rounded-lg shadow-md">
+      <ImageBackground
+        className="flex-1" 
+        source={{ uri : "https://lootopia.blob.core.windows.net/lootopia-photos/word_background.png"}}
+        >
+        <ScrollView
+          className="flex-1 p-5"
+          contentContainerStyle={{ alignItems: "center", justifyContent: "center", minHeight: '100%',}}>
+        <View className="bg-white/20 backdrop-blur-sm p-6 rounded-lg shadow-md">
           {/* Titre */}
-          <Text className="text-2xl font-bold text-center mb-5 text-brown-800">
+          <Text className="text-2xl font-bold text-center mb-5 text-white">
             {i18n.t("Register")}
           </Text>
 
@@ -112,9 +110,9 @@ export default function RegisterPage() {
           ) : null}
 
           <View className="mb-4">
-            <Text className="text-lg text-brown-800 mb-2">{i18n.t("Username")}</Text>
+            <Text className="text-lg text-white mb-2">{i18n.t("Email")}</Text>
             <TextInput
-                className="border border-gray-300 rounded-lg p-3 text-base bg-[#fdf5e6]"
+                className="border border-gray-300 rounded-lg p-3 text-base bg-white"
                 placeholder={i18n.t("Username")}
                 placeholderTextColor="#d2b48c"
                 value={formData.username}
@@ -123,9 +121,9 @@ export default function RegisterPage() {
           </View>
 
           <View className="mb-4">
-            <Text className="text-lg text-brown-800 mb-2">{i18n.t("Password")}</Text>
+            <Text className="text-lg text-white mb-2">{i18n.t("Password")}</Text>
             <TextInput
-                className="border border-gray-300 rounded-lg p-3 text-base bg-[#fdf5e6]"
+                className="border border-gray-300 rounded-lg p-3 text-base bg-white"
                 placeholder={i18n.t("Password")}
                 placeholderTextColor="#d2b48c"
                 secureTextEntry
@@ -135,9 +133,9 @@ export default function RegisterPage() {
           </View>
 
           <View className="mb-4">
-            <Text className="text-lg text-brown-800 mb-2">{i18n.t("Repeat Password")}</Text>
+            <Text className="text-lg text-white mb-2">{i18n.t("Repeat Password")}</Text>
             <TextInput
-                className="border border-gray-300 rounded-lg p-3 text-base bg-[#fdf5e6]"
+                className="border border-gray-300 rounded-lg p-3 text-base bg-white"
                 placeholder={i18n.t("Repeat Password")}
                 placeholderTextColor="#d2b48c"
                 secureTextEntry
@@ -162,11 +160,12 @@ export default function RegisterPage() {
 
           <Link
               href={"/login"}
-              className="mt-5 text-center text-yellow-600 underline text-base"
+              className="mt-5 text-center text-white underline text-base"
           >
             {i18n.t("Already have an account? Sign in")}
           </Link>
         </View>
-      </KeyboardAvoidingView>
+      </ScrollView>
+      </ImageBackground>
   );
 }

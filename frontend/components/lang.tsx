@@ -7,11 +7,13 @@ export default function LanguageSwitcher() {
   const { locale, changeLanguage } = useLanguage();
 
   return (
-    <View>
+    <View style={styles.container}>
       <Picker
         selectedValue={locale}
         onValueChange={(itemValue) => changeLanguage(itemValue)}
         style={styles.picker}
+        itemStyle={styles.pickerItem}
+        mode="dropdown"
       >
         <Picker.Item label="English" value="en" />
         <Picker.Item label="Français" value="fr" />
@@ -22,18 +24,22 @@ export default function LanguageSwitcher() {
 
 const styles = StyleSheet.create({
   container: {
-    alignSelf: 'flex-start',
-    padding: 20,
-  },
-  text: {
-    fontSize: 18,
-    marginBottom: 20,
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
   picker: {
-    width: 200,
-    height: 50,
-    backgroundColor: '#f5f5f5',
-    borderColor: '#ccc',
-    borderWidth: 1,
+    width: 160,
+    height: 40,
+    color: '#333',
+  },
+  pickerItem: {
+    fontSize: 16,
+    height: 44,
   },
 });

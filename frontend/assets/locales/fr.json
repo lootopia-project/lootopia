@@ -69,7 +69,7 @@
     "Enter your backup recovery code below to authenticate": "Entrez votre code de récupération de secours ci-dessous pour vous authentifier",
     "Recovery code validated successfully": "Code de récupération validé avec succès",
     "Enter Recovery Code": "Entrez le code de récupération",
-    "An error occurred. Please try again.": "Une erreur s'est produite. Veuillez réessayer.",
+    "An error occurred": "Une erreur s'est produite. Veuillez réessayer.",
     "Error. Please try again": "Erreur. Veuillez réessayer",
     "Authentification successfull": "Authentification réussie",
     "An error occurred while sending the message.":"Une erreur s'est produite lors de l'envoi du message.",

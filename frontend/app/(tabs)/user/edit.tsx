@@ -10,7 +10,7 @@ import ModalChangePassword from "@/components/user/ModalChangePassword";
 import FormEditUser from "@/components/user/FormEditUser";
 import { useErrors } from "@/hooks/providers/ErrorProvider";
 const EditUser = () => {
-    const { i18n } = useLanguage();
+    const { i18n,changeLanguage } = useLanguage();
     const [isModalVisible, setModalVisible] = useState(false);
     const [isSuccessVisible, setSuccessVisible] = useState(false);
     const { setErrorVisible, setErrorMessage } = useErrors();
@@ -81,7 +81,10 @@ const EditUser = () => {
         handleResponse(response);
     }
 
-    const handleResponse = (response: Return) => {
+    const handleResponse = (response: Return) => {       
+        if (response.success) {
+            changeLanguage(infoEditUser.lang);
+        }
         setMessage(response.message);
         setErrorMessage(response.message);
         setErrorVisible(!response.success);
@@ -90,7 +93,7 @@ const EditUser = () => {
         return (
             <>
             <ScrollView
-                className="p-6 bg-gray-100"
+                className="p-6"
                 contentContainerStyle={{ flexGrow: 1 }}
             >
                 <Text className="text-2xl font-bold mb-4 text-center">{i18n.t("Edit User")}</Text>

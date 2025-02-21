@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, TouchableOpacity, useColorScheme, StatusBar, SafeAreaView, StyleSheet, Image } from "react-native";
-import { useWindowDimensions } from "react-native";
+import { View, Text, TouchableOpacity, useColorScheme, StatusBar, SafeAreaView, StyleSheet, Image, Platform, useWindowDimensions } from "react-native";
 import { Colors } from "@/constants/Colors";
 import { Link } from "expo-router";
 import { useAuth } from "@/hooks/providers/AuthProvider";
 import { useRouter } from "expo-router";
 import { useLanguage } from "@/hooks/providers/LanguageProvider";
-import LanguageSwitcher from "./lang";
+import LanguageSwitcher from "../lang";
 import { useErrors } from "@/hooks/providers/ErrorProvider";
+
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const { width } = useWindowDimensions();
-  const isMobile = width < 768;
+  const isMobile = (Platform.OS !== 'web') ? true : width < 768;
   const theme = useColorScheme() || "light";
   const { isAuthenticated, logout } = useAuth();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -19,10 +19,6 @@ const Navbar = () => {
   const { i18n } = useLanguage();
   const [img, setImg] = useState("");
   const { setErrorMessage, setErrorVisible } = useErrors();
-  const handleMessages = () => {
-    router.push("/message");
-  }
-
   useEffect(() => {
     if (isAuthenticated) {
       const img = localStorage.getItem("img");
@@ -49,38 +45,36 @@ const Navbar = () => {
   return (
     <>
       <View style={styles.navWrapper}>
-
-        <SafeAreaView style={[styles.safeArea, { backgroundColor: Colors[theme].highlight }]}>
+        <SafeAreaView style={[styles.safeArea, { backgroundColor: Colors.bgNav }]}>
           <StatusBar barStyle={theme === "dark" ? "light-content" : "dark-content"} />
-          <View style={[styles.navBarContainer, { backgroundColor: Colors[theme].highlight }]}>
-            {isAuthenticated ? (
-              <Link href="/" style={[styles.brandLink, { color: Colors[theme].tint }]}>
-                Lootopia
-              </Link>
-            ) : (
-              <Link href="/login" style={[styles.brandLink, { color: Colors[theme].tint }]}>
-                Lootopia
-              </Link>
-            )}
-
+          <View style={[styles.navBarContainer, { backgroundColor: Colors.bgNav }]}>
+            <Link href="/" style={[styles.brandLink, { color: 'white' }]}>
+              Lootopia
+            </Link>
             <View style={styles.linksRowRight}>
-              { !isAuthenticated ?
+              {!isAuthenticated && !isMobile ?
                 (
-                  <LanguageSwitcher />
+                  <View className="flex items-center justify-center flex-row ">
+                    <LanguageSwitcher />
+                    <View style={styles.auth}>
+                      <TouchableOpacity>
+                        <Link href={"/login"}>{i18n.t("login")}</Link>
+                      </TouchableOpacity>
+                      <TouchableOpacity>
+                        <Link href={"/register"}>{i18n.t("Register")}</Link>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
                 )
                 : (
-                  <TouchableOpacity onPress={handleMessages}>
-                    <Text style={[styles.navLink, { color: Colors[theme].tint }]}>
-                      { isMobile?
-                    <>✉️</>        
-                    :
-                    (i18n.t("Messages"))
-                    }
-                    </Text>
-                  </TouchableOpacity>
+                  <>
+                    {/* links right */}
+                    {!isAuthenticated && <LanguageSwitcher /> }
+                  </>
+
                 )
               }
-              {/* links right */}
+              {/* dropdown right menu */}
               {isAuthenticated && !isMobile &&
                 (
                   <View style={styles.dropdownContainer}>
@@ -119,21 +113,41 @@ const Navbar = () => {
           </View>
           {menuOpen && isMobile && (
             <View style={styles.mobileMenu}>
-              <TouchableOpacity>
-                <Text style={[styles.mobileMenuText, { color: Colors[theme].text }]}>
-                  🏴 Accueil
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity>
-                <Text style={[styles.mobileMenuText, { color: Colors[theme].text }]}>
-                  🔍 Chasses
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity>
-                <Text style={[styles.mobileMenuText, { color: Colors[theme].text }]}>
-                  ⚔ Profil
-                </Text>
-              </TouchableOpacity>
+              {isAuthenticated ?
+                <>
+                  <TouchableOpacity>
+                    <Link href={"/user/edit"} style={[styles.mobileMenuText, { color: Colors[theme].text }]}>
+                      {i18n.t("Edit User")}
+                    </Link>
+                  </TouchableOpacity>
+                  <TouchableOpacity>
+                    <Link href={"/user/2fa"} style={[styles.mobileMenuText, { color: Colors[theme].text }]}>
+                      {i18n.t("Multi-Factor Authentication")}
+                    </Link>
+                  </TouchableOpacity>
+                  <TouchableOpacity>
+                    <Link href={"/message"} style={[styles.mobileMenuText, { color: Colors[theme].text }]}>
+                      {i18n.t("Messages")}
+                    </Link>
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={hangleLogout}>
+                    <Text style={[styles.mobileMenuText, { color: Colors[theme].text }]}>{i18n.t("logout")}</Text>
+                  </TouchableOpacity>
+                </>
+                :
+                <>
+                  <TouchableOpacity>
+                    <Link href={"/login"} style={[styles.mobileMenuText, { color: Colors[theme].text }]}>
+                      {i18n.t("login")}
+                    </Link>
+                  </TouchableOpacity>
+                  <TouchableOpacity>
+                    <Link href={"/register"} style={[styles.mobileMenuText, { color: Colors[theme].text }]}>
+                      {i18n.t("Register")}
+                    </Link>
+                  </TouchableOpacity>
+                </>
+              }
             </View>
           )}
         </SafeAreaView>
@@ -228,6 +242,11 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     alignItems: 'center',
     justifyContent: 'center'
+  },
+  auth: {
+    flexDirection: 'row',
+    gap: 16,
+    marginLeft: 20
   }
 });
 

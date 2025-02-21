@@ -14,6 +14,7 @@ const silver = '#C0C0C0';
 const brightGreen = '#2ECC71';
 
 export const Colors = {
+  bgNav : '#90EE90',
   light: {
     text: darkBrown,
     background: parchmentBeige,
