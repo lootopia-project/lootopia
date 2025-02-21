@@ -43,5 +43,6 @@ router.use([
  * the routes or the routes group.
  */
 export const middleware = router.named({
+  verifyStripeWebhook: () => import('@vbusatta/adonis-stripe/middleware'),
   auth: () => import('#middleware/auth_middleware'),
 })
