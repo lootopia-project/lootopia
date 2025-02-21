@@ -27,7 +27,7 @@ const MFA = () => {
             }
         };
         fetchEmail();
-    }, []);
+    }, [i18n, setErrorMessage, setErrorVisible]);
 
     const handleValidateCode = async () => {
         if (otpCode.length !== 6 || isNaN(Number(otpCode))) {

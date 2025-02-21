@@ -26,7 +26,7 @@
     "Oops": "Oops! The page you are looking for doesn't exist.",
     "Go back to Home": "Go back to Home",
     "Back": "Back",
-    "No conversations yet.": "No conversations yet.",
+    "No conversations": "No conversations yet.",
     "Write a message": "Write a message",
     "Send": "Send",
     "You": "You",
@@ -71,5 +71,18 @@
     "Enter Recovery Code": "Enter Recovery Code",
     "An error occurred": "An error occurred. Please try again.",
     "Error. Please try again": "Error. Please try again",
-    "Authentification successfull": "Authentification successfull"
+    "Authentification successfull": "Authentification successfull",
+    "An error occurred while sending the message.": "An error occurred while sending the message.",
+    "An error occurred while fetching data": "An error occurred while fetching data.",
+    "An error occurred while logging out.": "An error occurred while logging out.",
+    "Check your email": "Check your email",
+    "Please check your email": "Please check your email for further instructions.",
+    "User or token not found": "User or token not found",
+    "Scan this QR Code with an authentication application": "Scan this QR Code with an authentication application",
+    "Validate": "Validate",
+    "Display emergency codes": "Display emergency codes",
+    "Emergency codes": "Emergency codes",
+    "No code available": "No code available",
+    "Close": "Close",
+    "Empty message. Nothing has been sent.": "Empty message. Nothing has been sent."
   }
