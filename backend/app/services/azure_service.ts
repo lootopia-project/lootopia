@@ -1,5 +1,4 @@
 import { BlobServiceClient, StorageSharedKeyCredential } from '@azure/storage-blob'
-import env from '#start/env'
 
 export async function uploadBase64ImageToAzureStorage(
   base64Image: string,
