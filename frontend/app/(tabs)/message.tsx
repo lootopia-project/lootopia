@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, FlatList, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Button, FlatList, TextInput, TouchableOpacity, View } from "react-native";
 import { getDatabase, onValue, push, ref } from "firebase/database";
 import { fetchTreasureHunt } from "@/services/MessageHunting";
 import { FontAwesome } from "@expo/vector-icons";
@@ -11,9 +11,11 @@ import { useLanguage } from "@/hooks/providers/LanguageProvider";
 import LastMessageHunting from "@/type/feature/message/LastMessageHunting";
 import LastMessage from "@/type/feature/message/LastMessage";
 import { useErrors } from "@/hooks/providers/ErrorProvider";
+import { useTheme, TextWrapper } from "@/hooks/providers/ThemeProvider"; // Ajout de TextWrapper
 
 const Message = () => {
     const { i18n } = useLanguage();
+    const { textColor } = useTheme(); // Récupération de textColor depuis ThemeProvider
     const [messages, setMessages] = useState<Messages[]>([]);
     const [text, setText] = useState<string>("");
     const [user, setUser] = useState<Users>();
@@ -98,18 +100,18 @@ const Message = () => {
         >
             {item.role === "organizer" && <FontAwesome name="star" size={20} color="gold" />}
             <View className="flex-1 ml-3">
-                <Text className="font-bold text-base text-black">
+                <TextWrapper style={{ fontWeight: "bold", fontSize: 16 }}>
                     {item.message?.sender || i18n.t("Unknown sender")}
-                </Text>
-                <Text className="text-sm text-gray-600" numberOfLines={1} ellipsizeMode="tail">
+                </TextWrapper>
+                <TextWrapper style={{ fontSize: 14, opacity: 0.8 }} numberOfLines={1} ellipsizeMode="tail">
                     {item.message?.text || i18n.t("No message")}
-                </Text>
+                </TextWrapper>
             </View>
-            <Text className="text-sm text-gray-400 ml-2">
+            <TextWrapper style={{ fontSize: 12, opacity: 0.6, marginLeft: 8 }}>
                 {item.message?.date
                     ? new Date(item.message.date).toLocaleDateString()
                     : i18n.t("No date")}
-            </Text>
+            </TextWrapper>
         </TouchableOpacity>
     );
 
@@ -120,10 +122,12 @@ const Message = () => {
     return (
         <>
             {!discussionClicked ? (
-                <View className="flex-1 bg-gray-100 p-4">
+                <View className="flex-1 p-4">
                     <TouchableOpacity className="flex-row items-center mb-4" onPress={redirectWelcome}>
-                        <FontAwesome name="arrow-left" size={20} color="black" />
-                        <Text className="ml-2 text-lg font-bold text-black">{i18n.t("Back")}</Text>
+                        <FontAwesome name="arrow-left" size={20} color={textColor} />
+                        <TextWrapper style={{ fontSize: 18, fontWeight: "bold", marginLeft: 8 }}>
+                            {i18n.t("Back")}
+                        </TextWrapper>
                     </TouchableOpacity>
 
                     <FlatList
@@ -131,15 +135,19 @@ const Message = () => {
                         keyExtractor={(item) => item?.id.toString()}
                         renderItem={renderItem}
                         ListEmptyComponent={
-                            <Text className="text-center text-gray-500 mt-10">{i18n.t("No conversations")}</Text>
+                            <TextWrapper style={{ textAlign: "center", marginTop: 20 }}>
+                                {i18n.t("No conversations")}
+                            </TextWrapper>
                         }
                     />
                 </View>
             ) : (
-                <View className="flex-1 bg-gray-100 p-4">
+                <View className="flex-1 bg p-4">
                     <TouchableOpacity className="flex-row items-center mb-4" onPress={handleBackClick}>
-                        <FontAwesome name="arrow-left" size={20} color="black" />
-                        <Text className="ml-2 text-lg font-bold text-black">{i18n.t("Back")}</Text>
+                        <FontAwesome name="arrow-left" size={20} color={textColor} />
+                        <TextWrapper style={{ fontSize: 18, fontWeight: "bold", marginLeft: 8 }}>
+                            {i18n.t("Back")}
+                        </TextWrapper>
                     </TouchableOpacity>
 
                     <FlatList
@@ -152,21 +160,22 @@ const Message = () => {
                             <View className="flex-row justify-between items-center mb-2">
                                 <View className="flex-row items-center">
                                     {item.sender === organizerId && <FontAwesome name="star" size={16} color="gold" />}
-                                    <Text
-                                        className={`font-bold ${
-                                            item.sender === user?.nickname ? "text-blue-500" : "text-gray-800"
-                                        }`}
+                                    <TextWrapper
+                                        style={{
+                                            fontWeight: "bold",
+                                            color: item.sender === user?.nickname ? "#1E90FF" : textColor,
+                                        }}
                                     >
                                         {item.sender === user?.nickname ? i18n.t("You") : item.sender}: {item.text}
-                                    </Text>
+                                    </TextWrapper>
                                 </View>
-                                <Text className="text-sm text-gray-500">
+                                <TextWrapper style={{ fontSize: 12, opacity: 0.6 }}>
                                     {item.timestamp &&
                                         new Date(item.timestamp).toLocaleTimeString([], {
                                             hour: "2-digit",
                                             minute: "2-digit",
                                         })}
-                                </Text>
+                                </TextWrapper>
                             </View>
                         )}
                     />
@@ -175,7 +184,9 @@ const Message = () => {
                         value={text}
                         onChangeText={setText}
                         placeholder={i18n.t("Write a message")}
-                        className="border border-gray-300 rounded-lg p-3 bg-white mb-4"
+                        placeholderTextColor={textColor}
+                        className="border border-gray-300 rounded-lg p-3 mb-4"
+                        style={{ color: textColor }}
                     />
                     <Button title={i18n.t("Send")} onPress={handleSend} />
                 </View>

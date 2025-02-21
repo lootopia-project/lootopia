@@ -1,5 +1,5 @@
 import { useEffect, useState} from "react";
-import {Text, ScrollView, View} from "react-native";
+import {Text, ScrollView, View, ImageBackground} from "react-native";
 import InfoEditUser from "@/type/feature/user/InfoEditUser";
 import {getInfoUser, updateInfoUser, updatePassword} from "@/services/UsersService";
 import { useLanguage } from "@/hooks/providers/LanguageProvider";
@@ -9,7 +9,10 @@ import Success from "@/components/Success";
 import ModalChangePassword from "@/components/user/ModalChangePassword";
 import FormEditUser from "@/components/user/FormEditUser";
 import { useErrors } from "@/hooks/providers/ErrorProvider";
+import { useTheme } from "@/hooks/providers/ThemeProvider";
 const EditUser = () => {
+    const { backgroundImage } = useTheme();
+
     const { i18n } = useLanguage();
     const [isModalVisible, setModalVisible] = useState(false);
     const [isSuccessVisible, setSuccessVisible] = useState(false);
@@ -87,12 +90,22 @@ const EditUser = () => {
         setErrorVisible(!response.success);
     };
 
+    console.log("backgroundImage",backgroundImage);
         return (
             <>
-            <ScrollView
-                className="p-6 bg-gray-100"
+            <h1>CC</h1>
+            {/* <ImageBackground
+             source={backgroundImage ? { uri: backgroundImage } : null}
+             defaultSource={require("@/assets/images/blanc.jpg")} // Image de secours en cas de problème
+             style={{ flex: 1, width: "100%", height: "100%" }}
+             resizeMode="cover"
+             > */}
+            
+              <ScrollView
+                className="p-6"
                 contentContainerStyle={{ flexGrow: 1 }}
-            >
+                >
+                
                 <Text className="text-2xl font-bold mb-4 text-center">{i18n.t("Edit User")}</Text>
 
                 <View className="w-full flex justify-center items-center">
@@ -116,8 +129,9 @@ const EditUser = () => {
                 />
 
                 <Success visible={isSuccessVisible} onClose={() => setSuccessVisible(false)} successMessage={message} />
+                
             </ScrollView>
-
+        {/* </ImageBackground>  */}
             </>
         );
 };
