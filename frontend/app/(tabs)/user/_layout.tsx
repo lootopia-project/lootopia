@@ -1,6 +1,6 @@
 import { Slot } from "expo-router";
-import { View, Text, ScrollView, Platform, useWindowDimensions } from "react-native";
-import Navbar from "@/components/navbar/navba";
+import { View, ScrollView, Platform, useWindowDimensions } from "react-native";
+import Navbar from "@/components/user/navbar";
 
 export default function RootLayout() {
     const { width } = useWindowDimensions();

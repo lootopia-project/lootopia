@@ -93,7 +93,7 @@ const EditUser = () => {
         return (
             <>
             <ScrollView
-                className="p-6 bg-gray-100"
+                className="p-6"
                 contentContainerStyle={{ flexGrow: 1 }}
             >
                 <Text className="text-2xl font-bold mb-4 text-center">{i18n.t("Edit User")}</Text>

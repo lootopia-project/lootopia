@@ -45,25 +45,18 @@ const Navbar = () => {
   return (
     <>
       <View style={styles.navWrapper}>
-        <SafeAreaView style={[styles.safeArea, { backgroundColor: Colors[theme].highlight }]}>
+        <SafeAreaView style={[styles.safeArea, { backgroundColor: Colors.bgNav }]}>
           <StatusBar barStyle={theme === "dark" ? "light-content" : "dark-content"} />
-          <View style={[styles.navBarContainer, { backgroundColor: Colors[theme].highlight }]}>
-            {isAuthenticated ? (
-              <Link href="/" style={[styles.brandLink, { color: Colors[theme].tint }]}>
-                Lootopia
-              </Link>
-            ) : (
-              <Link href="/login" style={[styles.brandLink, { color: Colors[theme].tint }]}>
-                Lootopia
-              </Link>
-            )}
-
+          <View style={[styles.navBarContainer, { backgroundColor: Colors.bgNav }]}>
+            <Link href="/" style={[styles.brandLink, { color: 'white' }]}>
+              Lootopia
+            </Link>
             <View style={styles.linksRowRight}>
-              {!isAuthenticated ?
+              {!isAuthenticated && !isMobile ?
                 (
                   <View className="flex items-center justify-center flex-row ">
                     <LanguageSwitcher />
-                    <View style={styles.auth }>
+                    <View style={styles.auth}>
                       <TouchableOpacity>
                         <Link href={"/login"}>{i18n.t("login")}</Link>
                       </TouchableOpacity>
@@ -76,6 +69,7 @@ const Navbar = () => {
                 : (
                   <>
                     {/* links right */}
+                    {!isAuthenticated && <LanguageSwitcher /> }
                   </>
 
                 )
@@ -119,21 +113,41 @@ const Navbar = () => {
           </View>
           {menuOpen && isMobile && (
             <View style={styles.mobileMenu}>
-              <TouchableOpacity>
-                <Text style={[styles.mobileMenuText, { color: Colors[theme].text }]}>
-                  🏴 Accueil
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity>
-                <Text style={[styles.mobileMenuText, { color: Colors[theme].text }]}>
-                  🔍 Chasses
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity>
-                <Text style={[styles.mobileMenuText, { color: Colors[theme].text }]}>
-                  ⚔ Profil
-                </Text>
-              </TouchableOpacity>
+              {isAuthenticated ?
+                <>
+                  <TouchableOpacity>
+                    <Link href={"/user/edit"} style={[styles.mobileMenuText, { color: Colors[theme].text }]}>
+                      {i18n.t("Edit User")}
+                    </Link>
+                  </TouchableOpacity>
+                  <TouchableOpacity>
+                    <Link href={"/user/2fa"} style={[styles.mobileMenuText, { color: Colors[theme].text }]}>
+                      {i18n.t("Multi-Factor Authentication")}
+                    </Link>
+                  </TouchableOpacity>
+                  <TouchableOpacity>
+                    <Link href={"/message"} style={[styles.mobileMenuText, { color: Colors[theme].text }]}>
+                      {i18n.t("Messages")}
+                    </Link>
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={hangleLogout}>
+                    <Text style={[styles.mobileMenuText, { color: Colors[theme].text }]}>{i18n.t("logout")}</Text>
+                  </TouchableOpacity>
+                </>
+                :
+                <>
+                  <TouchableOpacity>
+                    <Link href={"/login"} style={[styles.mobileMenuText, { color: Colors[theme].text }]}>
+                      {i18n.t("login")}
+                    </Link>
+                  </TouchableOpacity>
+                  <TouchableOpacity>
+                    <Link href={"/register"} style={[styles.mobileMenuText, { color: Colors[theme].text }]}>
+                      {i18n.t("Register")}
+                    </Link>
+                  </TouchableOpacity>
+                </>
+              }
             </View>
           )}
         </SafeAreaView>

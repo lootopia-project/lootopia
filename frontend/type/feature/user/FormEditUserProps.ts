@@ -5,7 +5,7 @@ interface FormEditUserProps  {
     handleFileChange: () => void;
     setModalVisible: (visible: boolean) => void;
     submit: () => void;
-    hangleCheckMail: () => void;
+    // hangleCheckMail: () => void;
 }
 
 export default FormEditUserProps;

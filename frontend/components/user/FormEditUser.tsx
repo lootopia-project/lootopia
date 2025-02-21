@@ -12,7 +12,7 @@ const FormEditUser: React.FC<FormEditUserProps> = ({ infoEditUser, handleChange,
         setCheckMail(!checkMail);
     }
     return (
-        <View className="bg-white p-8 rounded-lg shadow-lg w-full max-w-3xl flex flex-col items-center text-center">
+        <View className="p-8 w-full max-w-3xl flex flex-col items-center text-center">
             <TouchableOpacity onPress={handleFileChange} className="flex justify-center items-center mt-4">
                 <View style={{ width: 100, height: 100, backgroundColor: '#E5E7EB', borderRadius: 50, overflow: 'hidden', alignItems: 'center', justifyContent: 'center' }}>
                     {infoEditUser.img ? (
@@ -97,13 +97,15 @@ const FormEditUser: React.FC<FormEditUserProps> = ({ infoEditUser, handleChange,
                 </View>
             </View>
 
-            <TouchableOpacity className="mt-6" onPress={() => setModalVisible(true)}>
-                <Text className="text-blue-500 underline text-center">{i18n.t("Change Password")}</Text>
-            </TouchableOpacity>
+            <View className="flex flex-row justify-center w-full mt-6 mb-6 space-x-4">
+                <TouchableOpacity className="bg-blue-500 p-4 rounded-lg" onPress={() => setModalVisible(true)}>
+                    <Text className="text-white text-center">{i18n.t("Change Password")}</Text>
+                </TouchableOpacity>
 
-            <TouchableOpacity className="bg-blue-500 p-4 rounded-lg mt-6 w-full" onPress={() => submit()}>
-                <Text className="text-white text-center">{i18n.t("Save Changes")}</Text>
-            </TouchableOpacity>
+                <TouchableOpacity className="bg-blue-500 p-4 rounded-lg " onPress={() => submit()}>
+                    <Text className="text-white text-center">{i18n.t("Save Changes")}</Text>
+                </TouchableOpacity>
+            </View>
             {checkMail && <CheckMail handleCheckMail={hangleCheckMail}/>}
         </View>
     );

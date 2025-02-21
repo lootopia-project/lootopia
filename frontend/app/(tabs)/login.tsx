@@ -7,6 +7,8 @@ import {
   KeyboardAvoidingView,
   Platform,
   useColorScheme,
+  ScrollView,
+  ImageBackground,
 } from "react-native";
 import { useAuth } from "@/hooks/providers/AuthProvider";
 import { useErrors } from "@/hooks/providers/ErrorProvider";
@@ -29,8 +31,8 @@ export default function LoginPage() {
     try {
       const check = await login({ email, password });
       if (check.message === "2FA") {
-         router.push("/2fa");
-     }
+        router.push("/2fa");
+      }
       else if (check.headers) {
         setErrorMessage("");
         router.push("/");
@@ -42,30 +44,36 @@ export default function LoginPage() {
   };
 
   return (
-      <KeyboardAvoidingView
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
-          className="flex-1 justify-center items-center p-5"
-          style={{ backgroundColor: themeColors.background }}
+    <ImageBackground
+      style={{ flex: 1, backgroundColor: themeColors.background }}
+      // behavior={Platform.OS === "ios" ? "padding" : "height"}
+      source={{uri: "https://lootopia.blob.core.windows.net/lootopia-photos/map_background.png"}}
+      resizeMode="cover"
       >
-        <View className="w-11/12 bg-white p-6 rounded-lg shadow-lg">
-          {/* Titre */}
-          <Text
+      <ScrollView
+        style={{ flex: 1, minHeight: '100%', }}
+        contentContainerStyle={{ flexGrow: 1 }}
+        keyboardShouldPersistTaps="handled"
+      >
+        <View className="flex-1 justify-center items-center p-5">
+          <View className="bg-white/20 backdrop-blur-sm p-6 rounded-lg shadow-lg">
+            <Text
               className="text-2xl font-bold text-center mb-5"
-              style={{ color: themeColors.text }}
-          >
-            {i18n.t("Sign in")}
-          </Text>
-
-          {/* Champ Email */}
-          <View className="mb-4">
-            <Text className="text-lg mb-2" style={{ color: themeColors.text }}>
-              {i18n.t("email")}
+              style={{ color: "white" }}
+            >
+              {i18n.t("Sign in")}
             </Text>
-            <TextInput
+
+            {/* Champ Email */}
+            <View className="mb-4">
+              <Text className="text-lg mb-2" style={{ color: "white" }}>
+                {i18n.t("email")}
+              </Text>
+              <TextInput
                 className="border rounded-lg p-3 text-base"
                 style={{
                   borderColor: themeColors.icon,
-                  color: themeColors.text,
+                  color: "white",
                   backgroundColor: themeColors.background,
                 }}
                 placeholder={i18n.t("email")}
@@ -74,19 +82,19 @@ export default function LoginPage() {
                 onChangeText={setEmail}
                 keyboardType="email-address"
                 autoCapitalize="none"
-            />
-          </View>
+              />
+            </View>
 
-          {/* Champ Mot de passe */}
-          <View className="mb-4">
-            <Text className="text-lg mb-2" style={{ color: themeColors.text }}>
-              {i18n.t("password")}
-            </Text>
-            <TextInput
+            {/* Champ Mot de passe */}
+            <View className="mb-4">
+              <Text className="text-lg mb-2" style={{ color: "white" }}>
+                {i18n.t("password")}
+              </Text>
+              <TextInput
                 className="border rounded-lg p-3 text-base"
                 style={{
                   borderColor: themeColors.icon,
-                  color: themeColors.text,
+                  color: "white",
                   backgroundColor: themeColors.background,
                 }}
                 placeholder={i18n.t("password")}
@@ -95,31 +103,34 @@ export default function LoginPage() {
                 onChangeText={setPassword}
                 secureTextEntry
                 autoCapitalize="none"
-            />
-          </View>
+              />
+            </View>
 
-          {/* Bouton de connexion */}
-          <TouchableOpacity
-              className="bg-blue-500 py-4 rounded-lg"
+            {/* Bouton de connexion */}
+            <TouchableOpacity
+              className="py-4 rounded-lg"
+              style={{backgroundColor: "#C59B5F"}}
               onPress={handleLogin}
-          >
-            <Text
+            >
+              <Text
                 className="text-center text-white text-lg font-bold"
                 style={{ color: themeColors.background }}
-            >
-              {i18n.t("login")}
-            </Text>
-          </TouchableOpacity>
+              >
+                {i18n.t("login")}
+              </Text>
+            </TouchableOpacity>
 
-          {/* Lien d'inscription */}
-          <Link
+            {/* Lien d'inscription */}
+            <Link
               href="/register"
               className="mt-5 text-center text-base underline"
               style={{ color: themeColors.tint }}
-          >
-            {i18n.t("Don't have an account? Sign up")}
-          </Link>
+            >
+              {i18n.t("Don't have an account? Sign up")}
+            </Link>
+          </View>
         </View>
-      </KeyboardAvoidingView>
+      </ScrollView>
+    </ImageBackground>
   );
 }
