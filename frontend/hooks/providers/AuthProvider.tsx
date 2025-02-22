@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
-import  { loginUser, logoutUser, checkIsLogin } from "@/services/AuthService";
+import { loginUser, logoutUser, checkIsLogin, loginOrRegisterWithGoogle } from "@/services/AuthService";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import LOGIN from "@/type/feature/auth/login";
 import RETURN from "@/type/request/return";
@@ -10,6 +10,7 @@ import { CheckDoubleAuth, CheckRecoveryCode } from "@/services/DoubleAuth";
 
 const defaultContextValue: AUTH_CONTEXT_TYPE = {
     isAuthenticated: false,
+    errorGoogle: "",
     login: async (): Promise<RETURN> => {
         await Promise.resolve();
         return { message: "" };
@@ -22,27 +23,32 @@ const defaultContextValue: AUTH_CONTEXT_TYPE = {
         await Promise.resolve();
         return { message: "" };
     },
-
     checkRecoveryCode: async (): Promise<RETURN> => {
         await Promise.resolve();
         return { message: "" };
-    }
-
+    },
+    LoginOrRegisterWithGoogle: async (mode: 'login' | 'register') => {
+        void 0;
+    },
 };
 
-const publicRoutes = ["/+not-found", "/login", "/register", "/2fa", "/user/recoveryCode","/", "/user/checkMail"];
+const publicRoutes = ["/+not-found", "/login", "/register", "/2fa", "/user/recoveryCode", "/", "/user/checkMail", "/login-success"];
 const AUTH_CONTEXT = createContext(defaultContextValue);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [errorGoogle, setErrorGoogle] = useState("");
     const pathName = usePathname();
     const router = useRouter();
     const { changeLanguage } = useLanguage();
+
     useEffect(() => {
         const initializeAuthState = async () => {
             try {
+                await AsyncStorage.getItem("token")
                 const data = await checkIsLogin();
                 if (data.message === true) {
+                    setErrorGoogle("");
                     setIsAuthenticated(true);
                     await AsyncStorage.setItem("lang", data.lang);
                     await AsyncStorage.setItem("img", data.img);
@@ -63,22 +69,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                 const isPublic = publicRoutes.some((route) => {
                     return pathName === route || pathName.startsWith("/user/checkMail/");
                 })                
-                if (!isPublic) {
+                 if (!isPublic) {
                     router.push("/+not-found");
                 }
             }
         };
 
         initializeAuthState();
-    }, [pathName,changeLanguage,router]);
+    }, [pathName,changeLanguage, router]);
 
     const login = async (userData: LOGIN): Promise<RETURN> => {
-
         const data = await loginUser(userData);
-
-        if(data.message!=="2FA"){
-         await AsyncStorage.setItem("token", data.headers.authorization);
-        }else{
+        if (data.message !== "2FA") {
+            await AsyncStorage.setItem("token", data.headers.authorization);
+        }else {
             await AsyncStorage.setItem("email", userData.email);
         }
         return data;
@@ -113,16 +117,53 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             setIsAuthenticated(true);
         }
         return result;
-    }
+    };
+
+
+
+    
+
+    const LoginOrRegisterWithGoogle = async (mode: 'login' | 'register') => {
+        loginOrRegisterWithGoogle(mode);
+    };
+    
+
+    const fetchGoogleToken = async (token: string) => {
+            if (token) {
+                await AsyncStorage.setItem("token", token);
+                setIsAuthenticated(true);
+      
+        }
+    };
+    
+
+    useEffect(() => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get("token");
+        const error = urlParams.get("error");
+        if (token&&pathName==="/"){
+            fetchGoogleToken(token);
+        }
+        else if (error) {
+            if (error === "already_registered_google") {
+                setErrorGoogle("You have already an Google account. Please login with Google");
+                
+            } else if (error === "registered_with_email") {
+                setErrorGoogle("You have already an account with this email. Please login with your email and password");
+            }
+        }
+    }, [pathName]);
 
     return (
         <AUTH_CONTEXT.Provider
             value={{
                 isAuthenticated,
+                errorGoogle,
                 login,
                 logout,
                 checkDoubleAuth,
-                checkRecoveryCode
+                checkRecoveryCode,
+                LoginOrRegisterWithGoogle,
             }}
         >
             {children}
@@ -133,7 +174,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 export const useAuth = () => {
     const context = useContext(AUTH_CONTEXT);
     if (!context) {
-      throw new Error("useAuth must be used within an AuthProvider");
+        throw new Error("useAuth must be used within an AuthProvider");
     }
     return context;
-  };
+};

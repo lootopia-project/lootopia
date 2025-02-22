@@ -84,5 +84,8 @@
     "Emergency codes": "Codes de secours",
     "No code available": "Aucun code disponible",
     "Close": "Fermer",
-    "Empty message. Nothing has been sent.": "Message vide. Rien n'a été envoyé."
+    "Empty message. Nothing has been sent.": "Message vide. Rien n'a été envoyé.",
+    "Or sign up with Google": "Ou inscrivez-vous avec Google",
+    "You have already an Google account. Please login with Google": "Vous avez déjà un compte Google. Veuillez vous connecter avec Google",
+    "You have already an account with this email. Please login with your email and password": "Vous avez déjà un compte avec cet email. Veuillez vous connecter avec votre email et votre mot de passe",
 }

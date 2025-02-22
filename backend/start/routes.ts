@@ -20,6 +20,9 @@ router.post('/users/checkDoubleAuth', [DoubleAuthsController, 'checkDoubleAuth']
 router.post('/users/checkRecoveryCode', [DoubleAuthsController, 'checkRecoveryCode'])
 router.post('/users/CheckMailToken', [UsersController, 'CheckMailToken'])
 
+router.get('/auth/google', [AuthController, 'redirectToGoogle'])
+router.get('/auth/google/callback', [AuthController, 'handleGoogleCallback'])
+
 router
   .group(() => {
     router.post('/logout', [AuthController, 'logout'])

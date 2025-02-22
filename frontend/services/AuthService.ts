@@ -19,8 +19,8 @@ const config = {
 const loginUser = async (userData: LOGIN): Promise<RETURN> => {
     try {
         const { email, password } = userData;
-        // Récupérer le token FCM via requestFcmToken
         const fcmToken = await requestFcmToken();
+        AsyncStorage.setItem("fcmToken", fcmToken.token || "");
         if (!fcmToken) {
 
             const permission = await Notification.requestPermission();
@@ -122,5 +122,23 @@ const registerUser = async (userData: LOGIN): Promise<RETURN> => {
   }
 };
 
+const loginOrRegisterWithGoogle = async (mode: 'login' | 'register') => {
+    const fcmToken = await requestFcmToken();
+    AsyncStorage.setItem("fcmToken", fcmToken.token || "");
+    if (!fcmToken) {
 
-export { loginUser, logoutUser , checkIsLogin, registerUser };
+        const permission = await Notification.requestPermission();
+        if (permission === "granted") {
+            const newFcmToken = await requestFcmToken();
+            if (!newFcmToken) {
+                console.warn("Impossible d'obtenir un token FCM après avoir demandé l'autorisation.");
+            }
+        } else {
+            console.error("L'utilisateur a refusé les notifications.");
+        }
+    }
+    window.location.href = `${API_URL}/auth/google?state=${mode}`;
+    }
+
+
+export { loginUser, logoutUser , checkIsLogin, registerUser, loginOrRegisterWithGoogle };

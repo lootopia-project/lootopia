@@ -4,6 +4,7 @@ import User from '#models/user'
 import AuthAccessToken from '#models/auth_access_token'
 import { sendNotification } from '#services/send_notification_service'
 import { DateTime } from 'luxon'
+import env from '#start/env'
 
 export default class AuthController {
   async login({ request, auth, response }: HttpContext) {
@@ -31,6 +32,7 @@ export default class AuthController {
 
         sendNotification(fcmToken, verifyCredentials, 'Login successful', 'You are now logged in')
       }
+      console.log(head)
       return response.json(head)
     }
   }
@@ -42,7 +44,7 @@ export default class AuthController {
     if (USER_VERIFY) {
       return response.status(201).json({ message: 'User already exists' })
     }
-    const newUser = await User.create({
+    await User.create({
       email: email,
       password: password,
     })
@@ -65,10 +67,63 @@ export default class AuthController {
 
   async checkIsLogin({ auth, response }: HttpContext) {
     const user = auth.use('api').user
+    console.log(user)
     if (user) {
       const lang = user.lang
       return response.status(200).json({ message: true, lang: lang, img: user.img })
     }
     return response.status(200).json({ message: false })
+  }
+
+  public async redirectToGoogle({ ally, request, response }: HttpContext) {
+    const state = request.input('state')
+    console.log('🔍 Origine de la requête OAuth :', state)
+
+    return ally
+      .use('google')
+      .stateless()
+      .redirect((redirectRequest) => {
+        redirectRequest.param('state', state)
+      })
+  }
+
+  public async handleGoogleCallback({ ally, auth, response, request }: HttpContext) {
+    const FRONT_URL = env.get('FRONT_URL') || ''
+    console.log('🔍 FRONT_URL :', FRONT_URL)
+
+    const google = ally.use('google').stateless()
+    const state = request.qs().state || ''
+
+    if (google.accessDenied()) {
+      return response.redirect(`${FRONT_URL}${state}/?error=access_denied`)
+    }
+
+    if (google.hasError()) {
+      return response.redirect(`${FRONT_URL}${state}/?error=${google.getError()}`)
+    }
+
+    const googleUser = await google.user()
+    let user = await User.findBy('email', googleUser.email)
+
+    if (user) {
+      if (user.provider === 'google' && state === 'register') {
+        return response.redirect(`${FRONT_URL}${state}/?error=already_registered_google`)
+      } else if (user.provider === 'email') {
+        return response.redirect(`${FRONT_URL}${state}/?error=registered_with_email`)
+      }
+    } else {
+      user = await User.create({
+        img: googleUser.avatarUrl,
+        name: googleUser.original.given_name,
+        surname: googleUser.original.family_name,
+        email: googleUser.email,
+        provider: 'google',
+        password: '',
+      })
+    }
+
+    const token = await auth.use('api').authenticateAsClient(user, [], { expiresIn: '1day' })
+
+    return response.redirect(`${FRONT_URL}?token=${token?.headers?.authorization}`)
   }
 }

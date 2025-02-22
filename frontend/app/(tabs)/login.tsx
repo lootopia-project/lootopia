@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -7,6 +7,7 @@ import {
   useColorScheme,
   ScrollView,
   ImageBackground,
+  Image,
 } from "react-native";
 import { useAuth } from "@/hooks/providers/AuthProvider";
 import { useErrors } from "@/hooks/providers/ErrorProvider";
@@ -15,7 +16,7 @@ import { Colors } from "@/constants/Colors";
 import { useLanguage } from "@/hooks/providers/LanguageProvider";
 
 export default function LoginPage() {
-  const { login } = useAuth();
+  const { login,LoginOrRegisterWithGoogle,errorGoogle } = useAuth();
   const { setErrorVisible, setErrorMessage } = useErrors();
   const colorScheme = useColorScheme();
   const themeColors = colorScheme === "dark" ? Colors.dark : Colors.light;
@@ -24,6 +25,8 @@ export default function LoginPage() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const urlParams = new URLSearchParams(window.location.search);
+  const error = urlParams.get("error");
 
   const handleLogin = async () => {
     try {
@@ -40,6 +43,19 @@ export default function LoginPage() {
       setErrorVisible(true);
     }
   };
+
+    useEffect(() => {
+      if(error){
+        setErrorMessage(i18n.t(errorGoogle))
+        setErrorVisible(true)
+      }
+    }, [errorGoogle]);
+
+  const handleGoogleLogin = () => {
+
+    LoginOrRegisterWithGoogle("login");
+ };
+
 
   return (
     <ImageBackground
@@ -82,7 +98,6 @@ export default function LoginPage() {
               />
             </View>
 
-            {/* Champ Mot de passe */}
             <View className="mb-4">
               <Text className="text-lg mb-2" style={{ color: "white" }}>
                 {i18n.t("password")}
@@ -103,7 +118,6 @@ export default function LoginPage() {
               />
             </View>
 
-            {/* Bouton de connexion */}
             <TouchableOpacity
               className="py-4 rounded-lg"
               style={{backgroundColor: "#C59B5F"}}
@@ -117,7 +131,6 @@ export default function LoginPage() {
               </Text>
             </TouchableOpacity>
 
-            {/* Lien d'inscription */}
             <Link
               href="/register"
               className="mt-5 text-center text-base underline"
@@ -125,6 +138,22 @@ export default function LoginPage() {
             >
               {i18n.t("Don't have an account? Sign up")}
             </Link>
+             <View className="mt-6 items-center">
+                        <Text className="text-lg text-white mb-2">
+                          {i18n.t("Or sign up with Google")}
+                        </Text>
+                        <TouchableOpacity
+                          className="mt-3 bg-white p-2 rounded-full shadow-lg"
+                          onPress={handleGoogleLogin}
+                        >
+                          <Image
+                            source={{
+                              uri: "https://lootopia.blob.core.windows.net/lootopia-photos/google_logo.png",
+                            }}
+                            style={{ width: 40, height: 40 }}
+                          />
+                        </TouchableOpacity>
+                      </View>
           </View>
         </View>
       </ScrollView>

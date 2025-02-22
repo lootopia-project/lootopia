@@ -70,6 +70,9 @@ export default class User extends compose(BaseModel, AuthFinder) {
   @column()
   declare checkMail: boolean
 
+  @column()
+  declare provider: string
+
   @hasMany(() => Notification)
   declare notifications: HasMany<typeof Notification>
 
