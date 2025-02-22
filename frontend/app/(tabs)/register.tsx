@@ -23,7 +23,7 @@ export default function RegisterPage() {
   const [success, setSuccess] = useState("");
   const { setErrorVisible, setErrorMessage } = useErrors();
   const { i18n } = useLanguage();
-  const urlParams = new URLSearchParams(window.location.search);
+  const urlParams = new URLSearchParams(window?.location?.search);
   const error = urlParams.get("error");
   const [formData, setFormData] = useState({
     username: "",

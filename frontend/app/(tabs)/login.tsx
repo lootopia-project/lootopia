@@ -25,7 +25,7 @@ export default function LoginPage() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const urlParams = new URLSearchParams(window.location.search);
+  const urlParams = new URLSearchParams(window?.location?.search);
   const error = urlParams.get("error");
 
   const handleLogin = async () => {
@@ -39,6 +39,7 @@ export default function LoginPage() {
         router.push("/");
       }
     } catch (err) {
+      console.log(err);
       setErrorMessage(i18n.t("Invalid email or password"));
       setErrorVisible(true);
     }

@@ -138,7 +138,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     
 
     useEffect(() => {
-        const urlParams = new URLSearchParams(window.location.search);
+        const urlParams = new URLSearchParams(window?.location?.search);
         const token = urlParams.get("token");
         const error = urlParams.get("error");
         if (token&&pathName==="/"){

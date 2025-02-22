@@ -89,17 +89,20 @@ export default class AuthController {
 
   public async handleGoogleCallback({ ally, auth, response, request }: HttpContext) {
     const FRONT_URL = env.get('FRONT_URL') || ''
+    const MOBILE_REDIRECT_URI = 'myapp://auth'
+
     console.log('🔍 FRONT_URL :', FRONT_URL)
+    console.log('🔍 MOBILE_REDIRECT_URI :', MOBILE_REDIRECT_URI)
 
     const google = ally.use('google').stateless()
     const state = request.qs().state || ''
 
     if (google.accessDenied()) {
-      return response.redirect(`${FRONT_URL}${state}/?error=access_denied`)
+      return response.redirect(`${FRONT_URL}/${state}/?error=access_denied`)
     }
 
     if (google.hasError()) {
-      return response.redirect(`${FRONT_URL}${state}/?error=${google.getError()}`)
+      return response.redirect(`${FRONT_URL}/${state}/?error=${google.getError()}`)
     }
 
     const googleUser = await google.user()
@@ -125,6 +128,12 @@ export default class AuthController {
 
     const token = await auth.use('api').authenticateAsClient(user, [], { expiresIn: '1day' })
 
-    return response.redirect(`${FRONT_URL}?token=${token?.headers?.authorization}`)
-  }
+    // 🔥 Vérification de la plateforme avec le state envoyé depuis l'application
+    if (state === 'mobile') {
+      return response.redirect(`${MOBILE_REDIRECT_URI}?token=${token?.headers?.authorization}`)
+    } else {
+      return response.redirect(`${FRONT_URL}?token=${token?.headers?.authorization}`)
+    }
+}
+
 }
