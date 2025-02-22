@@ -39,7 +39,8 @@ export default defineConfig({
     () => import('@adonisjs/mail/mail_provider'),
     () => import('@adonisjs/core/providers/edge_provider'),
     () => import('@adonisjs/i18n/i18n_provider'),
-    () => import('@vbusatta/adonis-stripe/provider')
+    () => import('@vbusatta/adonis-stripe/provider'),
+    () => import('@adonisjs/ally/ally_provider'),
   ],
 
   /*

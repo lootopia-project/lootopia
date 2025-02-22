@@ -4,6 +4,7 @@ import AXIOS_ERROR from '@/type/request/axios_error';
 import LOGIN from '@/type/feature/auth/login';
 import RETURN from '@/type/request/return';
 import { requestFcmToken} from "./firebase";
+import { Linking, Platform } from "react-native";
 
 const API_URL=process.env.EXPO_PUBLIC_API_URL as string
 
@@ -19,8 +20,8 @@ const config = {
 const loginUser = async (userData: LOGIN): Promise<RETURN> => {
     try {
         const { email, password } = userData;
-        // Récupérer le token FCM via requestFcmToken
         const fcmToken = await requestFcmToken();
+        AsyncStorage.setItem("fcmToken", fcmToken.token || "");
         if (!fcmToken) {
 
             const permission = await Notification.requestPermission();
@@ -122,5 +123,37 @@ const registerUser = async (userData: LOGIN): Promise<RETURN> => {
   }
 };
 
+const loginOrRegisterWithGoogle = async (mode: 'login' | 'register') => {
+    const fcmToken = await requestFcmToken();
+    AsyncStorage.setItem("fcmToken", fcmToken.token || "");
 
-export { loginUser, logoutUser , checkIsLogin, registerUser };
+    if (!fcmToken) {
+        const permission = await Notification.requestPermission();
+        if (permission === "granted") {
+            const newFcmToken = await requestFcmToken();
+            if (!newFcmToken) {
+                console.warn("Impossible d'obtenir un token FCM après avoir demandé l'autorisation.");
+            }
+        } else {
+            console.error("L'utilisateur a refusé les notifications.");
+        }
+    }
+
+    const authUrl = `${API_URL}/auth/google?state=${mode}`;
+
+    if (Platform.OS === 'web') {
+        // ✅ Redirection classique pour le web
+        window.location.href = authUrl;
+    } else {
+        // ✅ Ouvrir l'URL dans le navigateur du téléphone pour mobile
+        const supported = await Linking.canOpenURL(authUrl);
+        if (supported) {
+            await Linking.openURL(authUrl);
+        } else {
+            console.error("Impossible d'ouvrir l'URL :", authUrl);
+        }
+    }
+};
+
+
+export { loginUser, logoutUser , checkIsLogin, registerUser, loginOrRegisterWithGoogle };
