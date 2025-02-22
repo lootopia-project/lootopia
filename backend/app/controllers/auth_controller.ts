@@ -107,9 +107,10 @@ export default class AuthController {
 
     if (user) {
       if (user.provider === 'google' && state === 'register') {
-        return response.redirect(`${FRONT_URL}${state}/?error=already_registered_google`)
+        console.log('🔍 Utilisateur déjà enregistré avec Google')
+        return response.redirect(`${FRONT_URL}/${state}/?error=already_registered_google`);
       } else if (user.provider === 'email') {
-        return response.redirect(`${FRONT_URL}${state}/?error=registered_with_email`)
+        return response.redirect(`${FRONT_URL}/${state}/?error=registered_with_email`);
       }
     } else {
       user = await User.create({

@@ -146,7 +146,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         }
         else if (error) {
             if (error === "already_registered_google") {
-                setErrorGoogle("You have already an Google account. Please login with Google");
+                setErrorGoogle("You already have an account linked to this email address");
                 
             } else if (error === "registered_with_email") {
                 setErrorGoogle("You have already an account with this email. Please login with your email and password");
