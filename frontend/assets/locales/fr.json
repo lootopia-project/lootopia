@@ -86,5 +86,6 @@
     "Close": "Fermer",
     "Empty message. Nothing has been sent.": "Message vide. Rien n'a été envoyé.",
     "Or sign in with":"Ou connectez-vous avec",
-    "Connexion success":"Connexion réussie"
+    "Connexion success":"Connexion réussie",
+    "An account already exists with this email": "Un compte existe déjà avec cet email"
 }

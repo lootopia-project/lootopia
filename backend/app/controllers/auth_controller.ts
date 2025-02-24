@@ -73,7 +73,7 @@ export default class AuthController {
   }
 
   async loginOrRegisterGoogle({ request, response, auth }: HttpContext) {
-    const { email, firstName, lastName, img, provider, mode,fcmToken } = request.all()
+    const { email, firstName, lastName, img, provider, mode, fcmToken } = request.all()
 
     const USER_VERIFY = await User.findBy('email', email)
     if (USER_VERIFY && mode === 'register') {
@@ -82,7 +82,7 @@ export default class AuthController {
       const head = await auth
         .use('api')
         .authenticateAsClient(USER_VERIFY, [], { expiresIn: '1day' })
-        sendNotification(fcmToken, USER_VERIFY, 'Login successful', 'You are now logged in')
+      sendNotification(fcmToken, USER_VERIFY, 'Login successful', 'You are now logged in')
 
       return response.json({ message: head, success: true })
     }
