@@ -71,4 +71,31 @@ export default class AuthController {
     }
     return response.status(200).json({ message: false })
   }
+
+  async loginOrRegisterGoogle({ request, response, auth }: HttpContext) {
+    const { email, firstName, lastName, img, provider, mode,fcmToken } = request.all()
+
+    const USER_VERIFY = await User.findBy('email', email)
+    if (USER_VERIFY && mode === 'register') {
+      return response.json({ message: 'An account already exists with this email', success: false })
+    } else if (USER_VERIFY && mode === 'login') {
+      const head = await auth
+        .use('api')
+        .authenticateAsClient(USER_VERIFY, [], { expiresIn: '1day' })
+        sendNotification(fcmToken, USER_VERIFY, 'Login successful', 'You are now logged in')
+
+      return response.json({ message: head, success: true })
+    }
+
+    await User.create({
+      email: email,
+      name: firstName,
+      surname: lastName,
+      img: img,
+      provider: provider,
+      password: '',
+    })
+
+    return response.json({ success: true })
+  }
 }

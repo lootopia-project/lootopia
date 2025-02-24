@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "expo-router";
 import {
   View,
@@ -7,19 +7,73 @@ import {
   TouchableOpacity,
   Keyboard,
   ScrollView,
-  ImageBackground,
+  ImageBackground, Image,
 } from "react-native";
-import { registerUser } from "@/services/AuthService";
+import {  registerUser } from "@/services/AuthService";
 import { validatePassword } from "@/constants/validatePassword";
 import { useErrors } from "@/hooks/providers/ErrorProvider";
 import { useLanguage } from "@/hooks/providers/LanguageProvider";
 import AboutPassword from "@/components/aboutPassword";
 
+import { Platform } from "react-native";
+import * as WebBrowser from 'expo-web-browser';
+import { useAuth, useSSO, useUser } from '@clerk/clerk-expo'
+import * as AuthSession from 'expo-auth-session'
+import UsersGoogle from "@/type/feature/auth/user_google";
+import {useAuth as Auth} from "@/hooks/providers/AuthProvider";
+
+
+
 export default function RegisterPage() {
   const [success, setSuccess] = useState("");
   const { setErrorVisible, setErrorMessage } = useErrors();
   const { i18n } = useLanguage();
+  const { startSSOFlow } = useSSO()
+  const {loginOrRegisterGoogle } = Auth();
+  const {user}=useUser()
+  const {signOut}=useAuth()
+  const [sendData, setSendData] = useState(false)
 
+
+  useEffect(() => {
+    signOut()
+  }, [])
+
+  useEffect(() => {
+    const register = async () => {
+      if (user && sendData) {
+        const users: UsersGoogle = {
+          firstName: user?.firstName||"",
+          lastName: user?.lastName||"",
+          email: user?.primaryEmailAddress?.emailAddress||"",
+          img: user?.imageUrl||"",
+          provider: "google",
+          mode: "register",
+        };
+    
+        const result = await loginOrRegisterGoogle(users);
+
+        if (result.success) {
+          setSuccess(i18n.t("Registration successful!"));
+          setErrorMessage("");
+        }else{
+          setErrorMessage(i18n.t(result.message));
+          setErrorVisible(true);
+        }
+        setSendData(false);
+      }
+
+    };
+
+    register();
+  }, [user, sendData]); 
+
+  
+
+
+
+  
+  
   const [formData, setFormData] = useState({
     username: "",
     password: "",
@@ -91,6 +145,30 @@ export default function RegisterPage() {
     }
   };
 
+ 
+
+
+  const handleGoogleRegister = async () => {
+    setSendData(true)
+    try {
+      const { createdSessionId, setActive, signIn, signUp } = await startSSOFlow({
+        strategy: 'oauth_google',
+        redirectUrl: AuthSession.makeRedirectUri(),
+      })
+
+
+      if (createdSessionId) {
+        setActive!({ session: createdSessionId })
+      } else {
+        setErrorMessage('Error connecting')
+        setErrorVisible(true)
+      }
+    } catch (err) {
+
+    }
+  };
+  
+
   return (
       <ImageBackground
         className="flex-1" 
@@ -157,6 +235,17 @@ export default function RegisterPage() {
           </TouchableOpacity>
 
           <View className="mt-4">{AboutPassword(checkPassword)}</View>
+
+          <View className="mt-6 flex items-center">
+              <Text className="text-white mb-2">{i18n.t("Or sign in with")}</Text>
+              <TouchableOpacity onPress={handleGoogleRegister} className="p-2 rounded-full">
+                <Image
+                  source={{ uri: "https://lootopia.blob.core.windows.net/lootopia-photos/google_logo.png" }}
+                  style={{ width: 50, height: 50 }}
+                  resizeMode="contain"
+                />
+              </TouchableOpacity>
+            </View>
 
           <Link
               href={"/login"}

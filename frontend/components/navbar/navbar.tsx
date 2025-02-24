@@ -21,7 +21,7 @@ const Navbar = () => {
   const { setErrorMessage, setErrorVisible } = useErrors();
   useEffect(() => {
     if (isAuthenticated) {
-      const img = localStorage.getItem("img");
+      // const img = localStorage.getItem("img");
       setImg("https://lootopia.blob.core.windows.net/lootopia-photos/user.png");
       if (img) {
         setImg(img);

@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
-import  { loginUser, logoutUser, checkIsLogin } from "@/services/AuthService";
+import  { loginUser, logoutUser, checkIsLogin, LoginOrRegisterGoogle } from "@/services/AuthService";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import LOGIN from "@/type/feature/auth/login";
 import RETURN from "@/type/request/return";
@@ -7,6 +7,7 @@ import AUTH_CONTEXT_TYPE from "@/type/feature/auth/auth_context_type";
 import { useRouter, usePathname } from "expo-router";
 import { useLanguage } from "@/hooks/providers/LanguageProvider";
 import { CheckDoubleAuth, CheckRecoveryCode } from "@/services/DoubleAuth";
+import UsersGoogle from "@/type/feature/auth/user_google";
 
 const defaultContextValue: AUTH_CONTEXT_TYPE = {
     isAuthenticated: false,
@@ -26,6 +27,11 @@ const defaultContextValue: AUTH_CONTEXT_TYPE = {
     checkRecoveryCode: async (): Promise<RETURN> => {
         await Promise.resolve();
         return { message: "" };
+    },
+
+    loginOrRegisterGoogle: async (users:UsersGoogle): Promise<RETURN> => {
+        await Promise.resolve();
+        return { message: "" };
     }
 
 };
@@ -41,6 +47,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     useEffect(() => {
         const initializeAuthState = async () => {
             try {
+                AsyncStorage.getItem("token");
                 const data = await checkIsLogin();
                 if (data.message === true) {
                     setIsAuthenticated(true);
@@ -115,9 +122,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         return result;
     }
 
+    const loginOrRegisterGoogle = async (users: UsersGoogle): Promise<RETURN> => {
+        const result = await LoginOrRegisterGoogle(users);
+        if (result?.message.headers) {
+            await AsyncStorage.setItem("token", result.message.headers.authorization);
+            setIsAuthenticated(true);
+        }
+        return result;
+    };
+    
     return (
         <AUTH_CONTEXT.Provider
             value={{
+                loginOrRegisterGoogle,
                 isAuthenticated,
                 login,
                 logout,
@@ -129,6 +146,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         </AUTH_CONTEXT.Provider>
     );
 };
+
+
 
 export const useAuth = () => {
     const context = useContext(AUTH_CONTEXT);

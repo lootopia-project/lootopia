@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -7,23 +7,69 @@ import {
   useColorScheme,
   ScrollView,
   ImageBackground,
+  Image,
 } from "react-native";
 import { useAuth } from "@/hooks/providers/AuthProvider";
 import { useErrors } from "@/hooks/providers/ErrorProvider";
 import { useRouter, Link } from "expo-router";
 import { Colors } from "@/constants/Colors";
 import { useLanguage } from "@/hooks/providers/LanguageProvider";
+import { useSSO, useUser,useAuth as useClerkAuth  } from "@clerk/clerk-expo";
+import UsersGoogle from "@/type/feature/auth/user_google";
+import * as AuthSession from 'expo-auth-session';
 
 export default function LoginPage() {
-  const { login } = useAuth();
+  const { login,loginOrRegisterGoogle } = useAuth();
+  const [success, setSuccess] = useState("");
   const { setErrorVisible, setErrorMessage } = useErrors();
   const colorScheme = useColorScheme();
+  
   const themeColors = colorScheme === "dark" ? Colors.dark : Colors.light;
   const { i18n } = useLanguage();
   const router = useRouter();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { startSSOFlow } = useSSO()
+  const {user}=useUser()
+  const {signOut}=useClerkAuth()
+  const [sendData, setSendData] = useState(false)
+    useEffect(() => {
+      signOut()
+    }, [])
+
+  useEffect(() => {
+    const register = async () => {
+      if (user && sendData) {
+
+        const users: UsersGoogle = {
+          firstName: user?.firstName||"",
+          lastName: user?.lastName||"",
+          email: user?.primaryEmailAddress?.emailAddress||"",
+          img: user?.imageUrl||"",
+          provider: "google",
+          mode: "login",
+        };
+    
+        const result = await loginOrRegisterGoogle(users);
+
+        if (result.message.headers) {
+          setSuccess(i18n.t("Connexion success"));
+          setErrorMessage("");
+          setTimeout(() => {
+            router.push("/");
+          }, 1000);
+        }else{
+          setErrorMessage(i18n.t(result.message));
+          setErrorVisible(true);
+        }
+        setSendData(false);
+      }
+
+    };
+
+    register();
+  }, [user, sendData]); 
 
   const handleLogin = async () => {
     try {
@@ -41,14 +87,34 @@ export default function LoginPage() {
     }
   };
 
+  const handleGoogleLogin = async () => {
+     setSendData(true)
+        try {
+          const { createdSessionId, setActive, signIn, signUp } = await startSSOFlow({
+            strategy: 'oauth_google',
+            redirectUrl: AuthSession.makeRedirectUri(),
+          })
+    
+    
+          if (createdSessionId) {
+            setActive!({ session: createdSessionId })
+          } else {
+            setErrorMessage('Error connecting')
+            setErrorVisible(true)
+          }
+        } catch (err) {
+    
+        }
+  };
+
   return (
     <ImageBackground
       style={{ flex: 1, backgroundColor: themeColors.background }}
-      source={{uri: "https://lootopia.blob.core.windows.net/lootopia-photos/map_background.png"}}
+      source={{ uri: "https://lootopia.blob.core.windows.net/lootopia-photos/map_background.png" }}
       resizeMode="cover"
-      >
+    >
       <ScrollView
-        style={{ flex: 1, minHeight: '100%', }}
+        style={{ flex: 1, minHeight: '100%' }}
         contentContainerStyle={{ flexGrow: 1 }}
         keyboardShouldPersistTaps="handled"
       >
@@ -106,7 +172,7 @@ export default function LoginPage() {
             {/* Bouton de connexion */}
             <TouchableOpacity
               className="py-4 rounded-lg"
-              style={{backgroundColor: "#C59B5F"}}
+              style={{ backgroundColor: "#C59B5F" }}
               onPress={handleLogin}
             >
               <Text
@@ -116,6 +182,22 @@ export default function LoginPage() {
                 {i18n.t("login")}
               </Text>
             </TouchableOpacity>
+
+            {success ? (
+                          <Text className="text-sm text-green-600 text-center mb-5">{success}</Text>
+              ) : null}
+
+            {/* Connexion avec Google */}
+            <View className="mt-6 flex items-center">
+              <Text className="text-white mb-2">{i18n.t("Or sign in with")}</Text>
+              <TouchableOpacity onPress={handleGoogleLogin} className="p-2 rounded-full">
+                <Image
+                  source={{ uri: "https://lootopia.blob.core.windows.net/lootopia-photos/google_logo.png" }}
+                  style={{ width: 50, height: 50 }}
+                  resizeMode="contain"
+                />
+              </TouchableOpacity>
+            </View>
 
             {/* Lien d'inscription */}
             <Link
@@ -131,3 +213,7 @@ export default function LoginPage() {
     </ImageBackground>
   );
 }
+function setSuccess(arg0: any) {
+  throw new Error("Function not implemented.");
+}
+
