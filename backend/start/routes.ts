@@ -24,7 +24,6 @@ router.post('/users/loginOrRegisterGoogle', [AuthController, 'loginOrRegisterGoo
 router
   .post('stripe/webhook', [PaymentsController, 'handleWebhook'])
   .use(middleware.verifyStripeWebhook())
-router.post('/stripe/initPayment', [PaymentsController, 'initPayment'])
 router
   .group(() => {
     router.post('/logout', [AuthController, 'logout'])
@@ -41,6 +40,7 @@ router
     router.post('/users/validateTwoFactorCode', [DoubleAuthsController, 'validateTwoFactorCode'])
     router.get('/users/recoveryCode', [DoubleAuthsController, 'recoveryCode'])
     router.post('/users/CheckMail', [UsersController, 'CheckMail'])
+    router.post('/stripe/initPayment', [PaymentsController, 'initPayment'])
   })
   .use([
     middleware.auth({

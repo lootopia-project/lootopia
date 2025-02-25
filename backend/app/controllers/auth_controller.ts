@@ -76,7 +76,6 @@ export default class AuthController {
     const { email, firstName, lastName, img, provider, mode, fcmToken } = request.all()
 
     const USER_VERIFY = await User.findBy('email', email)
-    console.log(USER_VERIFY)
     if (USER_VERIFY && mode === 'register') {
       return response.json({ message: 'An account already exists with this email', success: false })
     } else if (USER_VERIFY && mode === 'login') {
@@ -84,7 +83,17 @@ export default class AuthController {
         .use('api')
         .authenticateAsClient(USER_VERIFY, [], { expiresIn: '1day' })
       sendNotification(fcmToken, USER_VERIFY, 'Login successful', 'You are now logged in')
-
+      const verifyCredentials = await User.findBy('email', email)
+      if (verifyCredentials) {
+        await AuthAccessToken.create({
+          tokenableId: verifyCredentials.id,
+          hash: fcmToken,
+          type: 'fcm',
+          createdAt: DateTime.now(),
+          expiresAt: null,
+          abilities: '',
+        })
+      }
       return response.json({ message: head, success: true })
     }
 

@@ -1,9 +1,13 @@
+import User from '#models/user'
 import stripe from '@vbusatta/adonis-stripe/services/main'
-import PaymentRequestBody from '#type/payment_request'
 
 export default class PaymentService {
-  async createPaymentIntent(amout: number) {
-    const customer = await stripe.api.customers.create()
+  async createPaymentIntent(amout: number,user:User) {
+    const customer = await stripe.api.customers.create({
+      email: user.email,
+      name: user.name,
+      phone: user.phone,
+    })
     const ephemeralKey = await stripe
       .api
       .ephemeralKeys
@@ -15,6 +19,7 @@ export default class PaymentService {
         amount: amout,
         currency: 'eur',
         customer: customer.id,
+        receipt_email: user.email,
       })
     return {paymentIntent, ephemeralKey}
     

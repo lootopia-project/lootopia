@@ -1,16 +1,20 @@
 import axios from 'axios';
 import PaymentIntent from '@/type/feature/stripe/paymentIntent';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const API_URL = process.env.EXPO_PUBLIC_API_URL as string;
-const config = {
-  headers: {
-    "Content-Type": "application/json",
-  },
-  withCredentials: true
-};
+
 
 const handlePayment = async () :Promise<PaymentIntent> => {
+  const token = await AsyncStorage.getItem('token');
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": token ? `${token}` : '',
+    },
+    withCredentials: true
+  };
   try {
-    const response = await axios.post(`${API_URL}/stripe/initPayment`, {amount:100}, config);
+    const response = await axios.post(`${API_URL}/stripe/initPayment`,{}, config);
     return response.data;
 
     } catch (error) {

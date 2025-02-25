@@ -87,5 +87,15 @@
     "Empty message. Nothing has been sent.": "Empty message. Nothing has been sent.",
     "Or sign in with":"Or sign in with",
     "Connexion success":"Connexion success",
-    "An account already exists with this email":"An account already exists with this email"
+    "An account already exists with this email":"An account already exists with this email",
+    "Secure payment":"Secure payment",
+    "No payment yet":"No payment yet",
+    "Thank you for your payment":"Thank you for your purchase! A confirmation email has been sent to you. If you have any further questions, please do not hesitate to contact us.",
+    "Amount paid":"Amount paid",
+    "Payment status":"Payment status",
+    "Back to home":"Back to home",
+    "Successful payment":"Successful payment",
+    "Pay": "Pay",
+    "Payment failure": "Payment failure",
+    "Payment error": "Payment error"
   }

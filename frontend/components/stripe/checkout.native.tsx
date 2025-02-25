@@ -1,99 +1,122 @@
 import React, { useState } from 'react';
-import { View, Text, Button, ActivityIndicator, StyleSheet } from 'react-native';
+import {
+  View,
+  Text,
+  Button,
+  ActivityIndicator,
+  StyleSheet
+} from 'react-native';
 import { CardField, useConfirmPayment } from '@stripe/stripe-react-native';
 import { handlePayment as handlePaymentService } from '@/services/PaymentService';
-
+import { useLanguage } from '@/hooks/providers/LanguageProvider';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { router } from 'expo-router';
 export default function CheckoutScreen() {
   const [loading, setLoading] = useState<boolean>(false);
   const [paymentStatus, setPaymentStatus] = useState<string | null>(null);
 
   const { confirmPayment } = useConfirmPayment();
-
+  const { i18n } = useLanguage();
   const handlePayment = async () => {
     setLoading(true);
 
     try {
-      const data= await handlePaymentService();
+      const data = await handlePaymentService();
       const { paymentIntent } = data;
-        
-        const { error, paymentIntent: mobilePaymentIntent } = await confirmPayment(
-            paymentIntent,
-            {
-              paymentMethodType: 'Card',
-            }
-          );          
-  
-          if (error) {
-            setPaymentStatus('Échec du paiement');
-          } else {
-            setPaymentStatus('Paiement réussi 🎉');
-          }
+
+      const { error, paymentIntent: mobilePaymentIntent } =
+        await confirmPayment(paymentIntent, {
+          paymentMethodType: 'Card',
+        });
+
+      if (error) {
+        setPaymentStatus(i18n.t('Payment failure'));
+      } else {
+        if (!error) {
+          await AsyncStorage.setItem('result', JSON.stringify(mobilePaymentIntent));
+          router.push('/checkout/success');
+        }
+        setPaymentStatus(i18n.t("Successful payment"));
+      }
     } catch (error) {
-      setPaymentStatus("Erreur lors du paiement");
+      setPaymentStatus(i18n.t("Payment error"));
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Paiement sécurisé</Text>
-        <View style={styles.form}>
-        {/**
-         * CardField est un composant de @stripe/stripe-react-native
-         * qui gère l’affichage de la carte, le style, la validation, etc.
-         */}
-        <CardField
-          postalCodeEnabled={false}
-          style={styles.cardField}
-          cardStyle={{
-            backgroundColor: '#FFFFFF',
-            textColor: '#000000',
-          }}
-          onCardChange={(cardDetails) => {
-            // Vous pouvez récupérer ici les données de la carte si besoin
-            // console.log(cardDetails);
-          }}
-        />
+    <View style={styles.screenContainer}>
+      <View style={styles.cardContainer}>
+        <Text style={styles.title}>{i18n.t("Secure payment")}</Text>
+
+        <View style={styles.cardFieldWrapper}>
+          <CardField
+            postalCodeEnabled={false}
+            style={styles.cardField}
+            cardStyle={{
+              backgroundColor: '#FFFFFF',
+              textColor: '#000000',
+            }}
+          />
+        </View>
+
+        {loading ? (
+          <ActivityIndicator size="large" color="#0000ff" />
+        ) : (
+          <Button title={i18n.t("Pay")} onPress={handlePayment} />
+        )}
+
+        {paymentStatus && (
+          <Text style={styles.statusText}>{paymentStatus}</Text>
+        )}
       </View>
-
-      {loading ? (
-        <ActivityIndicator size="large" color="#0000ff" />
-      ) : (
-        <Button title="Payer" onPress={handlePayment} />
-      )}
-
-      {paymentStatus && <Text>{paymentStatus}</Text>}
     </View>
   );
 }
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      paddingHorizontal: 20,
-      paddingTop: 40,
-      alignItems: 'center',
-    },
-    title: {
-      fontSize: 18,
-      marginVertical: 10,
-    },
-    form: {
-      width: '100%',
-      marginVertical: 20,
-    },
-    input: {
-      borderBottomWidth: 1,
-      marginBottom: 10,
-      padding: 5,
-    },
-    cardField: {
-      height: 50,
-      marginVertical: 10,
-    },
-    status: {
-      marginTop: 20,
-      fontSize: 16,
-      color: 'green',
-    },
-  });
+  screenContainer: {
+    flex: 1,
+    backgroundColor: '#f2f2f2',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  cardContainer: {
+    width: '90%',
+    maxWidth: 340,
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    padding: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 4,
+    elevation: 3,
+
+    alignItems: 'center',
+  },
+  title: {
+    fontSize: 18,
+    marginBottom: 16,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  cardFieldWrapper: {
+    width: '100%',
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 6,
+    paddingHorizontal: 8,
+    paddingVertical: 6,
+    marginBottom: 16,
+    backgroundColor: '#fff',
+  },
+  cardField: {
+    height: 40,
+  },
+  statusText: {
+    marginTop: 10,
+    fontSize: 16,
+    color: '#555',
+  },
+});

@@ -87,5 +87,15 @@
     "Empty message. Nothing has been sent.": "Message vide. Rien n'a été envoyé.",
     "Or sign in with":"Ou connectez-vous avec",
     "Connexion success":"Connexion réussie",
-    "An account already exists with this email": "Un compte existe déjà avec cet email"
+    "An account already exists with this email": "Un compte existe déjà avec cet email",
+    "Secure payment": "Paiement sécurisé",
+    "No payment yet": "Aucun paiement",
+    "Thank you for your payment":"Merci pour votre achat ! Un email de confirmation vous a été envoyé. Nous restons à votre disposition pour toute question supplémentaire.",
+    "Amount paid": "Montant payé",
+    "Payment status": "Statut du paiement",
+    "Back to home": "Retour à l'accueil",
+    "Successful payment": "Paiement effectué avec succès",
+    "Pay": "Payer",
+    "Payment failure": "Échec du paiement",
+    "Payment error": "Erreur lors du paiement"
 }

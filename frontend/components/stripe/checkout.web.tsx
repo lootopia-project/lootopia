@@ -8,43 +8,47 @@ import {
 } from 'react-native';
 import { handlePayment as handlePaymentService } from '@/services/PaymentService';
 import { useStripe, useElements, CardElement } from '@stripe/react-stripe-js';
-
+import { useLanguage } from '@/hooks/providers/LanguageProvider';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { router } from 'expo-router';
 export default function CheckoutScreen() {
   const [loading, setLoading] = useState(false);
   const [paymentStatus, setPaymentStatus] = useState<string | null>(null);
 
   const stripe = useStripe();
   const elements = useElements();
-
+  const { i18n } = useLanguage();
   const handlePayment = async () => {
     setLoading(true);
     setPaymentStatus(null);
 
     try {
-      // 1. Appel de votre service backend pour récupérer le clientSecret
       const data = await handlePaymentService();
       const { paymentIntent } = data;
 
       if (stripe && elements) {
-        // 2. Confirmation du paiement avec le champ CardElement
         const { error, paymentIntent: result } = await stripe.confirmCardPayment(
           paymentIntent,
           {
             payment_method: {
               card: elements.getElement(CardElement)!,
-            },
+            }
           }
         );
-        setPaymentStatus(error ? 'Échec du paiement' : 'Paiement réussi 🎉');
+        setPaymentStatus(error ? i18n.t('Payment failure') : i18n.t("Successful payment"));
+       
+        if (!error) {
+          await AsyncStorage.setItem('result', JSON.stringify(result));
+          router.push('/checkout/success');
+        }
       }
     } catch (err) {
-      setPaymentStatus('Erreur lors du paiement');
+      setPaymentStatus(i18n.t("Payment error"));
     } finally {
       setLoading(false);
     }
   };
 
-  // Personnalisation du CardElement
   const cardElementOptions = {
     style: {
       base: {
@@ -64,7 +68,7 @@ export default function CheckoutScreen() {
   return (
     <View style={styles.pageContainer}>
       <View style={styles.cardContainer}>
-        <Text style={styles.title}>Paiement Sécurisé</Text>
+        <Text style={styles.title}>{i18n.t("Secure payment")}</Text>
         
         <View style={styles.cardElementWrapper}>
           <CardElement options={cardElementOptions} />
@@ -73,7 +77,7 @@ export default function CheckoutScreen() {
         {loading ? (
           <ActivityIndicator size="large" color="#000" />
         ) : (
-          <Button title="Payer" onPress={handlePayment} />
+          <Button title={i18n.t("Pay")} onPress={handlePayment} />
         )}
 
         {paymentStatus && (

@@ -18,10 +18,10 @@ export default class extends BaseSeeder {
     }
     let worldId: number
 
-    const world = await World.first() // Prend un monde existant
+    const world = await World.first()
 
     if (!world) {
-      const newWorld = await World.create({ name: 'Monde Par Défaut' }) // Ajoute un monde si vide
+      const newWorld = await World.create({ name: 'Monde Par Défaut' }) 
       worldId = newWorld.id
     } else {
       worldId = world.id
@@ -35,7 +35,7 @@ export default class extends BaseSeeder {
       maxUser: 5,
       private: false,
       endDate: DateTime.now().plus({ days: 7 }),
-      searchDelay: '02:00:00', // Format HH:mm:ss
+      searchDelay: '02:00:00',
       status: true,
       background: 'https://example.com/bg.jpg',
       textColor: '#FFFFFF',
@@ -48,14 +48,14 @@ export default class extends BaseSeeder {
       {
         userId: anthony.id,
         huntingId: hunting.id,
-        score: 0, // Ajout de la valeur par défaut
-        opinion: 'Aucune opinion', // Nouvelle valeur ajoutée
+        score: 0, 
+        opinion: 'Aucune opinion', 
       },
       {
         userId: yassine.id,
         huntingId: hunting.id,
-        score: 0, // Ajout de la valeur par défaut
-        opinion: 'Aucune opinion', // Nouvelle valeur ajoutée
+        score: 0,
+        opinion: 'Aucune opinion',
       },
     ])
 
@@ -67,7 +67,7 @@ export default class extends BaseSeeder {
       maxUser: 5,
       private: false,
       endDate: DateTime.now().plus({ days: 7 }),
-      searchDelay: '02:00:00', // Format HH:mm:ss
+      searchDelay: '02:00:00',
       status: true,
       background: 'https://example.com/bg.jpg',
       textColor: '#FFFFFF',
@@ -80,14 +80,14 @@ export default class extends BaseSeeder {
       {
         userId: kevin.id,
         huntingId: hunting2.id,
-        score: 0, // Ajout de la valeur par défaut
-        opinion: 'Aucune opinion', // Nouvelle valeur ajoutée
+        score: 0,
+        opinion: 'Aucune opinion', 
       },
       {
         userId: yassine.id,
         huntingId: hunting2.id,
-        score: 0, // Ajout de la valeur par défaut
-        opinion: 'Aucune opinion', // Nouvelle valeur ajoutée
+        score: 0,
+        opinion: 'Aucune opinion', 
       },
     ])
   }

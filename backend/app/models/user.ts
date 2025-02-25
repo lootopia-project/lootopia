@@ -56,7 +56,7 @@ export default class User extends compose(BaseModel, AuthFinder) {
   declare isTwoFactorEnabled: boolean
 
   @column()
-  declare phone: number
+  declare phone: string
 
   @column()
   declare crowns: number

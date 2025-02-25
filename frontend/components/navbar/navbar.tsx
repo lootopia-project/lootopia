@@ -53,9 +53,6 @@ const Navbar = () => {
             <Link href="/" style={[styles.brandLink, { color: 'white' }]}>
               Lootopia
             </Link>
-            <TouchableOpacity>
-                    <Link href={"/checkout"} style={[styles.mobileMenuText, { color: Colors[theme].text }]}>checkout</Link>
-              </TouchableOpacity>
             <View style={styles.linksRowRight}>
               {!isAuthenticated && !isMobile ?
                 (

@@ -5,10 +5,13 @@ export default class PaymentsController {
   async handleWebhook({ response }: HttpContext) {
     return response.ok({ received: true })
   }
-  async initPayment ({ response,request }: HttpContext) {    
-    const { amount } = request.only(['amount'])
+  async initPayment ({ response,request, auth }: HttpContext) {    
+    const amount = 1000; //amount in cents
     const paymentService = new PaymentService()
-    const paymentIntent = await paymentService.createPaymentIntent(amount)
+    if (auth.user === undefined) {
+      return response.unauthorized('You must be logged in to make a payment')
+    }
+    const paymentIntent = await paymentService.createPaymentIntent(amount,auth.user)
     return response.ok({
       paymentIntent:paymentIntent.paymentIntent.client_secret,
       ephemeralKey:paymentIntent.ephemeralKey.secret,
