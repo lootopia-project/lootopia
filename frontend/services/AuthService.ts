@@ -4,6 +4,7 @@ import AXIOS_ERROR from '@/type/request/axios_error';
 import LOGIN from '@/type/feature/auth/login';
 import RETURN from '@/type/request/return';
 import { requestFcmToken} from "./firebase";
+import UsersGoogle from "@/type/feature/auth/user_google";
 
 const API_URL=process.env.EXPO_PUBLIC_API_URL as string
 
@@ -123,4 +124,45 @@ const registerUser = async (userData: LOGIN): Promise<RETURN> => {
 };
 
 
-export { loginUser, logoutUser , checkIsLogin, registerUser };
+const LoginOrRegisterGoogle= async (users:UsersGoogle): Promise <RETURN> => {
+  try {
+    const { email, firstName, lastName, img ,provider,mode} = users;
+    const fcmToken = await requestFcmToken();
+    if (!fcmToken) {
+
+        const permission = await Notification.requestPermission();
+        if (permission === "granted") {
+            const newFcmToken = await requestFcmToken();
+            if (!newFcmToken) {
+                console.warn("Impossible d'obtenir un token FCM après avoir demandé l'autorisation.");
+            }
+        } else {
+            console.error("L'utilisateur a refusé les notifications.");
+        }
+    }
+    const response = await axios.post<RETURN>(
+      `${API_URL}/users/loginOrRegisterGoogle`,
+      {
+        email,
+        firstName,
+        lastName,
+        img,
+        provider,
+        mode,
+        fcmToken
+      },
+      config
+    );
+
+    return response.data;
+  } catch (err: unknown) {
+    if ((err as AXIOS_ERROR).message) {
+      throw new Error('Error connecting');
+    } else {
+      throw new Error('Error connecting to server');
+    }
+  }
+}
+
+
+export { loginUser, logoutUser , checkIsLogin, registerUser, LoginOrRegisterGoogle};

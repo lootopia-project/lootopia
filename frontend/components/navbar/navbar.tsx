@@ -21,7 +21,7 @@ const Navbar = () => {
   const { setErrorMessage, setErrorVisible } = useErrors();
   useEffect(() => {
     if (isAuthenticated) {
-      const img = localStorage.getItem("img");
+      // const img = localStorage.getItem("img");
       setImg("https://lootopia.blob.core.windows.net/lootopia-photos/user.png");
       if (img) {
         setImg(img);
@@ -33,10 +33,8 @@ const Navbar = () => {
   const hangleLogout = async () => {
     try {
 
-      const check = await logout();
-      if (check.message) {
-        router.push("/login");
-      }
+      await logout();
+    
     } catch (error) {
       setErrorMessage(i18n.t("An error occurred while logging out."));
       setErrorVisible(true);
