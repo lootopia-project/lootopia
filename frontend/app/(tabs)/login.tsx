@@ -15,12 +15,12 @@ import { useErrors } from "@/hooks/providers/ErrorProvider";
 import { useRouter, Link } from "expo-router";
 import { Colors } from "@/constants/Colors";
 import { useLanguage } from "@/hooks/providers/LanguageProvider";
-import { useSSO, useUser,useAuth as useClerkAuth  } from "@clerk/clerk-expo";
+import { useSSO, useUser, useAuth as useClerkAuth } from "@clerk/clerk-expo";
 import UsersGoogle from "@/type/feature/auth/user_google";
-import * as AuthSession from 'expo-auth-session';
+import * as AuthSession from "expo-auth-session";
 
 export default function LoginPage() {
-  const { login,loginOrRegisterGoogle } = useAuth();
+  const { login, loginOrRegisterGoogle } = useAuth();
   const [success, setSuccess] = useState("");
   const { setErrorVisible, setErrorMessage } = useErrors();
   const colorScheme = useColorScheme();
@@ -31,29 +31,27 @@ export default function LoginPage() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { startSSOFlow } = useSSO()
-  const {user}=useUser()
-  const {signOut}=useClerkAuth()
-  const [sendData, setSendData] = useState(false)
+  const { startSSOFlow } = useSSO();
+  const { user } = useUser();
+  const { signOut } = useClerkAuth();
+  const [sendData, setSendData] = useState(false);
+
   useEffect(() => {
-      signOut();  
-  }, [])
-  
-  
+    signOut();
+  }, []);
 
   useEffect(() => {
     const register = async () => {
       if (user && sendData) {
-
         const users: UsersGoogle = {
-          firstName: user?.firstName||"",
-          lastName: user?.lastName||"",
-          email: user?.primaryEmailAddress?.emailAddress||"",
-          img: user?.imageUrl||"",
+          firstName: user?.firstName || "",
+          lastName: user?.lastName || "",
+          email: user?.primaryEmailAddress?.emailAddress || "",
+          img: user?.imageUrl || "",
           provider: "google",
           mode: "login",
         };
-    
+
         const result = await loginOrRegisterGoogle(users);
 
         if (result.message.headers) {
@@ -62,25 +60,23 @@ export default function LoginPage() {
           setTimeout(() => {
             router.push("/");
           }, 2000);
-        }else{
+        } else {
           setErrorMessage(i18n.t(result.message));
           setErrorVisible(true);
         }
         setSendData(false);
       }
-
     };
 
     register();
-  }, [user, sendData]); 
+  }, [user, sendData]);
 
   const handleLogin = async () => {
     try {
       const check = await login({ email, password });
       if (check.message === "2FA") {
         router.push("/2fa");
-      }
-      else if (check.headers) {
+      } else if (check.headers) {
         setErrorMessage("");
         router.push("/");
       }
@@ -91,24 +87,21 @@ export default function LoginPage() {
   };
 
   const handleGoogleLogin = async (e: GestureResponderEvent) => {
-      e.preventDefault();
-     setSendData(true)
-        try {
-          const { createdSessionId, setActive, signIn, signUp } = await startSSOFlow({
-            strategy: 'oauth_google',
-            redirectUrl: AuthSession.makeRedirectUri(),
-          })
-    
-    
-          if (createdSessionId) {
-            setActive!({ session: createdSessionId })
-          } else {
-            setErrorMessage('Error connecting')
-            setErrorVisible(true)
-          }
-        } catch (err) {
-    
-        }
+    e.preventDefault();
+    setSendData(true);
+    try {
+      const { createdSessionId, setActive, signIn, signUp } = await startSSOFlow({
+        strategy: "oauth_google",
+        redirectUrl: AuthSession.makeRedirectUri(),
+      });
+
+      if (createdSessionId) {
+        setActive!({ session: createdSessionId });
+      } else {
+        setErrorMessage("Error connecting");
+        setErrorVisible(true);
+      }
+    } catch (err) {}
   };
 
   return (
@@ -118,7 +111,7 @@ export default function LoginPage() {
       resizeMode="cover"
     >
       <ScrollView
-        style={{ flex: 1, minHeight: '100%' }}
+        style={{ flex: 1, minHeight: "100%" }}
         contentContainerStyle={{ flexGrow: 1 }}
         keyboardShouldPersistTaps="handled"
       >
@@ -188,8 +181,8 @@ export default function LoginPage() {
             </TouchableOpacity>
 
             {success ? (
-                          <Text className="text-sm text-green-600 text-center mb-5">{success}</Text>
-              ) : null}
+              <Text className="text-sm text-green-600 text-center mb-5">{success}</Text>
+            ) : null}
 
             {/* Connexion avec Google */}
             <View className="mt-6 flex items-center">
@@ -202,6 +195,15 @@ export default function LoginPage() {
                 />
               </TouchableOpacity>
             </View>
+
+            {/* Lien "Forgot Password" */}
+            <Link
+              href="/forgot-password"
+              className="mt-3 text-center text-base underline"
+              style={{ color: themeColors.tint }}
+            >
+              {i18n.t("Forgot password ?")}
+            </Link>
 
             {/* Lien d'inscription */}
             <Link
@@ -217,4 +219,3 @@ export default function LoginPage() {
     </ImageBackground>
   );
 }
-

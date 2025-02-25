@@ -9,19 +9,21 @@ import {
   Keyboard,
 } from "react-native";
 import axios from "axios";
-import { SearchParams, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
+import { useSearchParams } from 'expo-router/build/hooks';
 import { validatePassword } from "@/constants/validatePassword";
 import { useErrors } from "@/hooks/providers/ErrorProvider";
 import { useLanguage } from "@/hooks/providers/LanguageProvider";
 import AboutPassword from "@/components/aboutPassword";
+import { resetPassword } from "@/services/AuthService";
 
-const API_URL = "https://lootopia.com/api";
 
 const ResetPassword = () => {
+ const searchParams = useSearchParams();
   const { setErrorVisible, setErrorMessage } = useErrors();
   const { i18n } = useLanguage();
   const router = useRouter();
-  const { token } = useSearchParams(); // Récupère le token depuis l'URL
+  const token = searchParams.get('token')||"";
 
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -41,7 +43,7 @@ const ResetPassword = () => {
     }
   }, [token]);
 
-  const handleChange = (key:string, value:string) => {
+  const handleChange = (key, value) => {
     if (key === "password") setPassword(value);
     if (key === "confirmPassword") setConfirmPassword(value);
 
@@ -68,13 +70,13 @@ const ResetPassword = () => {
     if (passwordErrors.length && passwordErrors.maj && passwordErrors.min && passwordErrors.special && passwordErrors.same) {
       setLoading(true);
       try {
-        const response = await axios.post(`${API_URL}/reset-password`, { token, password });
+        const response =await resetPassword(token, password);
 
-        if (response.data.message === "Password updated successfully") {
-          setMessage(i18n.t("Your password has been reset successfully!"));
+        if (response.success) {
+          setMessage(i18n.t("Your password has been reset successfully"));
           setTimeout(() => router.push("/login"), 3000);
         } else {
-          setErrorMessage(i18n.t(response.data.message));
+          setErrorMessage(i18n.t(response.message));
           setErrorVisible(true);
         }
       } catch (error) {
@@ -105,7 +107,6 @@ const ResetPassword = () => {
 
           {message ? <Text className="text-sm text-green-600 text-center mb-5">{message}</Text> : null}
 
-          {/* Champ Mot de passe */}
           <View className="mb-4">
             <Text className="text-lg text-white mb-2">{i18n.t("New Password")}</Text>
             <TextInput
@@ -118,7 +119,6 @@ const ResetPassword = () => {
             />
           </View>
 
-          {/* Champ Confirmation de mot de passe */}
           <View className="mb-4">
             <Text className="text-lg text-white mb-2">{i18n.t("Confirm Password")}</Text>
             <TextInput
@@ -131,7 +131,6 @@ const ResetPassword = () => {
             />
           </View>
 
-          {/* Bouton de réinitialisation */}
           <TouchableOpacity
             className="bg-yellow-500 py-3 rounded-lg"
             onPress={() => {
@@ -141,11 +140,10 @@ const ResetPassword = () => {
             disabled={loading}
           >
             <Text className="text-center text-white text-lg font-bold">
-              {loading ? i18n.t("Resetting...") : i18n.t("Reset Password")}
+              {loading ? i18n.t("Resetting") : i18n.t("Reset Password")}
             </Text>
           </TouchableOpacity>
 
-          {/* Indications sur le mot de passe */}
           <View className="mt-4">{AboutPassword(checkPassword)}</View>
         </View>
       </ScrollView>
