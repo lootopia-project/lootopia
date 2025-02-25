@@ -84,5 +84,8 @@
     "Emergency codes": "Emergency codes",
     "No code available": "No code available",
     "Close": "Close",
-    "Empty message. Nothing has been sent.": "Empty message. Nothing has been sent."
+    "Empty message. Nothing has been sent.": "Empty message. Nothing has been sent.",
+    "Or sign in with":"Or sign in with",
+    "Connexion success":"Connexion success",
+    "An account already exists with this email":"An account already exists with this email"
   }

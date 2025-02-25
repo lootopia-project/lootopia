@@ -20,11 +20,11 @@ router.post('/register', [AuthController, 'register'])
 router.post('/users/checkDoubleAuth', [DoubleAuthsController, 'checkDoubleAuth'])
 router.post('/users/checkRecoveryCode', [DoubleAuthsController, 'checkRecoveryCode'])
 router.post('/users/CheckMailToken', [UsersController, 'CheckMailToken'])
+router.post('/users/loginOrRegisterGoogle', [AuthController, 'loginOrRegisterGoogle'])
 router
   .post('stripe/webhook', [PaymentsController, 'handleWebhook'])
   .use(middleware.verifyStripeWebhook())
 router.post('/stripe/initPayment', [PaymentsController, 'initPayment'])
-
 router
   .group(() => {
     router.post('/logout', [AuthController, 'logout'])

@@ -21,6 +21,7 @@ export default class extends BaseSchema {
       table.integer('ranking').nullable()
       table.string('lang').nullable().defaultTo('en')
       table.boolean('check_mail').defaultTo(false)
+      table.string('provider').nullable().defaultTo('email')
     })
   }
 

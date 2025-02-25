@@ -37,10 +37,8 @@ const Navbar = () => {
   const hangleLogout = async () => {
     try {
 
-      const check = await logout();
-      if (check.message) {
-        router.push("/login");
-      }
+      await logout();
+    
     } catch (error) {
       setErrorMessage(i18n.t("An error occurred while logging out"));
       setErrorVisible(true);
