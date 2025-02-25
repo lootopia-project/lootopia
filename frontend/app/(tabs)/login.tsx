@@ -35,9 +35,11 @@ export default function LoginPage() {
   const {user}=useUser()
   const {signOut}=useClerkAuth()
   const [sendData, setSendData] = useState(false)
-    useEffect(() => {
-      signOut()
-    }, [])
+  useEffect(() => {
+      signOut();  
+  }, [])
+  
+  
 
   useEffect(() => {
     const register = async () => {
