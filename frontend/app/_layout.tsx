@@ -5,17 +5,20 @@ import { LanguageProvider } from "@/hooks/providers/LanguageProvider";
 import Navbar from "@/components/navbar/navbar";
 import Footer from "@/components/navbar/footer";
 import "../global.css";
+import StripeProvider from "@/hooks/providers/StripeProvider";
 
 export default function RootLayout() {
   return (
-    <LanguageProvider>
-      <AuthProvider>
-        <ErrorProvider>
-            <Navbar />
-            <Slot />
-            <Footer />
-        </ErrorProvider>
-      </AuthProvider>
-    </LanguageProvider>
+      <StripeProvider>
+        <LanguageProvider>
+          <AuthProvider>
+            <ErrorProvider>
+              <Navbar />
+              <Slot />
+              <Footer />
+            </ErrorProvider>
+          </AuthProvider>
+        </LanguageProvider>
+      </StripeProvider>
   );
 }

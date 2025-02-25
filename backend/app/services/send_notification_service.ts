@@ -1,6 +1,6 @@
 import User from '#models/user'
 import i18nManager from '@adonisjs/i18n/services/main'
-import FcmToken from '../type/fcm_token.js'
+import FcmToken from '#type/fcm_token'
 import axios from 'axios'
 import admin from '#services/firebase_admin'
 

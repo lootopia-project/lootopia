@@ -7,6 +7,7 @@ import { useRouter } from "expo-router";
 import { useLanguage } from "@/hooks/providers/LanguageProvider";
 import LanguageSwitcher from "../lang";
 import { useErrors } from "@/hooks/providers/ErrorProvider";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -20,13 +21,16 @@ const Navbar = () => {
   const [img, setImg] = useState("");
   const { setErrorMessage, setErrorVisible } = useErrors();
   useEffect(() => {
-    if (isAuthenticated) {
-      const img = localStorage.getItem("img");
-      setImg("https://lootopia.blob.core.windows.net/lootopia-photos/user.png");
-      if (img) {
-        setImg(img);
+    const fetchImg = async () => {
+      if (isAuthenticated) {
+        const img = await AsyncStorage.getItem("img");
+        setImg("https://lootopia.blob.core.windows.net/lootopia-photos/user.png");
+        if (img) {
+          setImg(img);
+        }
       }
-    }
+    };
+    fetchImg();
   }, [isAuthenticated]);
 
 
@@ -38,7 +42,7 @@ const Navbar = () => {
         router.push("/login");
       }
     } catch (error) {
-      setErrorMessage(i18n.t("An error occurred while logging out."));
+      setErrorMessage(i18n.t("An error occurred while logging out"));
       setErrorVisible(true);
     }
   };
@@ -51,6 +55,9 @@ const Navbar = () => {
             <Link href="/" style={[styles.brandLink, { color: 'white' }]}>
               Lootopia
             </Link>
+            <TouchableOpacity>
+                    <Link href={"/checkout"} style={[styles.mobileMenuText, { color: Colors[theme].text }]}>checkout</Link>
+              </TouchableOpacity>
             <View style={styles.linksRowRight}>
               {!isAuthenticated && !isMobile ?
                 (

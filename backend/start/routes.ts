@@ -13,12 +13,17 @@ const DoubleAuthsController = () => import('#controllers/double_auths_controller
 const AuthController = () => import('#controllers/auth_controller')
 const HuntingsController = () => import('#controllers/huntings_controller')
 const UsersController = () => import('#controllers/users_controller')
+const PaymentsController = () => import('#controllers/payments_controller')
 
 router.post('/login', [AuthController, 'login'])
 router.post('/register', [AuthController, 'register'])
 router.post('/users/checkDoubleAuth', [DoubleAuthsController, 'checkDoubleAuth'])
 router.post('/users/checkRecoveryCode', [DoubleAuthsController, 'checkRecoveryCode'])
 router.post('/users/CheckMailToken', [UsersController, 'CheckMailToken'])
+router
+  .post('stripe/webhook', [PaymentsController, 'handleWebhook'])
+  .use(middleware.verifyStripeWebhook())
+router.post('/stripe/initPayment', [PaymentsController, 'initPayment'])
 
 router
   .group(() => {
