@@ -213,7 +213,4 @@ export default function LoginPage() {
     </ImageBackground>
   );
 }
-function setSuccess(arg0: any) {
-  throw new Error("Function not implemented.");
-}
 

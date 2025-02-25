@@ -76,6 +76,7 @@ export default class AuthController {
     const { email, firstName, lastName, img, provider, mode, fcmToken } = request.all()
 
     const USER_VERIFY = await User.findBy('email', email)
+    console.log(USER_VERIFY)
     if (USER_VERIFY && mode === 'register') {
       return response.json({ message: 'An account already exists with this email', success: false })
     } else if (USER_VERIFY && mode === 'login') {
@@ -96,6 +97,6 @@ export default class AuthController {
       password: '',
     })
 
-    return response.json({ success: true })
+    return response.json({ message: 'User created', success: true })
   }
 }

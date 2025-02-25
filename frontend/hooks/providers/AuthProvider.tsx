@@ -124,8 +124,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     const loginOrRegisterGoogle = async (users: UsersGoogle): Promise<RETURN> => {
         const result = await LoginOrRegisterGoogle(users);
-        if (result?.message.headers) {
-            await AsyncStorage.setItem("token", result.message.headers.authorization);
+        if (result?.message?.headers) {
+            await AsyncStorage.setItem("token", result?.message?.headers.authorization);
             setIsAuthenticated(true);
         }
         return result;
