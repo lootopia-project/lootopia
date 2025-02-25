@@ -77,9 +77,9 @@ export default class MailService {
         throw new Error(`Type d'email inconnu : ${type}`)
 
       case 'password_reset':
-         const dateNow = DateTime.now()
-         const expires15min = dateNow.plus({ hours: 15 })
-         const ForgotAccessToken = await AuthAccessToken.create({
+        const dateNow = DateTime.now()
+        const expires15min = dateNow.plus({ minutes: 15 })
+        const ForgotAccessToken = await AuthAccessToken.create({
           tokenableId: user.id,
           type: 'password_reset',
           hash: TokenService.generateRandomToken(),
@@ -99,8 +99,7 @@ export default class MailService {
           url_text: i18n.t('_.Reset password'),
         }
         break
-
-      }
+    }
 
     await mail.send((message) => {
       message

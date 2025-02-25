@@ -94,7 +94,7 @@
     "Back to login":"Retour à la connexion",
     "A password reset link has been sent to":"Un lien de réinitialisation de mot de passe a été envoyé à",
     "Email Sent":"Email envoyé",
-    "An account with this email does not exist":"Un compte avec cet email n'existe pas",
+    "An account with this email does not exist or is registered with a social account'":"Un compte avec cet email n'existe pas ou est enregistré avec un compte social",
     "Resetting":"Réinitialisation...",
     "Reset Password":"Réinitialiser le mot de passe",
     "Enter new password":"Entrez un nouveau mot de passe",

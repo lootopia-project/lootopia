@@ -104,8 +104,11 @@ export default class AuthController {
     const { email } = request.all()
 
     const USER_VERIFY = await User.findBy('email', email)
-    if (!USER_VERIFY) {
-      return response.json({ message: 'An account with this email does not exist',success: false })
+    if (!USER_VERIFY || USER_VERIFY.provider === 'email') {
+      return response.json({
+        message: 'An account with this email does not exist or is registered with a social account',
+        success: false,
+      })
     }
 
     const token = await AuthAccessToken.create({
@@ -117,7 +120,7 @@ export default class AuthController {
       abilities: '',
     })
 
-     MailService.sendMail('password_reset', USER_VERIFY)
+    MailService.sendMail('password_reset', USER_VERIFY)
 
     return response.json({ message: 'Email sent', success: true })
   }
@@ -125,20 +128,20 @@ export default class AuthController {
   async resetPassword({ request, response }: HttpContext) {
     const { token, password } = request.all()
     const AUTH_ACCESS_TOKEN = await AuthAccessToken.query()
-          .preload('user')
-          .where('hash', token)
-          .andWhere('expires_at', '>', new Date())
-          .first()
+      .preload('user')
+      .where('hash', token)
+      .andWhere('expires_at', '>', new Date())
+      .first()
 
     if (AUTH_ACCESS_TOKEN) {
-       AUTH_ACCESS_TOKEN.user.password = password
+      AUTH_ACCESS_TOKEN.user.password = password
       await AUTH_ACCESS_TOKEN.user.save()
       await AuthAccessToken.query()
         .where('tokenable_id', AUTH_ACCESS_TOKEN.user.id)
         .andWhere('type', 'password_reset')
         .delete()
 
-        return response.json({ message: 'Password updated successfully', success: true })
+      return response.json({ message: 'Password updated successfully', success: true })
     }
 
     return response.json({ message: 'Invalid or expired token', success: false })

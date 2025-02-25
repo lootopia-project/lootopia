@@ -94,7 +94,7 @@
     "Back to login":"Back to login",
     "A password reset link has been sent to":"A password reset link has been sent to",
     "Email Sent":"Email Sent",
-    "An account with this email does not exist":"An account with this email does not exist",
+    "An account with this email does not exist or is registered with a social account'":"An account with this email does not exist or is registered with a social account'",
     "Resetting":"Resetting...",
     "Reset Password":"Reset Password",
     "Enter new password":"Enter new password",
