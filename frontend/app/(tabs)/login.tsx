@@ -8,6 +8,7 @@ import {
   ScrollView,
   ImageBackground,
   Image,
+  GestureResponderEvent,
 } from "react-native";
 import { useAuth } from "@/hooks/providers/AuthProvider";
 import { useErrors } from "@/hooks/providers/ErrorProvider";
@@ -58,7 +59,7 @@ export default function LoginPage() {
           setErrorMessage("");
           setTimeout(() => {
             router.push("/");
-          }, 1000);
+          }, 2000);
         }else{
           setErrorMessage(i18n.t(result.message));
           setErrorVisible(true);
@@ -87,7 +88,8 @@ export default function LoginPage() {
     }
   };
 
-  const handleGoogleLogin = async () => {
+  const handleGoogleLogin = async (e: GestureResponderEvent) => {
+      e.preventDefault();
      setSendData(true)
         try {
           const { createdSessionId, setActive, signIn, signUp } = await startSSOFlow({

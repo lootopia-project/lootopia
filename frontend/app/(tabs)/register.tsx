@@ -8,6 +8,7 @@ import {
   Keyboard,
   ScrollView,
   ImageBackground, Image,
+  GestureResponderEvent,
 } from "react-native";
 import {  registerUser } from "@/services/AuthService";
 import { validatePassword } from "@/constants/validatePassword";
@@ -148,7 +149,8 @@ export default function RegisterPage() {
  
 
 
-  const handleGoogleRegister = async () => {
+   const handleGoogleRegister = async (e: GestureResponderEvent) => {
+    e.preventDefault();
     setSendData(true)
     try {
       const { createdSessionId, setActive, signIn, signUp } = await startSSOFlow({
