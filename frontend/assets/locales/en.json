@@ -102,4 +102,6 @@
     "Your password has been reset successfully":"Your password has been reset successfully",
     "Error resetting password":"Error resetting password",
     "Invalid or expired token":"Invalid or expired token",
+    "Password updated successfully":"Password updated successfully",
+    "Sending":"Sending..."
   }

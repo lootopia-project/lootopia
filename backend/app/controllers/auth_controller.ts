@@ -5,6 +5,7 @@ import AuthAccessToken from '#models/auth_access_token'
 import { sendNotification } from '#services/send_notification_service'
 import { DateTime } from 'luxon'
 import MailService from '#services/mail_service'
+import i18nManager from '@adonisjs/i18n/services/main'
 
 export default class AuthController {
   async login({ request, auth, response }: HttpContext) {
@@ -101,17 +102,20 @@ export default class AuthController {
   }
 
   async forgotPassword({ request, response }: HttpContext) {
-    const { email } = request.all()
+    const { email, locale } = request.all()
+    const i18n = i18nManager.locale(locale)
 
     const USER_VERIFY = await User.findBy('email', email)
-    if (!USER_VERIFY || USER_VERIFY.provider === 'email') {
+    if (!USER_VERIFY || USER_VERIFY.provider === 'google') {
       return response.json({
-        message: 'An account with this email does not exist or is registered with a social account',
+        message: i18n.t(
+          '_.An account with this email does not exist or is registered with a social account'
+        ),
         success: false,
       })
     }
 
-    const token = await AuthAccessToken.create({
+    await AuthAccessToken.create({
       tokenableId: USER_VERIFY.id,
       hash: '',
       type: 'password_reset',
@@ -122,11 +126,12 @@ export default class AuthController {
 
     MailService.sendMail('password_reset', USER_VERIFY)
 
-    return response.json({ message: 'Email sent', success: true })
+    return response.json({ message: i18n.t('_.Email sent'), success: true })
   }
 
   async resetPassword({ request, response }: HttpContext) {
-    const { token, password } = request.all()
+    const { token, password, locale } = request.all()
+    const i18n = i18nManager.locale(locale)
     const AUTH_ACCESS_TOKEN = await AuthAccessToken.query()
       .preload('user')
       .where('hash', token)
@@ -141,9 +146,9 @@ export default class AuthController {
         .andWhere('type', 'password_reset')
         .delete()
 
-      return response.json({ message: 'Password updated successfully', success: true })
+      return response.json({ message: i18n.t('_.Password updated successfully'), success: true })
     }
 
-    return response.json({ message: 'Invalid or expired token', success: false })
+    return response.json({ message: i18n.t('._Invalid or expired token'), success: false })
   }
 }

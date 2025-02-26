@@ -101,5 +101,7 @@
     "Confirm new password":"Confirmez le nouveau mot de passe",
     "Your password has been reset successfully":"Votre mot de passe a été réinitialisé avec succès",
     "Error resetting password":"Erreur lors de la réinitialisation du mot de passe",
-    "Invalid or expired token":"Token invalide ou expiré"
+    "Invalid or expired token":"Token invalide ou expiré",
+    "Password updated successfully":"Mot de passe mis à jour avec succès",
+    "Sending":"Envoi en cours..."
 }

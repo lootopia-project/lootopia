@@ -163,12 +163,13 @@ const LoginOrRegisterGoogle= async (users:UsersGoogle): Promise <RETURN> => {
   }
 }
 
-const forgotPassword = async (email: string): Promise<RETURN> => {
+const forgotPassword = async (email: string,locale:string): Promise<RETURN> => {
   try {
     const response = await axios.post<RETURN>(
       `${API_URL}/forgot-password`,
       {
         email,
+        locale
       },
       config
     );

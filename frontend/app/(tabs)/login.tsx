@@ -98,7 +98,7 @@ export default function LoginPage() {
       if (createdSessionId) {
         setActive!({ session: createdSessionId });
       } else {
-        setErrorMessage("Error connecting");
+        setErrorMessage(i18n.t("Error connecting"));
         setErrorVisible(true);
       }
     } catch (err) {}
@@ -124,7 +124,6 @@ export default function LoginPage() {
               {i18n.t("Sign in")}
             </Text>
 
-            {/* Champ Email */}
             <View className="mb-4">
               <Text className="text-lg mb-2" style={{ color: "white" }}>
                 {i18n.t("email")}
@@ -145,7 +144,6 @@ export default function LoginPage() {
               />
             </View>
 
-            {/* Champ Mot de passe */}
             <View className="mb-4">
               <Text className="text-lg mb-2" style={{ color: "white" }}>
                 {i18n.t("password")}
@@ -166,7 +164,6 @@ export default function LoginPage() {
               />
             </View>
 
-            {/* Bouton de connexion */}
             <TouchableOpacity
               className="py-4 rounded-lg"
               style={{ backgroundColor: "#C59B5F" }}
@@ -184,7 +181,6 @@ export default function LoginPage() {
               <Text className="text-sm text-green-600 text-center mb-5">{success}</Text>
             ) : null}
 
-            {/* Connexion avec Google */}
             <View className="mt-6 flex items-center">
               <Text className="text-white mb-2">{i18n.t("Or sign in with")}</Text>
               <TouchableOpacity onPress={handleGoogleLogin} className="p-2 rounded-full">
@@ -196,7 +192,6 @@ export default function LoginPage() {
               </TouchableOpacity>
             </View>
 
-            {/* Lien "Forgot Password" */}
             <Link
               href="/forgot-password"
               className="mt-3 text-center text-base underline"
@@ -205,7 +200,6 @@ export default function LoginPage() {
               {i18n.t("Forgot password ?")}
             </Link>
 
-            {/* Lien d'inscription */}
             <Link
               href="/register"
               className="mt-5 text-center text-base underline"

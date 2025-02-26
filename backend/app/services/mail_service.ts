@@ -97,6 +97,10 @@ export default class MailService {
           hello: i18n.t('_.hello'),
           url: `${env.get('FRONT_URL')}/reset-password?token=${ForgotAccessToken.hash}`,
           url_text: i18n.t('_.Reset password'),
+          link_validity: i18n.t('_.This link is valid for 15 minutes'),
+          ignore_email: i18n.t(
+            '_.If you did not request a password reset, you can ignore this email'
+          ),
         }
         break
     }

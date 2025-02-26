@@ -22,7 +22,7 @@ const ForgotPassword = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const colorScheme = useColorScheme();
   const themeColors = colorScheme === "dark" ? Colors.dark : Colors.light;
-  const { i18n } = useLanguage();
+  const { i18n,locale } = useLanguage();
   const router = useRouter();
   const { setErrorVisible, setErrorMessage } = useErrors();
   
@@ -34,16 +34,16 @@ const ForgotPassword = () => {
 
     setLoading(true);
     try {
-        const result =await forgotPassword(email);
+        const result =await forgotPassword(email,locale);
 
         if (result.success) {
             setModalVisible(true);
         }else{
-            setErrorMessage(i18n.t(result.message));
+            setErrorMessage(result.message);
             setErrorVisible(true);
         }
     } catch (error) {
-        setErrorMessage(i18n.t("An error occurred while fetching data"));
+        setErrorMessage("An error occurred while fetching data");
         setErrorVisible(true);
       }
     setLoading(false);
@@ -96,7 +96,7 @@ const ForgotPassword = () => {
                 className="text-center text-white text-lg font-bold"
                 style={{ color: themeColors.background }}
               >
-                {loading ? i18n.t("Sending...") : i18n.t("Send")}
+                {loading ? i18n.t("Sending") : i18n.t("Send")}
               </Text>
             </TouchableOpacity>
 

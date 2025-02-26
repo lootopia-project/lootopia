@@ -21,7 +21,7 @@ import { resetPassword } from "@/services/AuthService";
 const ResetPassword = () => {
  const searchParams = useSearchParams();
   const { setErrorVisible, setErrorMessage } = useErrors();
-  const { i18n } = useLanguage();
+  const { i18n,locale } = useLanguage();
   const router = useRouter();
   const token = searchParams.get('token')||"";
 
@@ -43,7 +43,7 @@ const ResetPassword = () => {
     }
   }, [token]);
 
-  const handleChange = (key, value) => {
+  const handleChange = (key:string, value:string) => {
     if (key === "password") setPassword(value);
     if (key === "confirmPassword") setConfirmPassword(value);
 
@@ -73,19 +73,19 @@ const ResetPassword = () => {
         const response =await resetPassword(token, password);
 
         if (response.success) {
-          setMessage(i18n.t("Your password has been reset successfully"));
+          setMessage(response.message);
           setTimeout(() => router.push("/login"), 3000);
         } else {
-          setErrorMessage(i18n.t(response.message));
+          setErrorMessage(response.message);
           setErrorVisible(true);
         }
       } catch (error) {
-        setErrorMessage(i18n.t("Error resetting password"));
+        setErrorMessage("Error resetting password");
         setErrorVisible(true);
       }
       setLoading(false);
     } else {
-      setErrorMessage(i18n.t("Password does not meet requirements"));
+      setErrorMessage("Password does not meet requirements");
       setErrorVisible(true);
     }
   };
