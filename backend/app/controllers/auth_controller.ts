@@ -139,6 +139,9 @@ export default class AuthController {
       .first()
 
     if (AUTH_ACCESS_TOKEN) {
+      if (AUTH_ACCESS_TOKEN.user.password === password) {
+        return response.json({ message: i18n.t('_.Password is the same as the current one'), success: false })
+      }
       AUTH_ACCESS_TOKEN.user.password = password
       await AUTH_ACCESS_TOKEN.user.save()
       await AuthAccessToken.query()
