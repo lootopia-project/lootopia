@@ -1,30 +1,86 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "expo-router";
 import {
   View,
   Text,
   TextInput,
   TouchableOpacity,
-  ScrollView,
-  ImageBackground,
   Keyboard,
+  ScrollView,
+  ImageBackground, Image,
+  GestureResponderEvent,
 } from "react-native";
-import axios from "axios";
-import { SearchParams, useRouter } from "expo-router";
+import {  registerUser } from "@/services/AuthService";
 import { validatePassword } from "@/constants/validatePassword";
 import { useErrors } from "@/hooks/providers/ErrorProvider";
 import { useLanguage } from "@/hooks/providers/LanguageProvider";
 import AboutPassword from "@/components/aboutPassword";
 
-const API_URL = "https://lootopia.com/api";
+import { Platform } from "react-native";
+import * as WebBrowser from 'expo-web-browser';
+import { useAuth, useSSO, useUser } from '@clerk/clerk-expo'
+import * as AuthSession from 'expo-auth-session'
+import UsersGoogle from "@/type/feature/auth/user_google";
+import {useAuth as Auth} from "@/hooks/providers/AuthProvider";
 
-const ResetPassword = () => {
+
+
+export default function RegisterPage() {
+  const [success, setSuccess] = useState("");
   const { setErrorVisible, setErrorMessage } = useErrors();
   const { i18n } = useLanguage();
-  const router = useRouter();
-  const { token } = useSearchParams(); // Récupère le token depuis l'URL
+  const { startSSOFlow } = useSSO()
+  const {loginOrRegisterGoogle } = Auth();
+  const {user}=useUser()
+  const {signOut}=useAuth()
+  const [sendData, setSendData] = useState(false)
 
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+
+  useEffect(() => {
+    signOut()
+  }, [])
+
+  useEffect(() => {
+    const register = async () => {
+      if (user && sendData) {
+        const users: UsersGoogle = {
+          firstName: user?.firstName||"",
+          lastName: user?.lastName||"",
+          email: user?.primaryEmailAddress?.emailAddress||"",
+          img: user?.imageUrl||"",
+          provider: "google",
+          mode: "register",
+        };
+    
+        const result = await loginOrRegisterGoogle(users);
+
+        if (result.success) {
+          setSuccess(i18n.t("Registration successful!"));
+          setErrorMessage("");
+        }else{
+          setErrorMessage(i18n.t(result.message));
+          setErrorVisible(true);
+        }
+        setSendData(false);
+      }
+
+    };
+
+    register();
+  }, [user, sendData]); 
+
+  
+
+
+
+  
+  
+  const [formData, setFormData] = useState({
+    username: "",
+    password: "",
+    R_PASSWORD: "",
+  });
+
   const [checkPassword, setCheckPassword] = useState({
     length: false,
     maj: false,
@@ -32,22 +88,16 @@ const ResetPassword = () => {
     special: false,
     same: false,
   });
-  const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState("");
 
-  useEffect(() => {
-    if (!token) {
-      setMessage(i18n.t("Invalid or expired token"));
-    }
-  }, [token]);
-
-  const handleChange = (key:string, value:string) => {
-    if (key === "password") setPassword(value);
-    if (key === "confirmPassword") setConfirmPassword(value);
+  const handleChange = (key, value) => {
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [key]: value,
+    }));
 
     const newFormData = {
-      password: key === "password" ? value : password,
-      R_PASSWORD: key === "confirmPassword" ? value : confirmPassword,
+      ...formData,
+      [key]: value,
     };
 
     const passwordErrors = {
@@ -61,96 +111,152 @@ const ResetPassword = () => {
     setCheckPassword(passwordErrors);
   };
 
-  const handleResetPassword = async () => {
-    const passwordErrors = validatePassword({ password, R_PASSWORD: confirmPassword });
+  const handleLogin = async () => {
+    const passwordErrors = validatePassword(formData);
     setCheckPassword(passwordErrors);
 
-    if (passwordErrors.length && passwordErrors.maj && passwordErrors.min && passwordErrors.special && passwordErrors.same) {
-      setLoading(true);
+    if (
+        passwordErrors.length &&
+        passwordErrors.maj &&
+        passwordErrors.min &&
+        passwordErrors.special &&
+        passwordErrors.same
+    ) {
       try {
-        const response = await axios.post(`${API_URL}/reset-password`, { token, password });
+        const response = await registerUser({
+          email: formData.username,
+          password: formData.password,
+        });
+        setSuccess("");
+        setErrorMessage(response.message);
 
-        if (response.data.message === "Password updated successfully") {
-          setMessage(i18n.t("Your password has been reset successfully!"));
-          setTimeout(() => router.push("/login"), 3000);
+        if (response.message === true) {
+          setSuccess(i18n.t("Registration successful!"));
+          setErrorMessage("");
         } else {
-          setErrorMessage(i18n.t(response.data.message));
           setErrorVisible(true);
         }
       } catch (error) {
-        setErrorMessage(i18n.t("Error resetting password"));
+        setErrorMessage(i18n.t("Error connecting"));
         setErrorVisible(true);
       }
-      setLoading(false);
     } else {
       setErrorMessage(i18n.t("Password does not meet requirements"));
       setErrorVisible(true);
     }
   };
 
+ 
+
+
+   const handleGoogleRegister = async (e: GestureResponderEvent) => {
+    e.preventDefault();
+    setSendData(true)
+    try {
+      const { createdSessionId, setActive, signIn, signUp } = await startSSOFlow({
+        strategy: 'oauth_google',
+        redirectUrl: AuthSession.makeRedirectUri(),
+      })
+
+
+      if (createdSessionId) {
+        setActive!({ session: createdSessionId })
+      } else {
+        setErrorMessage('Error connecting')
+        setErrorVisible(true)
+      }
+    } catch (err) {
+
+    }
+  };
+  
+
   return (
-    <ImageBackground
-      style={{ flex: 1 }}
-      source={{ uri: "https://lootopia.blob.core.windows.net/lootopia-photos/word_background.png" }}
-    >
-      <ScrollView
-        style={{ flex: 1, padding: 20 }}
-        contentContainerStyle={{ alignItems: "center", justifyContent: "center", minHeight: "100%" }}
-        keyboardShouldPersistTaps="handled"
-      >
+      <ImageBackground
+        className="flex-1" 
+        source={{ uri : "https://lootopia.blob.core.windows.net/lootopia-photos/word_background.png"}}
+        >
+        <ScrollView
+          className="flex-1 p-5"
+          contentContainerStyle={{ alignItems: "center", justifyContent: "center", minHeight: '100%',}}>
         <View className="bg-white/20 backdrop-blur-sm p-6 rounded-lg shadow-md">
+          {/* Titre */}
           <Text className="text-2xl font-bold text-center mb-5 text-white">
-            {i18n.t("Reset Password")}
+            {i18n.t("Register")}
           </Text>
 
-          {message ? <Text className="text-sm text-green-600 text-center mb-5">{message}</Text> : null}
+          {success ? (
+              <Text className="text-sm text-green-600 text-center mb-5">{success}</Text>
+          ) : null}
 
-          {/* Champ Mot de passe */}
           <View className="mb-4">
-            <Text className="text-lg text-white mb-2">{i18n.t("New Password")}</Text>
+            <Text className="text-lg text-white mb-2">{i18n.t("Email")}</Text>
             <TextInput
-              className="border border-gray-300 rounded-lg p-3 text-base bg-white"
-              placeholder={i18n.t("Enter new password")}
-              placeholderTextColor="#d2b48c"
-              secureTextEntry
-              value={password}
-              onChangeText={(text) => handleChange("password", text)}
+                className="border border-gray-300 rounded-lg p-3 text-base bg-white"
+                placeholder={i18n.t("Username")}
+                placeholderTextColor="#d2b48c"
+                value={formData.username}
+                onChangeText={(text) => handleChange("username", text)}
             />
           </View>
 
-          {/* Champ Confirmation de mot de passe */}
           <View className="mb-4">
-            <Text className="text-lg text-white mb-2">{i18n.t("Confirm Password")}</Text>
+            <Text className="text-lg text-white mb-2">{i18n.t("Password")}</Text>
             <TextInput
-              className="border border-gray-300 rounded-lg p-3 text-base bg-white"
-              placeholder={i18n.t("Confirm new password")}
-              placeholderTextColor="#d2b48c"
-              secureTextEntry
-              value={confirmPassword}
-              onChangeText={(text) => handleChange("confirmPassword", text)}
+                className="border border-gray-300 rounded-lg p-3 text-base bg-white"
+                placeholder={i18n.t("Password")}
+                placeholderTextColor="#d2b48c"
+                secureTextEntry
+                value={formData.password}
+                onChangeText={(text) => handleChange("password", text)}
             />
           </View>
 
-          {/* Bouton de réinitialisation */}
+          <View className="mb-4">
+            <Text className="text-lg text-white mb-2">{i18n.t("Repeat Password")}</Text>
+            <TextInput
+                className="border border-gray-300 rounded-lg p-3 text-base bg-white"
+                placeholder={i18n.t("Repeat Password")}
+                placeholderTextColor="#d2b48c"
+                secureTextEntry
+                value={formData.R_PASSWORD}
+                onChangeText={(text) => handleChange("R_PASSWORD", text)}
+            />
+          </View>
+
           <TouchableOpacity
-            className="bg-yellow-500 py-3 rounded-lg"
-            onPress={() => {
-              Keyboard.dismiss();
-              handleResetPassword();
-            }}
-            disabled={loading}
+              className="bg-yellow-500 py-3 rounded-lg"
+              onPress={() => {
+                Keyboard.dismiss();
+                handleLogin();
+              }}
           >
             <Text className="text-center text-white text-lg font-bold">
-              {loading ? i18n.t("Resetting...") : i18n.t("Reset Password")}
+              {i18n.t("Sign up")}
             </Text>
           </TouchableOpacity>
 
-          {/* Indications sur le mot de passe */}
           <View className="mt-4">{AboutPassword(checkPassword)}</View>
+
+          <View className="mt-6 flex items-center">
+              <Text className="text-white mb-2">{i18n.t("Or sign in with")}</Text>
+              <TouchableOpacity onPress={handleGoogleRegister} className="p-2 rounded-full">
+                <Image
+                  source={{ uri: "https://lootopia.blob.core.windows.net/lootopia-photos/google_logo.png" }}
+                  style={{ width: 50, height: 50 }}
+                  resizeMode="contain"
+                />
+              </TouchableOpacity>
+            </View>
+
+          <Link
+              href={"/login"}
+              className="mt-5 text-center text-white underline text-base"
+          >
+            {i18n.t("Already have an account? Sign in")}
+          </Link>
         </View>
       </ScrollView>
-    </ImageBackground>
+      </ImageBackground>
   );
-};
-
-export default ResetPassword;
+}
