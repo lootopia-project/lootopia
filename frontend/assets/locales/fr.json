@@ -87,5 +87,21 @@
     "Empty message. Nothing has been sent.": "Message vide. Rien n'a été envoyé.",
     "Or sign in with":"Ou connectez-vous avec",
     "Connexion success":"Connexion réussie",
-    "An account already exists with this email": "Un compte existe déjà avec cet email"
+    "An account already exists with this email": "Un compte existe déjà avec cet email",
+    "Forgot password ?": "Mot de passe oublié ?",
+    "Forgot Password": "Mot de passe oublié",
+    "Enter your email":"Entrez votre email",
+    "Back to login":"Retour à la connexion",
+    "A password reset link has been sent to":"Un lien de réinitialisation de mot de passe a été envoyé à",
+    "Email Sent":"Email envoyé",
+    "An account with this email does not exist or is registered with a social account'":"Un compte avec cet email n'existe pas ou est enregistré avec un compte social",
+    "Resetting":"Réinitialisation...",
+    "Reset Password":"Réinitialiser le mot de passe",
+    "Enter new password":"Entrez un nouveau mot de passe",
+    "Confirm new password":"Confirmez le nouveau mot de passe",
+    "Your password has been reset successfully":"Votre mot de passe a été réinitialisé avec succès",
+    "Error resetting password":"Erreur lors de la réinitialisation du mot de passe",
+    "Invalid or expired token":"Token invalide ou expiré",
+    "Password updated successfully":"Mot de passe mis à jour avec succès",
+    "Sending":"Envoi en cours..."
 }

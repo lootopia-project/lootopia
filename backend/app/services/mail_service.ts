@@ -75,6 +75,34 @@ export default class MailService {
 
       default:
         throw new Error(`Type d'email inconnu : ${type}`)
+
+      case 'password_reset':
+        const dateNow = DateTime.now()
+        const expires15min = dateNow.plus({ minutes: 15 })
+        const ForgotAccessToken = await AuthAccessToken.create({
+          tokenableId: user.id,
+          type: 'password_reset',
+          hash: TokenService.generateRandomToken(),
+          createdAt: dateNow,
+          expiresAt: expires15min,
+          abilities: '',
+        })
+        subject = i18n.t('_.Password reset')
+        view = 'emails/passwordReset'
+        templateData = {
+          name: user.name,
+          message: i18n.t('_.Please click on the link below to reset your password.'),
+          object: subject,
+          lang: user.lang,
+          hello: i18n.t('_.hello'),
+          url: `${env.get('FRONT_URL')}/reset-password?token=${ForgotAccessToken.hash}`,
+          url_text: i18n.t('_.Reset password'),
+          link_validity: i18n.t('_.This link is valid for 15 minutes'),
+          ignore_email: i18n.t(
+            '_.If you did not request a password reset, you can ignore this email'
+          ),
+        }
+        break
     }
 
     await mail.send((message) => {

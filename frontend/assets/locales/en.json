@@ -87,5 +87,21 @@
     "Empty message. Nothing has been sent.": "Empty message. Nothing has been sent.",
     "Or sign in with":"Or sign in with",
     "Connexion success":"Connexion success",
-    "An account already exists with this email":"An account already exists with this email"
+    "An account already exists with this email":"An account already exists with this email",
+    "Forgot password ?":"Forgot password ?",
+    "Forgot Password":"Forgot Password",
+    "Enter your email":"Enter your email",
+    "Back to login":"Back to login",
+    "A password reset link has been sent to":"A password reset link has been sent to",
+    "Email Sent":"Email Sent",
+    "An account with this email does not exist or is registered with a social account'":"An account with this email does not exist or is registered with a social account'",
+    "Resetting":"Resetting...",
+    "Reset Password":"Reset Password",
+    "Enter new password":"Enter new password",
+    "Confirm new password":"Confirm new password",
+    "Your password has been reset successfully":"Your password has been reset successfully",
+    "Error resetting password":"Error resetting password",
+    "Invalid or expired token":"Invalid or expired token",
+    "Password updated successfully":"Password updated successfully",
+    "Sending":"Sending..."
   }

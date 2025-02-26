@@ -4,6 +4,9 @@ import User from '#models/user'
 import AuthAccessToken from '#models/auth_access_token'
 import { sendNotification } from '#services/send_notification_service'
 import { DateTime } from 'luxon'
+import MailService from '#services/mail_service'
+import i18nManager from '@adonisjs/i18n/services/main'
+import hash from '@adonisjs/core/services/hash'
 
 export default class AuthController {
   async login({ request, auth, response }: HttpContext) {
@@ -76,7 +79,6 @@ export default class AuthController {
     const { email, firstName, lastName, img, provider, mode, fcmToken } = request.all()
 
     const USER_VERIFY = await User.findBy('email', email)
-    console.log(USER_VERIFY)
     if (USER_VERIFY && mode === 'register') {
       return response.json({ message: 'An account already exists with this email', success: false })
     } else if (USER_VERIFY && mode === 'login') {
@@ -98,5 +100,62 @@ export default class AuthController {
     })
 
     return response.json({ message: 'User created', success: true })
+  }
+
+  async forgotPassword({ request, response }: HttpContext) {
+    const { email, locale } = request.all()
+    const i18n = i18nManager.locale(locale)
+
+    const USER_VERIFY = await User.findBy('email', email)
+    if (!USER_VERIFY || USER_VERIFY.provider === 'google') {
+      return response.json({
+        message: i18n.t(
+          '_.An account with this email does not exist or is registered with a social account'
+        ),
+        success: false,
+      })
+    }
+
+    await AuthAccessToken.create({
+      tokenableId: USER_VERIFY.id,
+      hash: '',
+      type: 'password_reset',
+      createdAt: DateTime.now(),
+      expiresAt: DateTime.now().plus({ minutes: 15 }),
+      abilities: '',
+    })
+
+    MailService.sendMail('password_reset', USER_VERIFY)
+
+    return response.json({ message: i18n.t('_.Email sent'), success: true })
+  }
+
+  async resetPassword({ request, response }: HttpContext) {
+    const { token, password, locale } = request.all()
+    const i18n = i18nManager.locale(locale)
+    const AUTH_ACCESS_TOKEN = await AuthAccessToken.query()
+      .preload('user')
+      .where('hash', token)
+      .andWhere('expires_at', '>', new Date())
+      .first()
+
+    if (AUTH_ACCESS_TOKEN) {
+      if (await hash.verify(AUTH_ACCESS_TOKEN.user.password, password)) {
+        return response.json({
+          message: i18n.t('_.Password is the same as the current one'),
+          success: false,
+        })
+      }
+      AUTH_ACCESS_TOKEN.user.password = password
+      await AUTH_ACCESS_TOKEN.user.save()
+      await AuthAccessToken.query()
+        .where('tokenable_id', AUTH_ACCESS_TOKEN.user.id)
+        .andWhere('type', 'password_reset')
+        .delete()
+
+      return response.json({ message: i18n.t('_.Password updated successfully'), success: true })
+    }
+
+    return response.json({ message: i18n.t('._Invalid or expired token'), success: false })
   }
 }
