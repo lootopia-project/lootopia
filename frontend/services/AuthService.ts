@@ -20,7 +20,6 @@ const config = {
 const loginUser = async (userData: LOGIN): Promise<RETURN> => {
     try {
         const { email, password } = userData;
-        // Récupérer le token FCM via requestFcmToken
         const fcmToken = await requestFcmToken();
         if (!fcmToken) {
 
@@ -164,5 +163,47 @@ const LoginOrRegisterGoogle= async (users:UsersGoogle): Promise <RETURN> => {
   }
 }
 
+const forgotPassword = async (email: string,locale:string): Promise<RETURN> => {
+  try {
+    const response = await axios.post<RETURN>(
+      `${API_URL}/forgot-password`,
+      {
+        email,
+        locale
+      },
+      config
+    );
 
-export { loginUser, logoutUser , checkIsLogin, registerUser, LoginOrRegisterGoogle};
+    return response.data;
+  } catch (err: unknown) {
+    if ((err as AXIOS_ERROR).message) {
+      throw new Error('Error connecting');
+    } else {
+      throw new Error('Error connecting to server');
+    }
+  }
+}
+
+const resetPassword = async (token: string, password: string): Promise<RETURN> => {
+  try {
+    const response = await axios.post<RETURN>(
+      `${API_URL}/reset-password`,
+      {
+        token,
+        password,
+      },
+      config
+    );
+
+    return response.data;
+  } catch (err: unknown) {
+    if ((err as AXIOS_ERROR).message) {
+      throw new Error('Error connecting');
+    } else {
+      throw new Error('Error connecting to server');
+    }
+  }
+}
+
+
+export { loginUser, logoutUser , checkIsLogin, registerUser, LoginOrRegisterGoogle,forgotPassword,resetPassword};

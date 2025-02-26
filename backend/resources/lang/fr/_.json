@@ -20,5 +20,15 @@
     "Check your email": "Vérifiez votre e-mail",
     "Please check your email for further instructions.": "Veuillez consulter votre e-mail pour plus d'instructions.",
     "Check": "Vérifier",
-    "Email verified": "E-mail vérifié avec succès"
+    "Email verified": "E-mail vérifié avec succès",
+    "Please click on the link below to reset your password.": "Veuillez cliquer sur le lien ci-dessous pour réinitialiser votre mot de passe.",
+    "Reset password": "Réinitialiser le mot de passe",
+    "Password reset": "Réinitialisation du mot de passe",
+    "This link is valid for 15 minutes. After expiration, you will need to request a new password reset.": "Ce lien est valable 15 minutes. Après expiration, vous devrez demander une nouvelle réinitialisation du mot de passe.",
+    "If you did not request this password reset, please ignore this email.": "Si vous n'avez pas demandé cette réinitialisation de mot de passe, veuillez ignorer cet e-mail.",
+    "An account with this email does not exist or is registered with a social account": "Un compte avec cet e-mail n'existe pas ou est enregistré avec un compte social",
+    "This link is valid for 15 minutes": "Ce lien est valable 15 minutes",
+    "If you did not request a password reset, you can ignore this email": "Si vous n'avez pas demandé de réinitialisation de mot de passe, vous pouvez ignorer cet e-mail",
+    "Password updated successfully": "Mot de passe mis à jour avec succès",
+    "Password is the same as the current one": "Le mot de passe est identique à l'actuel"
 }

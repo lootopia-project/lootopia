@@ -36,7 +36,7 @@ const defaultContextValue: AUTH_CONTEXT_TYPE = {
 
 };
 
-const publicRoutes = ["/+not-found", "/login", "/register", "/2fa", "/user/recoveryCode","/", "/user/checkMail"];
+const publicRoutes = ["/+not-found", "/login", "/register", "/2fa", "/user/recoveryCode","/", "/user/checkMail","/forgot-password","/reset-password"];
 const AUTH_CONTEXT = createContext(defaultContextValue);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {

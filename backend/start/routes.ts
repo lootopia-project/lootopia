@@ -21,6 +21,8 @@ router.post('/users/checkDoubleAuth', [DoubleAuthsController, 'checkDoubleAuth']
 router.post('/users/checkRecoveryCode', [DoubleAuthsController, 'checkRecoveryCode'])
 router.post('/users/CheckMailToken', [UsersController, 'CheckMailToken'])
 router.post('/users/loginOrRegisterGoogle', [AuthController, 'loginOrRegisterGoogle'])
+router.post('/forgot-password', [AuthController, 'forgotPassword'])
+router.post('/reset-password', [AuthController, 'resetPassword'])
 router
   .post('stripe/webhook', [PaymentsController, 'handleWebhook'])
   .use(middleware.verifyStripeWebhook())
