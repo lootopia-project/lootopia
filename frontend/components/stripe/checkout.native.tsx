@@ -6,37 +6,38 @@ import {
   ActivityIndicator,
   StyleSheet
 } from 'react-native';
-import { CardField, useConfirmPayment } from '@stripe/stripe-react-native';
+import { CardField, useStripe } from '@stripe/stripe-react-native';
 import { handlePayment as handlePaymentService } from '@/services/PaymentService';
 import { useLanguage } from '@/hooks/providers/LanguageProvider';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { router } from 'expo-router';
 export default function CheckoutScreen() {
   const [loading, setLoading] = useState<boolean>(false);
   const [paymentStatus, setPaymentStatus] = useState<string | null>(null);
-
-  const { confirmPayment } = useConfirmPayment();
   const { i18n } = useLanguage();
+  const stripe = useStripe();
+  
   const handlePayment = async () => {
     setLoading(true);
 
     try {
       const data = await handlePaymentService();
       const { paymentIntent } = data;
-
-      const { error, paymentIntent: mobilePaymentIntent } =
-        await confirmPayment(paymentIntent, {
-          paymentMethodType: 'Card',
+      const returnPayment =
+        await stripe.confirmPayment(paymentIntent, {
+          paymentMethodType: 'Card'
         });
 
-      if (error) {
+      if (returnPayment.error) {
         setPaymentStatus(i18n.t('Payment failure'));
       } else {
-        if (!error) {
-          await AsyncStorage.setItem('result', JSON.stringify(mobilePaymentIntent));
-          router.push('/checkout/success');
+        const setResult = {
+          amount: returnPayment.paymentIntent.amount,
+          currency: returnPayment.paymentIntent.currency,
+          receipt_email: returnPayment.paymentIntent.receiptEmail,
+          status: returnPayment.paymentIntent.status
         }
-        setPaymentStatus(i18n.t("Successful payment"));
+        await AsyncStorage.setItem('result', JSON.stringify(setResult));
+        setPaymentStatus(i18n.t('Successful payment'));
       }
     } catch (error) {
       setPaymentStatus(i18n.t("Payment error"));
@@ -80,6 +81,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f2f2f2',
     alignItems: 'center',
     justifyContent: 'center',
+    paddingBottom: 200,
   },
   cardContainer: {
     width: '90%',

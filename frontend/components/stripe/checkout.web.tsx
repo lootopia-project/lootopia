@@ -38,7 +38,13 @@ export default function CheckoutScreen() {
         setPaymentStatus(error ? i18n.t('Payment failure') : i18n.t("Successful payment"));
        
         if (!error) {
-          await AsyncStorage.setItem('result', JSON.stringify(result));
+          const setResult = {
+            amount: result.amount,
+            currency: result.currency,
+            receipt_email: result.receipt_email,
+            status: result.status
+          }
+          await AsyncStorage.setItem('result', JSON.stringify(setResult));
           router.push('/checkout/success');
         }
       }

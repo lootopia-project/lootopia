@@ -25,7 +25,7 @@ export default defineConfig({
   | Specify a fixed API version to avoid unexpected changes. Defaults to the
   | latest version if not provided.
   */
-//   apiVersion: env.get('STRIPE_API_VERSION'),
+  //   apiVersion: env.get('STRIPE_API_VERSION'),
 
   /*
   |--------------------------------------------------------------

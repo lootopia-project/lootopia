@@ -21,7 +21,7 @@ export default class extends BaseSeeder {
     const world = await World.first()
 
     if (!world) {
-      const newWorld = await World.create({ name: 'Monde Par Défaut' }) 
+      const newWorld = await World.create({ name: 'Monde Par Défaut' })
       worldId = newWorld.id
     } else {
       worldId = world.id
@@ -48,8 +48,8 @@ export default class extends BaseSeeder {
       {
         userId: anthony.id,
         huntingId: hunting.id,
-        score: 0, 
-        opinion: 'Aucune opinion', 
+        score: 0,
+        opinion: 'Aucune opinion',
       },
       {
         userId: yassine.id,
@@ -81,13 +81,13 @@ export default class extends BaseSeeder {
         userId: kevin.id,
         huntingId: hunting2.id,
         score: 0,
-        opinion: 'Aucune opinion', 
+        opinion: 'Aucune opinion',
       },
       {
         userId: yassine.id,
         huntingId: hunting2.id,
         score: 0,
-        opinion: 'Aucune opinion', 
+        opinion: 'Aucune opinion',
       },
     ])
   }
