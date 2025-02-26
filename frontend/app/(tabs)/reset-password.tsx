@@ -8,7 +8,6 @@ import {
   ImageBackground,
   Keyboard,
 } from "react-native";
-import axios from "axios";
 import { useRouter } from "expo-router";
 import { useSearchParams } from 'expo-router/build/hooks';
 import { validatePassword } from "@/constants/validatePassword";
@@ -21,7 +20,7 @@ import { resetPassword } from "@/services/AuthService";
 const ResetPassword = () => {
  const searchParams = useSearchParams();
   const { setErrorVisible, setErrorMessage } = useErrors();
-  const { i18n,locale } = useLanguage();
+  const { i18n } = useLanguage();
   const router = useRouter();
   const token = searchParams.get('token')||"";
 

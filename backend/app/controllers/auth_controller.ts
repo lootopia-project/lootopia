@@ -6,6 +6,7 @@ import { sendNotification } from '#services/send_notification_service'
 import { DateTime } from 'luxon'
 import MailService from '#services/mail_service'
 import i18nManager from '@adonisjs/i18n/services/main'
+import hash from '@adonisjs/core/services/hash'
 
 export default class AuthController {
   async login({ request, auth, response }: HttpContext) {
@@ -139,8 +140,11 @@ export default class AuthController {
       .first()
 
     if (AUTH_ACCESS_TOKEN) {
-      if (AUTH_ACCESS_TOKEN.user.password === password) {
-        return response.json({ message: i18n.t('_.Password is the same as the current one'), success: false })
+      if (await hash.verify(AUTH_ACCESS_TOKEN.user.password, password)) {
+        return response.json({
+          message: i18n.t('_.Password is the same as the current one'),
+          success: false,
+        })
       }
       AUTH_ACCESS_TOKEN.user.password = password
       await AUTH_ACCESS_TOKEN.user.save()

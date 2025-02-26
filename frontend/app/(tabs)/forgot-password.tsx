@@ -8,7 +8,6 @@ import {
   ImageBackground,
   Modal,
 } from "react-native";
-import axios from "axios";
 import { useRouter } from "expo-router";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "react-native";
