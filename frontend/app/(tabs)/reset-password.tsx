@@ -40,7 +40,7 @@ const ResetPassword = () => {
     if (!token) {
       setMessage(i18n.t("Invalid or expired token"));
     }
-  }, [token]);
+  }, [token, i18n]);
 
   const handleChange = (key:string, value:string) => {
     if (key === "password") setPassword(value);

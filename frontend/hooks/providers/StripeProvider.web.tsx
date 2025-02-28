@@ -1,5 +1,4 @@
-import React,{ ReactNode } from 'react';
-import { Platform } from 'react-native';
+import React from 'react';
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 

@@ -15,9 +15,6 @@ import { validatePassword } from "@/constants/validatePassword";
 import { useErrors } from "@/hooks/providers/ErrorProvider";
 import { useLanguage } from "@/hooks/providers/LanguageProvider";
 import AboutPassword from "@/components/aboutPassword";
-
-import { Platform } from "react-native";
-import * as WebBrowser from 'expo-web-browser';
 import { useAuth, useSSO, useUser } from '@clerk/clerk-expo'
 import * as AuthSession from 'expo-auth-session'
 import UsersGoogle from "@/type/feature/auth/user_google";

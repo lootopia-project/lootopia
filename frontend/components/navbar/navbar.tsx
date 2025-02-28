@@ -16,7 +16,6 @@ const Navbar = () => {
   const theme = useColorScheme() || "light";
   const { isAuthenticated, logout } = useAuth();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const router = useRouter();
   const { i18n } = useLanguage();
   const [img, setImg] = useState("");
   const { setErrorMessage, setErrorVisible } = useErrors();

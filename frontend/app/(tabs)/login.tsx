@@ -90,7 +90,7 @@ export default function LoginPage() {
     e.preventDefault();
     setSendData(true);
     try {
-      const { createdSessionId, setActive, signIn, signUp } = await startSSOFlow({
+      const { createdSessionId, setActive } = await startSSOFlow({
         strategy: "oauth_google",
         redirectUrl: AuthSession.makeRedirectUri(),
       });

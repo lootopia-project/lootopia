@@ -1,9 +1,10 @@
-import { BaseModel, belongsTo, column } from '@adonisjs/lucid/orm'
-import type { BelongsTo } from '@adonisjs/lucid/types/relations'
+import { BaseModel, belongsTo, column, hasMany } from '@adonisjs/lucid/orm'
+import type { BelongsTo, HasMany } from '@adonisjs/lucid/types/relations'
 import User from '#models/user'
 import TypeReward from '#models/type_reward'
 import Rarity from '#models/rarity'
 import Hunting from '#models/hunting'
+import OrdersReward from '#models/orders_reward'
 
 export default class Reward extends BaseModel {
   @column({ isPrimary: true })
@@ -35,4 +36,7 @@ export default class Reward extends BaseModel {
 
   @belongsTo(() => Hunting)
   declare hunting: BelongsTo<typeof Hunting>
+
+  @hasMany(() => OrdersReward)
+  declare ordersReward: HasMany<typeof OrdersReward>
 }
