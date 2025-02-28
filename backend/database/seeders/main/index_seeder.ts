@@ -7,5 +7,6 @@ export default class extends BaseSeeder {
   async run() {
     await this.seed(await import('#database/seeders/user_seeder'))
     await this.seed(await import('#database/seeders/hunting_seeder'))
+    await this.seed(await import('#database/seeders/order_seeder'))
   }
 }

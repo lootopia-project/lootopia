@@ -27,10 +27,12 @@ const FormEditUser: React.FC<FormEditUserProps> = ({ infoEditUser, handleChange,
                 </View>
             </TouchableOpacity>
             <View className="grid grid-cols-2 sm:grid-cols-1 gap-6 w-full mt-6">
+            <TouchableOpacity>
                 <Text className="mb-1 font-semibold flex flex-row items-center">
                     {i18n.t("Email")}
-                    {!infoEditUser.checkMail && <TouchableOpacity><ExclamationCircleIcon onPress={hangleCheckMail} className="w-5 h-5 text-red-500 ml-2" /></TouchableOpacity>}
+                    {!infoEditUser.checkMail && <ExclamationCircleIcon onPress={hangleCheckMail} className="w-5 h-5 text-red-500 ml-2" />}
                 </Text>
+                </TouchableOpacity>
                 <TextInput
                     className="bg-gray-100 border border-gray-300 p-3 rounded-lg w-full focus:border-blue-500 focus:ring-2 focus:ring-blue-300"
                     value={infoEditUser.email}

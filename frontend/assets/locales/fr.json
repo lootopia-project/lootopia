@@ -74,7 +74,7 @@
     "Authentification successfull": "Authentification réussie",
     "An error occurred while sending the message.":"Une erreur s'est produite lors de l'envoi du message.",
     "An error occurred while fetching data":"Une erreur s'est produite lors de la récupération des données.",
-    "An error occurred while logging out.":"Une erreur s'est produite lors de la déconnexion.",
+    "An error occurred while logging out":"Une erreur s'est produite lors de la déconnexion.",
     "Check your email":"Vérifiez votre email",
     "Please check your email":"Veuillez vérifier votre email pour plus d'instructions.",
     "User or token not found":"Utilisateur ou token introuvable",
@@ -103,5 +103,15 @@
     "Error resetting password":"Erreur lors de la réinitialisation du mot de passe",
     "Invalid or expired token":"Token invalide ou expiré",
     "Password updated successfully":"Mot de passe mis à jour avec succès",
-    "Sending":"Envoi en cours..."
+    "Sending":"Envoi en cours...",
+    "Secure payment": "Paiement sécurisé",
+    "No payment yet": "Aucun paiement",
+    "Thank you for your payment":"Merci pour votre achat ! Un email de confirmation vous a été envoyé. Nous restons à votre disposition pour toute question supplémentaire.",
+    "Amount paid": "Montant payé",
+    "Payment status": "Statut du paiement",
+    "Back to home": "Retour à l'accueil",
+    "Successful payment": "Paiement effectué avec succès",
+    "Pay": "Payer",
+    "Payment failure": "Échec du paiement",
+    "Payment error": "Erreur lors du paiement"
 }

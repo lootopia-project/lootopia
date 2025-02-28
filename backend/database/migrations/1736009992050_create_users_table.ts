@@ -16,7 +16,7 @@ export default class extends BaseSchema {
       table.string('two_factor_secret', 500).nullable()
       table.string('two_factor_recovery_codes', 500).nullable()
       table.boolean('is_two_factor_enabled').defaultTo(false)
-      table.integer('phone').nullable()
+      table.string('phone').nullable()
       table.integer('crowns').nullable().defaultTo(0)
       table.integer('ranking').nullable()
       table.string('lang').nullable().defaultTo('en')

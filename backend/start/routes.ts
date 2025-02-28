@@ -13,6 +13,7 @@ const DoubleAuthsController = () => import('#controllers/double_auths_controller
 const AuthController = () => import('#controllers/auth_controller')
 const HuntingsController = () => import('#controllers/huntings_controller')
 const UsersController = () => import('#controllers/users_controller')
+const PaymentsController = () => import('#controllers/payments_controller')
 
 router.post('/login', [AuthController, 'login'])
 router.post('/register', [AuthController, 'register'])
@@ -22,6 +23,9 @@ router.post('/users/CheckMailToken', [UsersController, 'CheckMailToken'])
 router.post('/users/loginOrRegisterGoogle', [AuthController, 'loginOrRegisterGoogle'])
 router.post('/forgot-password', [AuthController, 'forgotPassword'])
 router.post('/reset-password', [AuthController, 'resetPassword'])
+router
+  .post('stripe/webhook', [PaymentsController, 'handleWebhook'])
+  .use(middleware.verifyStripeWebhook())
 router
   .group(() => {
     router.post('/logout', [AuthController, 'logout'])
@@ -38,6 +42,7 @@ router
     router.post('/users/validateTwoFactorCode', [DoubleAuthsController, 'validateTwoFactorCode'])
     router.get('/users/recoveryCode', [DoubleAuthsController, 'recoveryCode'])
     router.post('/users/CheckMail', [UsersController, 'CheckMail'])
+    router.post('/stripe/initPayment', [PaymentsController, 'initPayment'])
   })
   .use([
     middleware.auth({

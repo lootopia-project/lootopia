@@ -5,7 +5,7 @@ export default class extends BaseSchema {
 
   async up() {
     this.schema.createTable(this.tableName, (table) => {
-      table.increments('id')
+      table.increments('id').primary()
       table.integer('spot_id').unsigned().references('id').inTable('spots').onDelete('CASCADE')
       table.integer('map_id').unsigned().references('id').inTable('maps').onDelete('CASCADE')
     })

@@ -74,7 +74,7 @@
     "Authentification successfull": "Authentification successfull",
     "An error occurred while sending the message.": "An error occurred while sending the message.",
     "An error occurred while fetching data": "An error occurred while fetching data.",
-    "An error occurred while logging out.": "An error occurred while logging out.",
+    "An error occurred while logging out": "An error occurred while logging out.",
     "Check your email": "Check your email",
     "Please check your email": "Please check your email for further instructions.",
     "User or token not found": "User or token not found",
@@ -103,5 +103,15 @@
     "Error resetting password":"Error resetting password",
     "Invalid or expired token":"Invalid or expired token",
     "Password updated successfully":"Password updated successfully",
-    "Sending":"Sending..."
+    "Sending":"Sending...",
+    "Secure payment":"Secure payment",
+    "No payment yet":"No payment yet",
+    "Thank you for your payment":"Thank you for your purchase! A confirmation email has been sent to you. If you have any further questions, please do not hesitate to contact us.",
+    "Amount paid":"Amount paid",
+    "Payment status":"Payment status",
+    "Back to home":"Back to home",
+    "Successful payment":"Successful payment",
+    "Pay": "Pay",
+    "Payment failure": "Payment failure",
+    "Payment error": "Payment error"
   }
