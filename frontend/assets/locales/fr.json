@@ -113,5 +113,11 @@
     "Successful payment": "Paiement effectué avec succès",
     "Pay": "Payer",
     "Payment failure": "Échec du paiement",
-    "Payment error": "Erreur lors du paiement"
+    "Payment error": "Erreur lors du paiement",
+    "Buy Crowns": "Acheter des Couronnes",
+    "Crowns": "Couronnes",
+    "Buy": "Acheter",
+    "Some Crowns": "Quelques Couronnes",
+    "Bag of Crowns": "Sac de couronnes",
+    "Pile of Crowns": "Tas de couronnes"
 }

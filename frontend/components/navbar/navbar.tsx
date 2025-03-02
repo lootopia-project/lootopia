@@ -18,11 +18,14 @@ const Navbar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const { i18n } = useLanguage();
   const [img, setImg] = useState("");
+  const [crowns, setCrowns] = useState(0);
   const { setErrorMessage, setErrorVisible } = useErrors();
   useEffect(() => {
     const fetchImg = async () => {
       if (isAuthenticated) {
         const img = await AsyncStorage.getItem("img");
+        const crowns = await AsyncStorage.getItem("crowns") || "0";
+        setCrowns(parseInt(crowns, 10));
         setImg("https://lootopia.blob.core.windows.net/lootopia-photos/user.png");
         if (img) {
           setImg(img);
@@ -75,6 +78,15 @@ const Navbar = () => {
 
                 )
               }
+                {isAuthenticated && (
+                <View style={styles.crownContainer}>
+                  <Image
+                    source={{ uri: "https://lootopia.blob.core.windows.net/lootopia-object/crown.png" }}
+                    style={styles.crownIcon}
+                  />
+                  <Text style={styles.crownText}>{crowns}</Text>
+                </View>
+              )}
               {/* dropdown right menu */}
               {isAuthenticated && !isMobile &&
                 (
@@ -248,7 +260,24 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 16,
     marginLeft: 20
-  }
+  },
+  crownContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#222",
+    padding: 6,
+    borderRadius: 8,
+  },
+  crownIcon: {
+    width: 24,
+    height: 24,
+    marginRight: 6,
+  },
+  crownText: {
+    fontSize: 16,
+    color: "white",
+    fontWeight: "bold",
+  },
 });
 
 export default Navbar;

@@ -14,6 +14,7 @@ const AuthController = () => import('#controllers/auth_controller')
 const HuntingsController = () => import('#controllers/huntings_controller')
 const UsersController = () => import('#controllers/users_controller')
 const PaymentsController = () => import('#controllers/payments_controller')
+const ShopCrownsController = () => import('#controllers/shop_crowns_controller')
 
 router.post('/login', [AuthController, 'login'])
 router.post('/register', [AuthController, 'register'])
@@ -43,6 +44,7 @@ router
     router.get('/users/recoveryCode', [DoubleAuthsController, 'recoveryCode'])
     router.post('/users/CheckMail', [UsersController, 'CheckMail'])
     router.post('/stripe/initPayment', [PaymentsController, 'initPayment'])
+    router.get('/shop/getShopCrowns', [ShopCrownsController, 'getShopCrowns'])
   })
   .use([
     middleware.auth({
