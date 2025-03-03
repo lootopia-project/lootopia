@@ -4,6 +4,57 @@ import { getLastMessagesForHunts } from '#services/firebase_service'
 import UsersHunting from '#models/users_hunting'
 
 export default class HuntingsController {
+  public async getAllHuntings({ auth, response }: HttpContext) {
+
+    const user = auth.user
+    if (!user) {
+      return response.unauthorized({ message: 'User not authenticated', success: false })
+    }
+
+    try {
+      const huntings = await Hunting.query().orderBy('id', 'desc')
+
+      return response.json({
+        message: 'Liste des chasses récupérée avec succès',
+        success: true,
+        huntings,
+      })
+    } catch (error) {
+      console.error('Erreur lors de la récupération des chasses :', error)
+
+      return response.internalServerError({
+        message: 'Erreur lors de la récupération des chasses',
+        success: false,
+      })
+    }
+  }
+
+  public async getPublicHuntings({ auth, response }: HttpContext) {
+    const user = auth.user
+    if (!user) {
+      return response.unauthorized({ message: 'User not authenticated', success: false })
+    }
+  
+    try {
+      const huntings = await Hunting.query()
+        .where('private', false)
+        .orderBy('id', 'desc')
+  
+      return response.json({
+        message: 'Liste des chasses publiques récupérée avec succès',
+        success: true,
+        huntings,
+      })
+    } catch (error) {
+      console.error('Erreur lors de la récupération des chasses publiques :', error)
+      return response.internalServerError({
+        message: 'Erreur lors de la récupération des chasses publiques',
+        success: false,
+      })
+    }
+  }
+  
+
   async getHuntingsParticpatedOrOrganized({ auth, response }: HttpContext) {
     const user = auth.user
     if (!user) {

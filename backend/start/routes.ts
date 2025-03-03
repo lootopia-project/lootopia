@@ -33,6 +33,8 @@ router
       HuntingsController,
       'getHuntingsParticpatedOrOrganized',
     ])
+    router.get('/huntings/getAllHuntings', [HuntingsController, 'getAllHuntings'])
+    router.get('/huntings/getPublicHuntings', [HuntingsController, 'getPublicHuntings'])
     router.post('/checkIsLogin', [AuthController, 'checkIsLogin'])
     router.get('/users/getInfoUser', [UsersController, 'getInfoUser'])
     router.post('/users/updateInfoUser', [UsersController, 'updateInfoUser'])
