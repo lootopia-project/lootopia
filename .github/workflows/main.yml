@@ -3,7 +3,7 @@ name: CI/CD Pipeline for Lootopia
 on:
   push:
     branches:
-      - git checkout 145-fix-ci-front
+      - 145-fix-ci-front
 
 jobs:
   deploy-frontend:
