@@ -16,6 +16,10 @@ jobs:
         run: npm install
         working-directory: frontend
 
+      - name: Install lightningcss
+        run: npm install lightningcss --build-from-source
+        working-directory: frontend
+
       - name: Rebuild lightningcss
         run: npm rebuild lightningcss
         working-directory: frontend
