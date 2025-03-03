@@ -20,10 +20,6 @@ jobs:
         run: npm install lightningcss --build-from-source
         working-directory: frontend
 
-      # - name: Rebuild lightningcss
-      #   run: npm rebuild lightningcss
-      #   working-directory: frontend
-
       - name: Build Expo web project
         run: npx expo export --platform web
         working-directory: frontend
