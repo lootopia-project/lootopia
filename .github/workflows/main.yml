@@ -3,7 +3,7 @@ name: CI/CD Pipeline for Lootopia
 on:
   push:
     branches:
-      - main
+      - git checkout 145-fix-ci-front
 
 jobs:
   deploy-frontend:
@@ -14,6 +14,10 @@ jobs:
 
       - name: Install dependencies (Expo web project)
         run: npm install
+        working-directory: frontend
+
+      - name: Rebuild lightningcss
+        run: npm rebuild lightningcss
         working-directory: frontend
 
       - name: Build Expo web project
