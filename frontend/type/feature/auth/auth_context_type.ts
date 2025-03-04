@@ -8,6 +8,7 @@ interface auth_context {
     checkDoubleAuth: (otpCode: string) => Promise<RETURN>;
     checkRecoveryCode: (recoveryCode: string) => Promise<RETURN>;
     loginOrRegisterGoogle(users:UsersGoogle): Promise<RETURN>
+    updateCrowns: ()=>Promise<number>
 }
 
 export default auth_context

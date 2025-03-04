@@ -1,6 +1,6 @@
 import CheckoutScreen from "@/components/stripe/checkout/checkout.native";
-import { handlePayment } from '@/services/PaymentService';
+import {  handlePaymentCrowns } from '@/services/PaymentService';
 
 export default function Checkout() {
-  return <CheckoutScreen handlePaymentService={handlePayment} />;
+  return <CheckoutScreen handlePaymentService={handlePaymentCrowns} />;
 }

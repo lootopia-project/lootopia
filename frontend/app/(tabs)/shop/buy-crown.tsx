@@ -1,8 +1,8 @@
 import { useErrors } from "@/hooks/providers/ErrorProvider";
 import { useLanguage } from "@/hooks/providers/LanguageProvider";
-import { createOrder } from "@/services/PaymentService";
 import { getShopCrown } from "@/services/ShopService";
 import ShopCrown from "@/type/feature/shop/shop_crown";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity, Image, FlatList } from "react-native";
@@ -36,9 +36,8 @@ useEffect(() => {
 const buyCrown = async (amount: number) => {
   console.log(amount);
     try {
-      const response=await createOrder(amount);
-      router.push({ pathname: '/checkout', params: { id: response.message.id } });
-
+        router.push("/checkout/crown");
+        AsyncStorage.setItem('amount', amount.toString());
     } catch (error) {
         setErrorMessage(i18n.t("An error occurred"));
         setErrorVisible(true);  

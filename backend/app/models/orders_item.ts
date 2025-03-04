@@ -1,8 +1,8 @@
 import { BaseModel, belongsTo, column } from '@adonisjs/lucid/orm'
 import Order from '#models/order'
 import type { BelongsTo } from '@adonisjs/lucid/types/relations'
-import Reward from '#models/reward'
-export default class OrdersReward extends BaseModel {
+import Item from '#models/item'
+export default class OrdersItem extends BaseModel {
   @column({ isPrimary: true })
   declare id: number
 
@@ -10,11 +10,14 @@ export default class OrdersReward extends BaseModel {
   declare orderId: number
 
   @column()
-  declare rewardId: number
+  declare itemId: number
+
+  @column()
+  declare price: number
 
   @belongsTo(() => Order)
   declare order: BelongsTo<typeof Order>
 
-  @belongsTo(() => Reward)
-  declare reward: BelongsTo<typeof Reward>
+  @belongsTo(() => Item)
+  declare item: BelongsTo<typeof Item>
 }

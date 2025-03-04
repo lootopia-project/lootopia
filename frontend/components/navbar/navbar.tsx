@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity, useColorScheme, StatusBar, SafeAreaView, StyleSheet, Image, Platform, useWindowDimensions } from "react-native";
 import { Colors } from "@/constants/Colors";
-import { Link } from "expo-router";
+import { Link, usePathname } from "expo-router";
 import { useAuth } from "@/hooks/providers/AuthProvider";
 import { useRouter } from "expo-router";
 import { useLanguage } from "@/hooks/providers/LanguageProvider";
@@ -20,6 +20,7 @@ const Navbar = () => {
   const [img, setImg] = useState("");
   const [crowns, setCrowns] = useState(0);
   const { setErrorMessage, setErrorVisible } = useErrors();
+    const pathName = usePathname();
   useEffect(() => {
     const fetchImg = async () => {
       if (isAuthenticated) {
@@ -33,7 +34,7 @@ const Navbar = () => {
       }
     };
     fetchImg();
-  }, [isAuthenticated]);
+  }, [isAuthenticated,pathName]);
 
 
   const hangleLogout = async () => {

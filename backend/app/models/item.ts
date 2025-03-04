@@ -1,12 +1,12 @@
 import { BaseModel, belongsTo, column, hasMany } from '@adonisjs/lucid/orm'
 import type { BelongsTo, HasMany } from '@adonisjs/lucid/types/relations'
 import User from '#models/user'
-import TypeReward from '#models/type_reward'
+import TypeItem from '#models/type_item'
 import Rarity from '#models/rarity'
 import Hunting from '#models/hunting'
-import OrdersReward from '#models/orders_reward'
+import OrdersItem from '#models/orders_item'
 
-export default class Reward extends BaseModel {
+export default class Item extends BaseModel {
   @column({ isPrimary: true })
   declare id: number
 
@@ -21,15 +21,25 @@ export default class Reward extends BaseModel {
 
   @column()
   declare userId: number
+  
+  @column()
+  declare price: number
+
+  @column()
+  declare description: string
+
+  @column()
+  declare img: string
 
   @column()
   declare huntingId: number
 
+
   @belongsTo(() => User)
   declare user: BelongsTo<typeof User>
 
-  @belongsTo(() => TypeReward)
-  declare type: BelongsTo<typeof TypeReward>
+  @belongsTo(() => TypeItem)
+  declare type: BelongsTo<typeof TypeItem>
 
   @belongsTo(() => Rarity)
   declare rarity: BelongsTo<typeof Rarity>
@@ -37,6 +47,6 @@ export default class Reward extends BaseModel {
   @belongsTo(() => Hunting)
   declare hunting: BelongsTo<typeof Hunting>
 
-  @hasMany(() => OrdersReward)
-  declare ordersReward: HasMany<typeof OrdersReward>
+  @hasMany(() => OrdersItem)
+  declare ordersItem: HasMany<typeof OrdersItem>
 }

@@ -1,6 +1,6 @@
 import { BaseModel, column, hasMany } from '@adonisjs/lucid/orm'
 import type { HasMany } from '@adonisjs/lucid/types/relations'
-import Reward from '#models/reward'
+import Item from '#models/item'
 
 export default class Rarity extends BaseModel {
   @column({ isPrimary: true })
@@ -9,6 +9,6 @@ export default class Rarity extends BaseModel {
   @column()
   declare name: string
 
-  @hasMany(() => Reward)
-  declare rewards: HasMany<typeof Reward>
+  @hasMany(() => Item)
+  declare item: HasMany<typeof Item>
 }
