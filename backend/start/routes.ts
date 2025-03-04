@@ -44,7 +44,7 @@ router
     router.get('/users/recoveryCode', [DoubleAuthsController, 'recoveryCode'])
     router.post('/users/CheckMail', [UsersController, 'CheckMail'])
     router.post('/stripe/initPayment', [PaymentsController, 'initPayment'])
-    router.post('/stripe/order', [PaymentsController, 'createOrder'])
+    router.post('/stripe/addCrowns', [PaymentsController, 'addCrowns'])
     router.get('/shop/getShopCrowns', [ShopCrownsController, 'getShopCrowns'])
   })
   .use([

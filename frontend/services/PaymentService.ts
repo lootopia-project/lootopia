@@ -25,8 +25,9 @@ const handlePayment = async () :Promise<PaymentIntent> => {
 };
 
 
-const createOrder=async(amount:number)=>{
+const handlePaymentCrowns = async () :Promise<PaymentIntent> => {
   const token = await AsyncStorage.getItem('token');
+  const amount=await AsyncStorage.getItem('amount');
   const config = {
     headers: {
       "Content-Type": "application/json",
@@ -35,8 +36,8 @@ const createOrder=async(amount:number)=>{
     withCredentials: true
   };
   try {
-    const response = await axios.post(`${API_URL}/stripe/order`,{amount}, config);
-    return response.data as Return
+    const response = await axios.post(`${API_URL}/stripe/addCrowns`,{amount}, config);
+    return response.data;
 
     } catch (error) {
     console.error("Erreur de paiement :", error);
@@ -46,4 +47,4 @@ const createOrder=async(amount:number)=>{
 
 
 
-export { handlePayment,createOrder };
+export { handlePayment,handlePaymentCrowns };

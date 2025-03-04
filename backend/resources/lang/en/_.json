@@ -29,5 +29,6 @@
     "This link is valid for 15 minutes": "This link is valid for 15 minutes",
     "If you did not request a password reset, you can ignore this email": "If you did not request a password reset, you can ignore this email",
     "Password updated successfully": "Password updated successfully",
-    "Password is the same as the current one": "Password is the same as the current one"
+    "Password is the same as the current one": "Password is the same as the current one",
+    "You bought {{amount}} crowns": "You bought {{amount}} crowns"
 }
