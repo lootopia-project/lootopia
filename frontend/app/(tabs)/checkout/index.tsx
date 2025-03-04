@@ -1,8 +1,5 @@
-import CheckoutScreen from "@/components/stripe/checkout.web";
-import { handlePayment } from '@/services/PaymentService';
-import { Text } from 'react-native';
+import Index from "@/components/stripe/index/index";
 
 export default function Checkout() {
-  // return <CheckoutScreen handlePaymentService={handlePayment} />;
-  return <Text>Checkout</Text>;
-} 
+  return <Index />;
+}
