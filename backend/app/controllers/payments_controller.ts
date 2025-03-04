@@ -39,4 +39,18 @@ export default class PaymentsController {
     console.log(order)
     return response.ok({message:order, success: true})
   }
+  async addCrowns({ response, auth, request }: HttpContext) {
+    const amount = request.input('amount')
+    const paymentService = new PaymentService()
+    if (auth.user === undefined) {
+      return response.unauthorized('You must be logged in to make a payment')
+    }
+    const paymentIntent = await paymentService.createPaymentIntent(amount, auth.user)
+    return response.ok({
+      paymentIntent: paymentIntent.paymentIntent.client_secret,
+      ephemeralKey: paymentIntent.ephemeralKey.secret,
+      customer: paymentIntent.paymentIntent.customer,
+      publishableKey: process.env.STRIPE_API_KEY,
+    })
+  }
 }
