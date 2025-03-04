@@ -1,3 +1,4 @@
+import Order from '#models/order'
 import User from '#models/user'
 import stripe from '@vbusatta/adonis-stripe/services/main'
 
@@ -20,4 +21,17 @@ export default class PaymentService {
     })
     return { paymentIntent, ephemeralKey }
   }
+
+  async createOrder(amount: number, user: User) {
+    const order=await Order.create({
+      finalPrice:amount,
+      status: 'pending',
+    })
+    await order.related('usersOrder').create({
+      userId: user.id,
+    })
+    return order
+  }
+
+
 }

@@ -23,4 +23,20 @@ export default class PaymentsController {
       publishableKey: process.env.STRIPE_API_KEY,
     })
   }
+
+  async createOrder({ request, response, auth }: HttpContext) {
+    const { amount } = request.only(['amount'])
+    console.log(amount)
+    const paymentService = new PaymentService()
+    if (auth.user === undefined) {
+      return response.unauthorized('You must be logged in to make a payment')
+    }
+    const order = await paymentService.createOrder(amount, auth.user)
+
+    if (order === null) {
+      return response.badRequest('No pending order found')
+    }
+    console.log(order)
+    return response.ok({message:order, success: true})
+  }
 }
