@@ -15,6 +15,7 @@ const HuntingsController = () => import('#controllers/huntings_controller')
 const UsersController = () => import('#controllers/users_controller')
 const PaymentsController = () => import('#controllers/payments_controller')
 const ShopCrownsController = () => import('#controllers/shop_crowns_controller')
+const ItemsController = () => import('#controllers/items_controller')
 
 router.post('/login', [AuthController, 'login'])
 router.post('/register', [AuthController, 'register'])
@@ -24,31 +25,32 @@ router.post('/users/CheckMailToken', [UsersController, 'CheckMailToken'])
 router.post('/users/loginOrRegisterGoogle', [AuthController, 'loginOrRegisterGoogle'])
 router.post('/forgot-password', [AuthController, 'forgotPassword'])
 router.post('/reset-password', [AuthController, 'resetPassword'])
+router.get('/shop/getListItem', [ItemsController, 'getListItem'])
+
+router.post('stripe/webhook', [PaymentsController, 'handleWebhook'])
+.use(middleware.verifyStripeWebhook())
 router
-  .post('stripe/webhook', [PaymentsController, 'handleWebhook'])
-  .use(middleware.verifyStripeWebhook())
-router
-  .group(() => {
-    router.post('/logout', [AuthController, 'logout'])
-    router.get('/huntings/getAllForMessage', [
-      HuntingsController,
-      'getHuntingsParticpatedOrOrganized',
-    ])
-    router.post('/checkIsLogin', [AuthController, 'checkIsLogin'])
-    router.get('/users/getInfoUser', [UsersController, 'getInfoUser'])
-    router.post('/users/updateInfoUser', [UsersController, 'updateInfoUser'])
-    router.post('/users/updatePassword', [UsersController, 'updatePassword'])
-    router.post('/users/toggleDoubleAuth', [DoubleAuthsController, 'toggleTwoFactorAuth'])
-    router.get('/users/isTwoFactorEnabled', [DoubleAuthsController, 'isTwoFactorEnabled'])
-    router.post('/users/validateTwoFactorCode', [DoubleAuthsController, 'validateTwoFactorCode'])
-    router.get('/users/recoveryCode', [DoubleAuthsController, 'recoveryCode'])
-    router.post('/users/CheckMail', [UsersController, 'CheckMail'])
-    router.post('/stripe/initPayment', [PaymentsController, 'initPayment'])
-    router.post('/stripe/addCrowns', [PaymentsController, 'addCrowns'])
-    router.get('/shop/getShopCrowns', [ShopCrownsController, 'getShopCrowns'])
-  })
-  .use([
-    middleware.auth({
-      guards: ['api'],
-    }),
+.group(() => {
+  router.post('/logout', [AuthController, 'logout'])
+  router.get('/huntings/getAllForMessage', [
+    HuntingsController,
+    'getHuntingsParticpatedOrOrganized',
   ])
+  router.post('/checkIsLogin', [AuthController, 'checkIsLogin'])
+  router.get('/users/getInfoUser', [UsersController, 'getInfoUser'])
+  router.post('/users/updateInfoUser', [UsersController, 'updateInfoUser'])
+  router.post('/users/updatePassword', [UsersController, 'updatePassword'])
+  router.post('/users/toggleDoubleAuth', [DoubleAuthsController, 'toggleTwoFactorAuth'])
+  router.get('/users/isTwoFactorEnabled', [DoubleAuthsController, 'isTwoFactorEnabled'])
+  router.post('/users/validateTwoFactorCode', [DoubleAuthsController, 'validateTwoFactorCode'])
+  router.get('/users/recoveryCode', [DoubleAuthsController, 'recoveryCode'])
+  router.post('/users/CheckMail', [UsersController, 'CheckMail'])
+  router.post('/stripe/initPayment', [PaymentsController, 'initPayment'])
+  router.post('/stripe/addCrowns', [PaymentsController, 'addCrowns'])
+  router.get('/shop/getShopCrowns', [ShopCrownsController, 'getShopCrowns'])
+})
+.use([
+  middleware.auth({
+    guards: ['api'],
+  }),
+])

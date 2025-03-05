@@ -31,5 +31,5 @@
     "If you did not request a password reset, you can ignore this email": "Si vous n'avez pas demandé de réinitialisation de mot de passe, vous pouvez ignorer cet e-mail",
     "Password updated successfully": "Mot de passe mis à jour avec succès",
     "Password is the same as the current one": "Le mot de passe est identique à l'actuel",
-    "You bought {amount} crowns": "Vous avez acheté {amount} couronnes"
+    "You bought {numberCrown} crowns": "Vous avez acheté {numberCrown} couronnes"
 }

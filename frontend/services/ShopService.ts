@@ -1,3 +1,4 @@
+import Item from "@/type/feature/shop/item";
 import ShopCrown from "@/type/feature/shop/shop_crown"
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
@@ -17,6 +18,24 @@ export const getShopCrown = async (): Promise<ShopCrown[]> => {
     try {
         const response = await axios.get(`${API_URL}/shop/getShopCrowns`, config)
         return response.data as ShopCrown[]
+    } catch (err) {
+        throw new Error("Error connecting to server")
+    }
+}
+
+export const getListItem = async (): Promise<Item[]> => {
+    const token = await AsyncStorage.getItem('token');
+    const config = {
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": token ? `${token}` : '',
+        },
+        withCredentials: true
+    }
+
+    try {
+        const response = await axios.get(`${API_URL}/shop/getListItem`, config)
+        return response.data as Item[]
     } catch (err) {
         throw new Error("Error connecting to server")
     }

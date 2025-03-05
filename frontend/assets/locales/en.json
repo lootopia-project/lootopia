@@ -119,5 +119,12 @@
     "Buy": "Buy",
     "Some Crowns": "Some Crowns",
     "Bag of Crowns": "Bag of Crowns",
-    "Pile of Crowns": "Pile of Crowns"
+    "Pile of Crowns": "Pile of Crowns",
+    "Rare":"Rare",
+    "Legendary":"Legendary",
+    "Mythic":"Mythic",
+    "Epic":"Epic",
+    "Confirm Purchase":"Confirm Purchase",
+    "Do you want to buy {itemName} for {itemPrice} crowns?": "Do you want to buy {{itemName}} for {{itemPrice}} crowns?",
+    "Shop": "Shop"
   }

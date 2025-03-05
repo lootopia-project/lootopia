@@ -119,5 +119,12 @@
     "Buy": "Acheter",
     "Some Crowns": "Quelques Couronnes",
     "Bag of Crowns": "Sac de couronnes",
-    "Pile of Crowns": "Tas de couronnes"
+    "Pile of Crowns": "Tas de couronnes",
+    "Rare":"Rare",
+    "Legendary":"Légendaire",
+    "Mythic":"Mythique",
+    "Epic":"Épique",
+    "Confirm Purchase":"Confirmer l'achat",
+    "Do you want to buy {itemName} for {itemPrice} crowns?": "Voulez-vous acheter {{itemName}} pour {{itemPrice}} couronnes?",
+    "Shop": "Boutique"
 }

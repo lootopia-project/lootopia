@@ -39,14 +39,14 @@ export default class PaymentsController {
     }
     const i18n = i18nManager.locale(user.lang)
     const paymentIntent = await paymentService.createPaymentIntent(amountStripe, auth.user)
-    console.log(numberCrown)
     user.crowns += numberCrown?.numberOfCrowns||0
     console.log("nouveau nombre de couronnes", user.crowns)
     await user.save()
     const log =await LogHistory.create({
       userId: auth.user.id,
-      log: i18n.t('_.You bought {numberCrown} crowns', { numberCrown }),
+      log: i18n.t('_.You bought {numberCrown} crowns', { numberCrown:numberCrown?.numberOfCrowns  }),
     })
+    console.log(log)
     return response.ok({
       paymentIntent: paymentIntent.paymentIntent.client_secret,
       ephemeralKey: paymentIntent.ephemeralKey.secret,
