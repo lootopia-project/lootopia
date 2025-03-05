@@ -16,6 +16,8 @@ const UsersController = () => import('#controllers/users_controller')
 const PaymentsController = () => import('#controllers/payments_controller')
 const ShopCrownsController = () => import('#controllers/shop_crowns_controller')
 const ItemsController = () => import('#controllers/items_controller')
+const LogHistoriesController = () => import('#controllers/log_histories_controller')
+const OrdersController = () => import('#controllers/orders_controller')
 
 router.post('/login', [AuthController, 'login'])
 router.post('/register', [AuthController, 'register'])
@@ -25,9 +27,8 @@ router.post('/users/CheckMailToken', [UsersController, 'CheckMailToken'])
 router.post('/users/loginOrRegisterGoogle', [AuthController, 'loginOrRegisterGoogle'])
 router.post('/forgot-password', [AuthController, 'forgotPassword'])
 router.post('/reset-password', [AuthController, 'resetPassword'])
-router.get('/shop/getListItem', [ItemsController, 'getListItem'])
-
-router.post('stripe/webhook', [PaymentsController, 'handleWebhook'])
+router
+.post('stripe/webhook', [PaymentsController, 'handleWebhook'])
 .use(middleware.verifyStripeWebhook())
 router
 .group(() => {
@@ -48,9 +49,14 @@ router
   router.post('/stripe/initPayment', [PaymentsController, 'initPayment'])
   router.post('/stripe/addCrowns', [PaymentsController, 'addCrowns'])
   router.get('/shop/getShopCrowns', [ShopCrownsController, 'getShopCrowns'])
+  router.post('/shop/buyItem', [ItemsController, 'buyItem'])
+  router.get('/shop/getListItem', [ItemsController, 'getListItem'])
+  router.get('shop/getLogHistories', [LogHistoriesController, 'getLogHistories'])
+  router.get('/shop/getOrderDetailWithId/:id', [OrdersController,'getOrderDetailWithId'])
+
 })
 .use([
   middleware.auth({
-    guards: ['api'],
-  }),
-])
+      guards: ['api'],
+    }),
+  ])

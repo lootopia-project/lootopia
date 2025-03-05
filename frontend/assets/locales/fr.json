@@ -126,5 +126,14 @@
     "Epic":"Épique",
     "Confirm Purchase":"Confirmer l'achat",
     "Do you want to buy {itemName} for {itemPrice} crowns?": "Voulez-vous acheter {{itemName}} pour {{itemPrice}} couronnes?",
-    "Shop": "Boutique"
+    "Shop": "Boutique",
+    "Add to cart": "Ajouter au panier",
+    "Proceed to checkout": "Passer à la caisse",
+    "Your Cart": "Votre panier",
+    "Your cart is empty": "Votre panier est vide",
+    "Purchase History": "Historique des achats",
+    "Are you sure you want to buy these items?": "Êtes-vous sûr de vouloir acheter ces articles ?",
+    "View Details": "Voir les détails",
+    "Status": "Statut",
+    "Order": "Commande"
 }

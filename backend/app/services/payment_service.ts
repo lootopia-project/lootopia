@@ -23,8 +23,8 @@ export default class PaymentService {
   }
 
   async createOrder(amount: number, user: User) {
-    const order=await Order.create({
-      finalPrice:amount,
+    const order = await Order.create({
+      finalPrice: amount,
       status: 'pending',
     })
     await order.related('usersOrder').create({
@@ -32,6 +32,4 @@ export default class PaymentService {
     })
     return order
   }
-
-
 }

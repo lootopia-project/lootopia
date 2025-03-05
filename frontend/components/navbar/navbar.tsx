@@ -11,6 +11,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const router = useRouter();
   const { width } = useWindowDimensions();
   const isMobile = (Platform.OS !== 'web') ? true : width < 768;
   const theme = useColorScheme() || "light";
@@ -86,6 +87,10 @@ const Navbar = () => {
                     style={styles.crownIcon}
                   />
                   <Text style={styles.crownText}>{crowns}</Text>
+
+                  <TouchableOpacity onPress={() => router.push("/shop/buy-crown")}>
+                    <Text style={styles.plusButton}>+</Text>
+                </TouchableOpacity>
                 </View>
               )}
               {/* dropdown right menu */}
@@ -278,6 +283,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "white",
     fontWeight: "bold",
+  },
+  plusButton: {
+    color: "white",
+    fontWeight: "bold",
+    fontSize: 20,
+    marginLeft: 8,
   },
 });
 

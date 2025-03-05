@@ -11,13 +11,7 @@ export default class extends BaseSchema {
       table.integer('price').notNullable()
       table.string('description').notNullable()
       table.integer('rarity_id').unsigned().references('id').inTable('rarities').onDelete('CASCADE')
-      table
-        .integer('type_id')
-        .unsigned()
-        .references('id')
-        .inTable('type_items')
-        .onDelete('CASCADE')
-      table.integer('user_id').unsigned().references('id').inTable('users').onDelete('CASCADE')
+      table.integer('type_id').unsigned().references('id').inTable('type_items').onDelete('CASCADE')
       table
         .integer('hunting_id')
         .unsigned()

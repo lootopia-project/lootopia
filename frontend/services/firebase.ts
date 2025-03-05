@@ -1,16 +1,14 @@
 import { Platform } from "react-native";
 import { initializeApp } from "firebase/app";
-import { getMessaging, getToken, onMessage } from "firebase/messaging";
+import { deleteToken, getMessaging, getToken, onMessage } from "firebase/messaging";
 import * as Notifications from "expo-notifications";
 import { getDatabase, ref, get, child } from "firebase/database";
 
 import {firebaseConfig} from "@/config/firebaseConfig";
 
 
-// Initialiser Firebase pour le web
 const app = initializeApp(firebaseConfig);
 
-// Configurer Expo Notifications pour le mobile
 Notifications.setNotificationHandler({
     handleNotification: async () => ({
         shouldShowAlert: true,
@@ -19,7 +17,6 @@ Notifications.setNotificationHandler({
     }),
 });
 
-// Fonction pour afficher une notification
 const showNotification = (title: string, body: string) => {
     if (Platform.OS === "web") {
         if (Notification.permission === "granted") {
@@ -35,21 +32,20 @@ const showNotification = (title: string, body: string) => {
     }
 };
 
-// Fonction pour gérer les notifications Web avec Firebase
 const requestFcmTokenWeb = async (): Promise<{ platform: string; token: string | null }> => {
+    const messaging = getMessaging(app);
+    await deleteToken(messaging);
+
     try {
+
         if ('serviceWorker' in navigator) {
+            console.log("Les Service Workers sont supportés, tentative d'enregistrement...");
             navigator.serviceWorker
                 .register('./firebase-messaging-sw.js')
-                .then((registration) => {})
-                .catch((error) => {
-                    console.error('Erreur lors de l\'enregistrement du Service Worker :', error);
-                });
         } else {
-            console.warn('Les Service Workers ne sont pas supportés par ce navigateur.');
+            console.warn("Les Service Workers ne sont pas supportés par ce navigateur.");
         }
 
-        const messaging = getMessaging(app);
         const permission = await Notification.requestPermission();
 
         if (permission !== "granted") {
@@ -58,12 +54,10 @@ const requestFcmTokenWeb = async (): Promise<{ platform: string; token: string |
         }
 
         const fcmToken = await getToken(messaging, {
-            vapidKey:process.env.EXPO_PUBLIC_FCM_PUBLIC_KEY,
+            vapidKey: process.env.EXPO_PUBLIC_FCM_PUBLIC_KEY,
         });
-
-
         onMessage(messaging, (payload) => {
-
+            console.log("Notification reçue :", payload);
             if (payload.notification) {
                 const { title, body } = payload.notification;
                 showNotification(title || "Notification", body || "Vous avez une nouvelle notification.");
@@ -77,7 +71,7 @@ const requestFcmTokenWeb = async (): Promise<{ platform: string; token: string |
     }
 };
 
-// Fonction pour gérer les notifications Mobile avec Expo Notifications
+
 const requestFcmTokenMobile = async (): Promise<{ platform: string; token: string | null }> => {
     try {
         const { status } = await Notifications.requestPermissionsAsync();
@@ -99,7 +93,7 @@ const requestFcmTokenMobile = async (): Promise<{ platform: string; token: strin
 };
 
 
-// Fonction principale pour récupérer le token FCM selon la plateforme
+
 export const requestFcmToken = async (): Promise<{ platform: string; token: string | null }> => {
     if (Platform.OS === "web") {
         return await requestFcmTokenWeb();
@@ -118,6 +112,5 @@ Notifications.setNotificationHandler({
 const database = getDatabase(app);
 
 
-// Exporter les objets nécessaires
 export { Notifications,  getDatabase, ref, get, child,database };
 export default app;

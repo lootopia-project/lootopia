@@ -27,9 +27,8 @@ export default class PaymentsController {
     })
   }
 
- 
   async addCrowns({ response, auth, request }: HttpContext) {
-    const amount = parseInt(request.input('amount'))
+    const amount = Number.parseInt(request.input('amount'))
     const amountStripe = amount * 100
     const numberCrown = await ShopCrown.query().where('price', amount).first()
     const paymentService = new PaymentService()
@@ -39,14 +38,14 @@ export default class PaymentsController {
     }
     const i18n = i18nManager.locale(user.lang)
     const paymentIntent = await paymentService.createPaymentIntent(amountStripe, auth.user)
-    user.crowns += numberCrown?.numberOfCrowns||0
-    console.log("nouveau nombre de couronnes", user.crowns)
+    user.crowns += numberCrown?.numberOfCrowns || 0
     await user.save()
-    const log =await LogHistory.create({
+    await LogHistory.create({
       userId: auth.user.id,
-      log: i18n.t('_.You bought {numberCrown} crowns', { numberCrown:numberCrown?.numberOfCrowns  }),
+      log: i18n.t('_.You bought {numberCrown} crowns', {
+        numberCrown: numberCrown?.numberOfCrowns,
+      }),
     })
-    console.log(log)
     return response.ok({
       paymentIntent: paymentIntent.paymentIntent.client_secret,
       ephemeralKey: paymentIntent.ephemeralKey.secret,

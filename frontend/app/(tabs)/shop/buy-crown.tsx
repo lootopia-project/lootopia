@@ -13,7 +13,6 @@ const router = useRouter();
 const { i18n } = useLanguage();
 const { setErrorMessage, setErrorVisible } = useErrors();
 const [crownShopItems, setCrownShopItems] = useState<ShopCrown[]>([]);
-const [success, setSuccess] = useState(false);
 
 
 useEffect(() => {
@@ -34,7 +33,6 @@ useEffect(() => {
 
 
 const buyCrown = async (amount: number) => {
-  console.log(amount);
     try {
         router.push("/checkout/crown");
         AsyncStorage.setItem('amount', amount.toString());
@@ -45,8 +43,12 @@ const buyCrown = async (amount: number) => {
 }
 return (
     <View className="flex-1 bg-gray-100 items-center pt-6">
+      <View className="w-full flex-row items-center justify-between px-6">
+          <TouchableOpacity onPress={() => router.push("/shop/purchase-history")}>
+            <Text className="text-lg text-blue-500 font-semibold">{i18n.t("Purchase History")}</Text>
+          </TouchableOpacity>
+      </View>
       <Text className="text-2xl font-bold mb-4">{i18n.t("Buy Crowns")}</Text>
-
       <FlatList
         data={crownShopItems}
         numColumns={2}

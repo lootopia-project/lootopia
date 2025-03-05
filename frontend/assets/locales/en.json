@@ -126,5 +126,14 @@
     "Epic":"Epic",
     "Confirm Purchase":"Confirm Purchase",
     "Do you want to buy {itemName} for {itemPrice} crowns?": "Do you want to buy {{itemName}} for {{itemPrice}} crowns?",
-    "Shop": "Shop"
+    "Shop": "Shop",
+    "Add to cart": "Add to cart",
+    "Proceed to checkout": "Proceed to checkout",
+    "Your Cart": "Your Cart",
+    "Your cart is empty": "You Cart is empty",
+    "Purchase History": "Purchase History",
+    "Are you sure you want to buy these items?": "Are you sure you want to buy these items?",
+    "View Details": "View Details",
+    "Status": "Status",
+    "Order": "Order"
   }

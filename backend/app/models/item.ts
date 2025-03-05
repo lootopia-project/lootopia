@@ -20,9 +20,6 @@ export default class Item extends BaseModel {
   declare typeId: number
 
   @column()
-  declare userId: number
-  
-  @column()
   declare price: number
 
   @column()
@@ -33,10 +30,6 @@ export default class Item extends BaseModel {
 
   @column()
   declare huntingId: number
-
-
-  @belongsTo(() => User)
-  declare user: BelongsTo<typeof User>
 
   @belongsTo(() => TypeItem)
   declare type: BelongsTo<typeof TypeItem>
