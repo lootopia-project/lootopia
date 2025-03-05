@@ -12,5 +12,5 @@ export default class UsersItem extends BaseModel {
   declare itemId: number
 
   @column()
-  declare quantity: number 
+  declare quantity: number
 }

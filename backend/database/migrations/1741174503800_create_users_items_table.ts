@@ -8,7 +8,7 @@ export default class extends BaseSchema {
       table.increments('id').primary()
       table.integer('user_id').unsigned().notNullable().references('users.id').onDelete('CASCADE')
       table.integer('item_id').unsigned().notNullable().references('items.id').onDelete('CASCADE')
-      table.integer('quantity').notNullable().defaultTo(1) 
+      table.integer('quantity').notNullable().defaultTo(1)
     })
   }
   async down() {

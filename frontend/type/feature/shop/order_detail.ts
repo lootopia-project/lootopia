@@ -3,6 +3,7 @@ interface Item {
     name: string;
     price: number;
     img: string;
+    description: string;
   }
   
   interface OrderItem {

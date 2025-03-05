@@ -69,12 +69,15 @@ const OrderDetail = () => {
                 renderItem={({ item }) => (
                     <View className="flex-row items-center bg-white p-3 mb-2 rounded-lg shadow">
                         <Image source={{ uri: item.item.img }} className="w-16 h-16 rounded-lg mr-3" resizeMode="contain"/>
-                        <View>
+                        <View className="flex-1">
                             <Text className="text-lg font-semibold text-gray-900">
                                 {item.item.name}
                             </Text>
                             <Text className="text-gray-700">{item.price} 💰</Text>
                         </View>
+                         <Text className="text-gray-500 text-sm text-right w-60">
+                            {i18n.t(item.item.description)}
+                        </Text>
                     </View>
                 )}
             />

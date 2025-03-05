@@ -46,19 +46,14 @@ const PurchaseHistory = () => {
                             key={log.id}
                             className="flex-row justify-between items-center border-b py-3"
                         >
-                            {/* 🔥 Message du log */}
                             <Text className="text-md flex-1">{log.log}</Text>
 
-                            {/* 📅 Date affichée à droite */}
                             <Text className="text-sm text-gray-500 ml-4">
                                 {format(new Date(log.createdAt), "dd/MM/yyyy HH:mm")}
                             </Text>
-
-                            {/* 🔥 Bouton voir transaction si `orderId` existe */}
                             {log.orderId && (
                                 <TouchableOpacity
                                     className="ml-4 bg-blue-500 px-3 py-2 rounded-lg"
-                                    // onPress={() => router.push(`/shop/order-detail/?id=${log.orderId}`)}
                                     onPress={() => {
                                         router.push({
                                           pathname: "/shop/order-detail",

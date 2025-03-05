@@ -28,35 +28,34 @@ router.post('/users/loginOrRegisterGoogle', [AuthController, 'loginOrRegisterGoo
 router.post('/forgot-password', [AuthController, 'forgotPassword'])
 router.post('/reset-password', [AuthController, 'resetPassword'])
 router
-.post('stripe/webhook', [PaymentsController, 'handleWebhook'])
-.use(middleware.verifyStripeWebhook())
+  .post('stripe/webhook', [PaymentsController, 'handleWebhook'])
+  .use(middleware.verifyStripeWebhook())
 router
-.group(() => {
-  router.post('/logout', [AuthController, 'logout'])
-  router.get('/huntings/getAllForMessage', [
-    HuntingsController,
-    'getHuntingsParticpatedOrOrganized',
-  ])
-  router.post('/checkIsLogin', [AuthController, 'checkIsLogin'])
-  router.get('/users/getInfoUser', [UsersController, 'getInfoUser'])
-  router.post('/users/updateInfoUser', [UsersController, 'updateInfoUser'])
-  router.post('/users/updatePassword', [UsersController, 'updatePassword'])
-  router.post('/users/toggleDoubleAuth', [DoubleAuthsController, 'toggleTwoFactorAuth'])
-  router.get('/users/isTwoFactorEnabled', [DoubleAuthsController, 'isTwoFactorEnabled'])
-  router.post('/users/validateTwoFactorCode', [DoubleAuthsController, 'validateTwoFactorCode'])
-  router.get('/users/recoveryCode', [DoubleAuthsController, 'recoveryCode'])
-  router.post('/users/CheckMail', [UsersController, 'CheckMail'])
-  router.post('/stripe/initPayment', [PaymentsController, 'initPayment'])
-  router.post('/stripe/addCrowns', [PaymentsController, 'addCrowns'])
-  router.get('/shop/getShopCrowns', [ShopCrownsController, 'getShopCrowns'])
-  router.post('/shop/buyItem', [ItemsController, 'buyItem'])
-  router.get('/shop/getListItem', [ItemsController, 'getListItem'])
-  router.get('shop/getLogHistories', [LogHistoriesController, 'getLogHistories'])
-  router.get('/shop/getOrderDetailWithId/:id', [OrdersController,'getOrderDetailWithId'])
-
-})
-.use([
-  middleware.auth({
+  .group(() => {
+    router.post('/logout', [AuthController, 'logout'])
+    router.get('/huntings/getAllForMessage', [
+      HuntingsController,
+      'getHuntingsParticpatedOrOrganized',
+    ])
+    router.post('/checkIsLogin', [AuthController, 'checkIsLogin'])
+    router.get('/users/getInfoUser', [UsersController, 'getInfoUser'])
+    router.post('/users/updateInfoUser', [UsersController, 'updateInfoUser'])
+    router.post('/users/updatePassword', [UsersController, 'updatePassword'])
+    router.post('/users/toggleDoubleAuth', [DoubleAuthsController, 'toggleTwoFactorAuth'])
+    router.get('/users/isTwoFactorEnabled', [DoubleAuthsController, 'isTwoFactorEnabled'])
+    router.post('/users/validateTwoFactorCode', [DoubleAuthsController, 'validateTwoFactorCode'])
+    router.get('/users/recoveryCode', [DoubleAuthsController, 'recoveryCode'])
+    router.post('/users/CheckMail', [UsersController, 'CheckMail'])
+    router.post('/stripe/initPayment', [PaymentsController, 'initPayment'])
+    router.post('/stripe/addCrowns', [PaymentsController, 'addCrowns'])
+    router.get('/shop/getShopCrowns', [ShopCrownsController, 'getShopCrowns'])
+    router.post('/shop/buyItem', [ItemsController, 'buyItem'])
+    router.get('/shop/getListItem', [ItemsController, 'getListItem'])
+    router.get('shop/getLogHistories', [LogHistoriesController, 'getLogHistories'])
+    router.get('/shop/getOrderDetailWithId/:id', [OrdersController, 'getOrderDetailWithId'])
+  })
+  .use([
+    middleware.auth({
       guards: ['api'],
     }),
   ])

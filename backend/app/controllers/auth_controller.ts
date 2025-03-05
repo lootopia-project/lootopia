@@ -45,7 +45,7 @@ export default class AuthController {
     if (USER_VERIFY) {
       return response.status(201).json({ message: 'User already exists' })
     }
-    const newUser = await User.create({
+    await User.create({
       email: email,
       password: password,
     })

@@ -57,24 +57,34 @@ export default class ItemsController {
 
     await UsersOrder.create({
       orderId: order.id,
-      userId: auth.user.id
+      userId: auth.user.id,
     })
 
-    await OrdersItem.createMany(items.map((item) => ({
-      orderId: order.id,
-      itemId: item.id,
-      price: item.price
-    })))
+    const orderItems = []
 
+    for (const item of ListItem) {
+      const foundItem = items.find((i) => i.id === item.id)
+      if (foundItem) {
+        orderItems.push({
+          orderId: order.id,
+          itemId: foundItem.id,
+          price: foundItem.price,
+        })
+      }
+    }
 
-    await LogHistory.create({
+    await OrdersItem.createMany(orderItems)
+
+    const log = await LogHistory.create({
       userId: auth.user.id,
       log: i18n.t('_.You have bought {numberItem} items for {price} crowns', {
-        numberItem: items.length,
-        price: totalPrice,
+        numberItem: orderItems.length,
+        price: orderItems.reduce((acc, item) => acc + item.price, 0),
       }),
-      orderId: order.id
-    })    
+      orderId: order.id,
+    })
+
+    console.log(log)
 
     for (const item of ListItem) {
       const existingItem = await UsersItem.query()
@@ -89,13 +99,12 @@ export default class ItemsController {
         await UsersItem.create({
           userId: user.id,
           itemId: item.id,
-          quantity: 1
+          quantity: 1,
         })
       }
     }
 
     await user.save()
     return response.json({ message: i18n.t('Items bought successfully') })
-}
-
+  }
 }
