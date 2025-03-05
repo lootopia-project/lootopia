@@ -5,8 +5,6 @@ import Order from '#models/order'
 export default class OrdersController {
   async getOrderDetailWithId({ response, auth, params }: HttpContext) {
     const orderId = params.id
-    console.log(`Requête pour la commande ID: ${orderId}`)
-
     const user = auth.user
     if (!user) {
       return response.unauthorized({ message: 'Unauthorized' })

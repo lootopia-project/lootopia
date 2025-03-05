@@ -75,7 +75,7 @@ export default class ItemsController {
 
     await OrdersItem.createMany(orderItems)
 
-    const log = await LogHistory.create({
+    await LogHistory.create({
       userId: auth.user.id,
       log: i18n.t('_.You have bought {numberItem} items for {price} crowns', {
         numberItem: orderItems.length,
@@ -83,8 +83,6 @@ export default class ItemsController {
       }),
       orderId: order.id,
     })
-
-    console.log(log)
 
     for (const item of ListItem) {
       const existingItem = await UsersItem.query()

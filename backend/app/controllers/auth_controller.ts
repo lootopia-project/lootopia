@@ -10,8 +10,6 @@ import hash from '@adonisjs/core/services/hash'
 export default class AuthController {
   async login({ request, auth, response }: HttpContext) {
     const { email, password, fcmToken } = request.all()
-    console.log(fcmToken)
-
     const verifyCredentials = await User.verifyCredentials(email, password)
 
     if (verifyCredentials) {
