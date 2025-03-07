@@ -1,5 +1,5 @@
 import { useLanguage } from "@/hooks/providers/LanguageProvider";
-import ModalCartProps from "@/type/feature/shop/ModalCartProps";
+import ModalCartProps from "@/type/feature/shop/modal_cart_props";
 import { Feather } from "@expo/vector-icons";
 import { Modal, ScrollView, TouchableOpacity, View,Image,Text } from "react-native";
 

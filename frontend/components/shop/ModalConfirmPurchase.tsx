@@ -1,5 +1,5 @@
 import { useLanguage } from "@/hooks/providers/LanguageProvider";
-import ModalConfirmPurchaseProps from "@/type/feature/shop/ModalConfirmPurchaseProps";
+import ModalConfirmPurchaseProps from "@/type/feature/shop/modal_confirm_purchase_props";
 import { Modal, View,Text,Image,ScrollView,TouchableOpacity } from "react-native";
 
 
