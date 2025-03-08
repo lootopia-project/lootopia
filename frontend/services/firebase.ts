@@ -39,7 +39,6 @@ const requestFcmTokenWeb = async (): Promise<{ platform: string; token: string |
     try {
 
         if ('serviceWorker' in navigator) {
-            console.log("Les Service Workers sont supportés, tentative d'enregistrement...");
             navigator.serviceWorker
                 .register('./firebase-messaging-sw.js')
         } else {
@@ -57,7 +56,6 @@ const requestFcmTokenWeb = async (): Promise<{ platform: string; token: string |
             vapidKey: process.env.EXPO_PUBLIC_FCM_PUBLIC_KEY,
         });
         onMessage(messaging, (payload) => {
-            console.log("Notification reçue :", payload);
             if (payload.notification) {
                 const { title, body } = payload.notification;
                 showNotification(title || "Notification", body || "Vous avez une nouvelle notification.");

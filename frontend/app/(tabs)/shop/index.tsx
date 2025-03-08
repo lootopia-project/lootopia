@@ -49,6 +49,11 @@
 
       if(response.success){
         setCart([]);
+        router.push({
+          pathname: "/shop/order-detail",
+          params: { id: response.orderId },
+        });
+
       }else{
         setErrorMessage(response.message);
         setErrorVisible(true);

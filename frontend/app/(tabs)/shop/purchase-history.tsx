@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { TouchableOpacity, View, Text, ScrollView } from "react-native";
 import { format } from "date-fns";
 import { ArrowLeftIcon } from "react-native-heroicons/solid";
+import { Link } from "expo-router";
 
 const PurchaseHistory = () => {
     const { setErrorMessage, setErrorVisible } = useErrors();
@@ -29,12 +30,14 @@ const PurchaseHistory = () => {
 
     return (
         <View className="flex-1 bg-gray-100 p-6">
-            <TouchableOpacity className="flex-row items-center mb-4" onPress={() => router.push("/shop")}>
+            <Link href="/shop" asChild>
+                <TouchableOpacity className="flex-row items-center mb-4">
                 <ArrowLeftIcon size={24} color="black" />
-                <Text className="ml-2 text-lg font-semibold text-gray-700">
+                    <Text className="ml-2 text-lg font-semibold text-gray-700">
                     {i18n.t("Back")}
-                </Text>
-            </TouchableOpacity>
+                    </Text>
+                </TouchableOpacity>
+            </Link>
             <Text className="text-2xl font-bold mb-4">{i18n.t("Purchase History")}</Text>
 
             <ScrollView className="bg-white rounded-lg p-4 shadow-lg">

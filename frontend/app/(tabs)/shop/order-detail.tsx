@@ -4,6 +4,7 @@ import { getOrderDetail } from "@/services/ShopService";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { View, Text, Image, ActivityIndicator, FlatList, TouchableOpacity } from "react-native";
+import { Link } from "expo-router";
 import OrderDetailType from "@/type/feature/shop/order_detail";
 import { ArrowLeftIcon } from "react-native-heroicons/solid";
 
@@ -50,12 +51,14 @@ const OrderDetail = () => {
 
     return (
         <View className="flex-1 p-4 bg-gray-100">
-             <TouchableOpacity className="flex-row items-center mb-4" onPress={() => router.push("/shop/purchase-history")}>
+            <Link href="/shop/purchase-history" asChild>
+                <TouchableOpacity className="flex-row items-center mb-4">
                 <ArrowLeftIcon size={24} color="black" />
-                <Text className="ml-2 text-lg font-semibold text-gray-700">
+                    <Text className="ml-2 text-lg font-semibold text-gray-700">
                     {i18n.t("Back")}
-                </Text>
-            </TouchableOpacity>
+                    </Text>
+                </TouchableOpacity>
+            </Link>
             <Text className="text-2xl font-bold text-gray-800 mb-2">
                 {i18n.t("Order")} #{orderDetail.id}
             </Text>

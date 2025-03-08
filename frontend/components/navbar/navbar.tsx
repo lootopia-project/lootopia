@@ -87,22 +87,26 @@ const Navbar = () => {
                     source={{ uri: "https://lootopia.blob.core.windows.net/lootopia-object/crown.png" }}
                     style={styles.crownIcon}
                   />
-                  <Text style={styles.crownText}>{crowns}</Text>
-
-                  <TouchableOpacity onPress={() => router.push("/shop/buy-crown")}>
+                <Text style={styles.crownText}>{crowns}</Text>
+          
+                <Link href="/shop/buy-crown" asChild>
+                  <TouchableOpacity>
                     <Text style={styles.plusButton}>+</Text>
-                </TouchableOpacity>
-                </View>
+                  </TouchableOpacity>
+                </Link>
+              </View>
               )}
 
-  {/* 🛒 Icône du shop dans une autre div */}
-  {isAuthenticated && (
-    <View style={styles.shopContainer}>
-      <TouchableOpacity onPress={() => router.push("/shop")}>
-        <Feather name="shopping-cart" size={26} color="white" />
-      </TouchableOpacity>
-    </View>
-  )}
+                {/* 🛒 Icône du shop dans une autre div */}
+                {isAuthenticated && (
+                  <View style={styles.shopContainer}>
+                    <Link href="/shop" asChild>
+                      <TouchableOpacity>
+                        <Feather name="shopping-cart" size={26} color="white" />
+                      </TouchableOpacity>
+                    </Link>
+                  </View>
+                )}
               {/* dropdown right menu */}
               {isAuthenticated && !isMobile &&
                 (
