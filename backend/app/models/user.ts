@@ -13,6 +13,7 @@ import encryption from '@adonisjs/core/services/encryption'
 import AuthAccessToken from '#models/auth_access_token'
 import UsersOrder from '#models/users_order'
 import LogHistory from '#models/log_history'
+import UsersItem from '#models/users_item'
 
 const AuthFinder = withAuthFinder(() => hash.use('scrypt'), {
   uids: ['email', 'nickname'],
@@ -84,9 +85,6 @@ export default class User extends compose(BaseModel, AuthFinder) {
   @hasMany(() => Whitelist)
   declare whitelist: HasMany<typeof Whitelist>
 
-  @hasMany(() => Item)
-  declare item: HasMany<typeof Item>
-
   @hasMany(() => Hunting)
   declare hunting: HasMany<typeof Hunting>
 
@@ -98,6 +96,9 @@ export default class User extends compose(BaseModel, AuthFinder) {
 
   @hasMany(() => LogHistory)
   declare logHistory: HasMany<typeof LogHistory>
+
+  @hasMany(() => UsersItem)
+  declare usersItem: HasMany<typeof UsersItem>
 
   static accessTokens = DbAccessTokensProvider.forModel(User)
 }

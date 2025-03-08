@@ -1,7 +1,7 @@
 import { BaseModel, belongsTo, column } from '@adonisjs/lucid/orm'
 import type { BelongsTo } from '@adonisjs/lucid/types/relations'
 import User from '#models/user'
-import Order from './order.js'
+import Order from '#models/order'
 import { DateTime } from 'luxon'
 export default class LogHistory extends BaseModel {
   @column({ isPrimary: true })

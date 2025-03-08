@@ -3,6 +3,7 @@ import { BaseModel, column, hasMany } from '@adonisjs/lucid/orm'
 import type { HasMany } from '@adonisjs/lucid/types/relations'
 import OrdersItem from '#models/orders_item'
 import UsersOrder from '#models/users_order'
+import LogHistory from '#models/log_history'
 export default class Order extends BaseModel {
   @column({ isPrimary: true })
   declare id: number
@@ -18,4 +19,7 @@ export default class Order extends BaseModel {
 
   @hasMany(() => UsersOrder)
   declare usersOrder: HasMany<typeof UsersOrder>
+  
+  @hasMany(() => LogHistory)
+  declare logHistory: HasMany<typeof LogHistory>
 }
