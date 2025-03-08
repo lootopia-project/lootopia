@@ -1,10 +1,10 @@
 import { BaseModel, belongsTo, column, hasMany } from '@adonisjs/lucid/orm'
 import type { BelongsTo, HasMany } from '@adonisjs/lucid/types/relations'
-import User from '#models/user'
 import TypeItem from '#models/type_item'
 import Rarity from '#models/rarity'
 import Hunting from '#models/hunting'
 import OrdersItem from '#models/orders_item'
+import UsersItem from '#models/users_item'
 
 export default class Item extends BaseModel {
   @column({ isPrimary: true })
@@ -42,4 +42,7 @@ export default class Item extends BaseModel {
 
   @hasMany(() => OrdersItem)
   declare ordersItem: HasMany<typeof OrdersItem>
+
+  @hasMany(() => UsersItem)
+  declare usersItem: HasMany<typeof UsersItem>
 }
