@@ -6,6 +6,17 @@ import { Modal, ScrollView, TouchableOpacity, View,Image,Text } from "react-nati
 
 const ModalCart: React.FC<ModalCartProps> = ({cartVisible,setCartVisible,cart,removeFromCart,openConfirmModal}) => {
       const { i18n } = useLanguage();
+
+      const groupedCart = cart.reduce((acc, item) => {
+        const existingItem = acc.find((i) => i.id === item.id);
+        if (existingItem) {
+          existingItem.quantity += 1;
+        } else {
+          acc.push({ ...item, quantity: 1 });
+        }
+        return acc;
+      }, [] as (typeof cart[0] & { quantity: number })[]);
+      
     return (
         <Modal
         transparent={true}
@@ -18,14 +29,16 @@ const ModalCart: React.FC<ModalCartProps> = ({cartVisible,setCartVisible,cart,re
           className="flex-1 flex-row justify-end bg-black/50"
           onPress={() => setCartVisible(false)} 
         > 
-          <View className="bg-white h-full w-80 shadow-xl p-6" onStartShouldSetResponder={() => true}>
+          <View className="top-0 h-full right-0 bg-white h-full w-80 shadow-xl p-6" onStartShouldSetResponder={() => true}>
             <Text className="text-lg font-semibold mb-3">{i18n.t("Your Cart")}</Text>
 
             <ScrollView>
-              {cart.length > 0 ? (
-                cart.map((item) => (
+              {groupedCart.length > 0 ? (
+                groupedCart.map((item) => (
                   <View key={item.id} className="flex-row justify-between items-center py-2 border-b">
-                    <Text>{i18n.t(item.name)}</Text>
+                    <Text className="flex-1 whitespace-nowrap overflow-hidden">
+                      {item.name}
+                    </Text>
                     <View className="flex-row items-center">
                       <Text className="font-bold">{item.price}</Text>
                       <Image
@@ -33,6 +46,9 @@ const ModalCart: React.FC<ModalCartProps> = ({cartVisible,setCartVisible,cart,re
                         className="w-5 h-5 ml-1"
                         resizeMode="contain"
                       />
+                       {item.quantity > 1 && (
+                      <Text className="ml-2 text-gray-700 text-sm">x{item.quantity}</Text>
+                    )}
                     </View>
                     <TouchableOpacity onPress={() => removeFromCart(item.id)}>
                       <Feather name="trash" size={20} color="red" />
@@ -54,6 +70,7 @@ const ModalCart: React.FC<ModalCartProps> = ({cartVisible,setCartVisible,cart,re
                     className="w-6 h-6 ml-1"
                     resizeMode="contain"
                   />
+                  
                 </View>
               </View>
             )}

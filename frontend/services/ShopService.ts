@@ -2,6 +2,7 @@ import Item from "@/type/feature/shop/item";
 import LogHistory from "@/type/feature/shop/log_history";
 import OrderDetail from "@/type/feature/shop/order_detail";
 import ShopCrown from "@/type/feature/shop/shop_crown"
+import Return from "@/type/request/return";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 
@@ -43,7 +44,7 @@ export const getListItem = async (): Promise<Item[]> => {
     }
 }
 
-export const buyItem = async (ListItem:Item[]): Promise<void> => {
+export const buyItem = async (ListItem:Item[]): Promise<Return> => {
     const token = await AsyncStorage.getItem('token');
     const config = {
         headers: {

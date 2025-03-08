@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity, useColorScheme, StatusBar, SafeAreaView, StyleSheet, Image, Platform, useWindowDimensions } from "react-native";
 import { Colors } from "@/constants/Colors";
+import { Feather } from "@expo/vector-icons";
 import { Link, usePathname } from "expo-router";
 import { useAuth } from "@/hooks/providers/AuthProvider";
 import { useRouter } from "expo-router";
@@ -93,6 +94,15 @@ const Navbar = () => {
                 </TouchableOpacity>
                 </View>
               )}
+
+  {/* 🛒 Icône du shop dans une autre div */}
+  {isAuthenticated && (
+    <View style={styles.shopContainer}>
+      <TouchableOpacity onPress={() => router.push("/shop")}>
+        <Feather name="shopping-cart" size={26} color="white" />
+      </TouchableOpacity>
+    </View>
+  )}
               {/* dropdown right menu */}
               {isAuthenticated && !isMobile &&
                 (
@@ -290,6 +300,16 @@ const styles = StyleSheet.create({
     fontSize: 20,
     marginLeft: 8,
   },
+  shopContainer: {
+    backgroundColor: "#222", 
+    padding: 8,
+    borderRadius: 8,
+    marginLeft: 12, 
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  
+  
 });
 
 export default Navbar;

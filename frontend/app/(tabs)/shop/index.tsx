@@ -46,18 +46,23 @@ const Shop = () => {
 
   const confirmPurchase = async () => {
     const response=await buyItem(cart)
-    setCart([]);
-    setConfirmModalVisible(false);
+
+    if(response.success){
+      setCart([]);
+    }else{
+      setErrorMessage(response.message);
+      setErrorVisible(true);
+    }
     setCartVisible(false);
+    setConfirmModalVisible(false);
+    
+   
   };
 
   return (
     <View className="flex-1 bg-gray-100 items-center pt-6">
   <View className="w-full flex-row items-center justify-between px-6">
     
-    <TouchableOpacity onPress={() => router.push("/shop/purchase-history")}>
-      <Text className="text-lg text-blue-500 font-semibold">{i18n.t("Purchase History")}</Text>
-    </TouchableOpacity>
 
     <Text className="text-2xl font-bold text-center absolute left-1/2 -translate-x-1/2">
       {i18n.t("Shop")}
@@ -80,11 +85,11 @@ const Shop = () => {
         renderItem={({ item }) => (
           <View className="bg-white rounded-xl p-4 m-2 w-44 items-center shadow-lg">
             <Image source={{ uri: item.img }} className="w-20 h-20 mb-2" resizeMode="contain" />
-            <Text className="text-lg font-semibold text-center">{i18n.t(item.name)}</Text>
+            <Text className="text-lg font-semibold text-center">{item.name}</Text>
             <Text className={`text-sm ${item.rarity === "Legendary" ? "text-yellow-500" : "text-gray-500"}`}>
-              {i18n.t(item.rarity)}
+              {item.rarity}
             </Text>
-            <Text className="text-xs text-gray-600 text-center">{i18n.t(item.description)}</Text>
+            <Text className="text-xs text-gray-600 text-center">{item.description}</Text>
 
             <View className="flex-row items-center mt-1">
               <Text className="text-lg font-bold">{item.price}</Text>
@@ -98,21 +103,21 @@ const Shop = () => {
         )}
       />
 
-     <ModalCart
-        cart={cart}
-        cartVisible={cartVisible}
-        setCartVisible={setCartVisible}
-        removeFromCart={removeFromCart}
-        openConfirmModal={openConfirmModal}
-      />
 
       <ModalConfirmPurchase
         confirmModalVisible={confirmModalVisible}
         cart={cart}
         setConfirmModalVisible={setConfirmModalVisible}
         confirmPurchase={confirmPurchase}
-      />
+        />
 
+        <ModalCart
+           cart={cart}
+           cartVisible={cartVisible}
+           setCartVisible={setCartVisible}
+           removeFromCart={removeFromCart}
+           openConfirmModal={openConfirmModal}
+         />
     
     </View>
   );

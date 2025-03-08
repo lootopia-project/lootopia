@@ -45,7 +45,7 @@ export default class ItemsController {
     const totalPrice = items.reduce((acc, item) => acc + item.price, 0)
 
     if (user.crowns < totalPrice) {
-      return response.badRequest({ message: i18n.t('_.Not enough crowns') })
+      return response.json({ message: i18n.t('_.Not enough crowns'), success: false })
     }
 
     user.crowns -= totalPrice
@@ -103,6 +103,6 @@ export default class ItemsController {
     }
 
     await user.save()
-    return response.json({ message: i18n.t('Items bought successfully') })
+    return response.json({ message: i18n.t('Items bought successfully'), success: true })
   }
 }

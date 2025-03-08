@@ -21,7 +21,7 @@ const ModalConfirmPurchase :React.FC<ModalConfirmPurchaseProps>= ({confirmModalV
             <ScrollView className="max-h-40 w-full mt-4">
             {cart.map((item) => (
                 <View key={item.id} className="flex-row justify-between items-center w-full py-2 border-b">
-                <Text className="text-sm">{i18n.t(item.name)}</Text>
+                <Text className="text-sm">{item.name}</Text>
                 <View className="flex-row items-center">
                     <Text className="font-bold">{item.price}</Text>
                     <Image
