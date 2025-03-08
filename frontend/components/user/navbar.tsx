@@ -18,6 +18,13 @@ const Navbar = () => {
           <Text>{i18n.t("Multi-Factor Authentication")}</Text>
         </TouchableOpacity>
       </Link>
+
+      <Link href= "/shop/purchase-history">
+        <TouchableOpacity style={styles.navButton}>
+          <Text>{i18n.t("Purchase History")}</Text>
+        </TouchableOpacity>
+
+      </Link>
     
       {/* <Link href="/user/recompenses">
         <TouchableOpacity style={styles.navButton}>

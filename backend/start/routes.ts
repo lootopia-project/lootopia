@@ -14,6 +14,10 @@ const AuthController = () => import('#controllers/auth_controller')
 const HuntingsController = () => import('#controllers/huntings_controller')
 const UsersController = () => import('#controllers/users_controller')
 const PaymentsController = () => import('#controllers/payments_controller')
+const ShopCrownsController = () => import('#controllers/shop_crowns_controller')
+const ItemsController = () => import('#controllers/items_controller')
+const LogHistoriesController = () => import('#controllers/log_histories_controller')
+const OrdersController = () => import('#controllers/orders_controller')
 
 router.post('/login', [AuthController, 'login'])
 router.post('/register', [AuthController, 'register'])
@@ -43,6 +47,12 @@ router
     router.get('/users/recoveryCode', [DoubleAuthsController, 'recoveryCode'])
     router.post('/users/CheckMail', [UsersController, 'CheckMail'])
     router.post('/stripe/initPayment', [PaymentsController, 'initPayment'])
+    router.post('/stripe/addCrowns', [PaymentsController, 'addCrowns'])
+    router.get('/shop/getShopCrowns', [ShopCrownsController, 'getShopCrowns'])
+    router.post('/shop/buyItem', [ItemsController, 'buyItem'])
+    router.get('/shop/getListItem', [ItemsController, 'getListItem'])
+    router.get('shop/getLogHistories', [LogHistoriesController, 'getLogHistories'])
+    router.get('/shop/getOrderDetailWithId/:id', [OrdersController, 'getOrderDetailWithId'])
   })
   .use([
     middleware.auth({

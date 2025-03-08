@@ -15,6 +15,12 @@ interface returnWIthBooleanAndMessage {
     message: string;
     success: boolean;
 }
-type Return = ReturnWithToken | ReturnWithMessage | ReturnWithErrors| returnWIthBooleanAndMessage;
+
+interface returnWIthBooleanAndMessageAndOrderId {
+    message: string;
+    success: boolean;
+    orderId: number;
+}
+type Return = ReturnWithToken | ReturnWithMessage | ReturnWithErrors| returnWIthBooleanAndMessage| returnWIthBooleanAndMessageAndOrderId;
 
 export default Return;

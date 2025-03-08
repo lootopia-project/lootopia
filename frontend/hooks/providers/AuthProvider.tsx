@@ -53,6 +53,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                     setIsAuthenticated(true);
                     await AsyncStorage.setItem("lang", data.lang);
                     await AsyncStorage.setItem("img", data.img);
+                    await AsyncStorage.setItem("crowns", data.crowns.toString());
                     changeLanguage(data.lang);
                 } else {
                     setIsAuthenticated(false);

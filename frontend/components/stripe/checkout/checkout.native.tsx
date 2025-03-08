@@ -7,10 +7,9 @@ import {
   StyleSheet
 } from 'react-native';
 import { CardField, useStripe } from '@stripe/stripe-react-native';
-import { handlePayment as handlePaymentService } from '@/services/PaymentService';
 import { useLanguage } from '@/hooks/providers/LanguageProvider';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-export default function CheckoutScreen() {
+export default function CheckoutScreen({ handlePaymentService }: { handlePaymentService: () => Promise<any> }) {
   const [loading, setLoading] = useState<boolean>(false);
   const [paymentStatus, setPaymentStatus] = useState<string | null>(null);
   const { i18n } = useLanguage();

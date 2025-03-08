@@ -8,6 +8,8 @@ export default class extends BaseSchema {
       table.increments('id').primary()
       table.string('log').notNullable()
       table.integer('user_id').unsigned().references('id').inTable('users').onDelete('CASCADE')
+      table.integer('order_id').unsigned().references('id').inTable('orders').onDelete('CASCADE')
+      table.dateTime('created_at', { useTz: true })
     })
   }
 

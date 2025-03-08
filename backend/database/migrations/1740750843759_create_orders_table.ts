@@ -7,7 +7,6 @@ export default class extends BaseSchema {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id').primary()
       table.string('status').notNullable()
-      table.integer('final_price').notNullable()
       table.timestamp('created_at')
     })
   }

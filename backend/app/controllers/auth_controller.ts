@@ -10,7 +10,6 @@ import hash from '@adonisjs/core/services/hash'
 export default class AuthController {
   async login({ request, auth, response }: HttpContext) {
     const { email, password, fcmToken } = request.all()
-
     const verifyCredentials = await User.verifyCredentials(email, password)
 
     if (verifyCredentials) {
@@ -44,7 +43,7 @@ export default class AuthController {
     if (USER_VERIFY) {
       return response.status(201).json({ message: 'User already exists' })
     }
-    const newUser = await User.create({
+    await User.create({
       email: email,
       password: password,
     })
@@ -65,7 +64,9 @@ export default class AuthController {
     const user = auth.use('api').user
     if (user) {
       const lang = user.lang
-      return response.status(200).json({ message: true, lang: lang, img: user.img })
+      return response
+        .status(200)
+        .json({ message: true, lang: lang, img: user.img, crowns: user.crowns })
     }
     return response.status(200).json({ message: false })
   }

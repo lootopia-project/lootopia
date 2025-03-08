@@ -6,12 +6,11 @@ import {
   ActivityIndicator,
   StyleSheet
 } from 'react-native';
-import { handlePayment as handlePaymentService } from '@/services/PaymentService';
 import { useStripe, useElements, CardElement } from '@stripe/react-stripe-js';
 import { useLanguage } from '@/hooks/providers/LanguageProvider';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { router } from 'expo-router';
-export default function CheckoutScreen() {
+export default function CheckoutScreen({ handlePaymentService }: { handlePaymentService: () => Promise<any> }) {
   const [loading, setLoading] = useState(false);
   const [paymentStatus, setPaymentStatus] = useState<string | null>(null);
 
