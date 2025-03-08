@@ -7,68 +7,72 @@ import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity, Image, FlatList, ScrollView } from "react-native";
 
-const BuyShopCrown = () => {
-  const router = useRouter();
-  const { i18n } = useLanguage();
-  const { setErrorMessage, setErrorVisible } = useErrors();
-  const [crownShopItems, setCrownShopItems] = useState<ShopCrown[]>([]);
 
-  useEffect(() => {
+const BuyShopCrown = () => {
+const router = useRouter();
+const { i18n } = useLanguage();
+const { setErrorMessage, setErrorVisible } = useErrors();
+const [crownShopItems, setCrownShopItems] = useState<ShopCrown[]>([]);
+
+
+useEffect(() => {
+
     const fetchCrown = async () => {
-      try {
-        const response = await getShopCrown();
-        setCrownShopItems(response);
-      } catch (error) {
-        setErrorMessage(i18n.t("An error occurred"));
-        setErrorVisible(true);
-      }
+        try {
+            const response = await getShopCrown();
+            setCrownShopItems(response);
+
+        } catch (error) {
+            setErrorMessage(i18n.t("An error occurred"));
+            setErrorVisible(true);  
+        }
     };
 
     fetchCrown();
-  }, [i18n]);
+}, [i18n]);
 
-  const buyCrown = async (amount: number) => {
+
+const buyCrown = async (amount: number) => {
     try {
-      router.push("/checkout/crown");
-      AsyncStorage.setItem("amount", amount.toString());
+        router.push("/checkout/crown");
+        AsyncStorage.setItem('amount', amount.toString());
     } catch (error) {
-      setErrorMessage(i18n.t("An error occurred"));
-      setErrorVisible(true);
+        setErrorMessage(i18n.t("An error occurred"));
+        setErrorVisible(true);  
     }
-  };
+}
 
-  return (
-    <ScrollView className="flex-1 bg-gray-100" contentContainerStyle={{ flexGrow: 1 }}>
-      <View className="items-center pt-6 px-4">
-        <Text className="text-2xl font-bold mb-4">{i18n.t("Buy Crowns")}</Text>
-        
-        {/* Ajout de ScrollView pour englober FlatList */}
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          <FlatList
-            data={crownShopItems}
-            numColumns={2}
-            keyExtractor={(item) => item.id.toString()}
-            renderItem={({ item }) => (
-              <View className="bg-white rounded-xl p-4 m-2 w-40 items-center shadow-lg">
-                <Image source={{ uri: item.img }} className="w-16 h-16 mb-2" />
-                <Text className="text-lg font-semibold text-center">{i18n.t(item.name)}</Text>
-                <Text className="text-gray-500">
-                  {item.numberOfCrowns} {i18n.t("Crowns")}
-                </Text>
-                <Text className="text-lg font-bold mt-1">{item.price} €</Text>
-                <TouchableOpacity
-                  className="bg-blue-500 px-3 py-2 rounded-lg mt-2"
-                  onPress={() => buyCrown(item.price)}
-                >
-                  <Text className="text-white font-bold">{i18n.t("Buy")}</Text>
-                </TouchableOpacity>
-              </View>
-            )}
-          />
-        </ScrollView>
+return (
+  <ScrollView className="flex-1 bg-gray-100">
+    <View className="items-center pt-6">
+      <View className="w-full flex-row items-center justify-between px-6">
       </View>
-    </ScrollView>
-  );
-};
+      <Text className="text-2xl font-bold mb-4">{i18n.t("Buy Crowns")}</Text>
+      <FlatList
+        data={crownShopItems}
+        numColumns={2}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={({ item }) => (
+          <View className="bg-white rounded-xl p-4 m-2 w-40 items-center shadow-lg">
+            <Image source={{ uri: item.img }} className="w-16 h-16 mb-2" />
+            <Text className="text-lg font-semibold text-center">{i18n.t(item.name)}</Text>
+            <Text className="text-gray-500">
+              {item.numberOfCrowns} {i18n.t("Crowns")}
+            </Text>
+            <Text className="text-lg font-bold mt-1">{item.price} €</Text>
+            <TouchableOpacity
+              className="bg-blue-500 px-3 py-2 rounded-lg mt-2"
+              onPress={() => buyCrown(item.price)}
+            >
+              <Text className="text-white font-bold">{i18n.t("Buy")}</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+      />
+    </View>
+  </ScrollView>
+);
+
+  };
 
 export default BuyShopCrown;
