@@ -2,11 +2,10 @@ import Item from '#models/item'
 import LogHistory from '#models/log_history'
 import Order from '#models/order'
 import OrdersItem from '#models/orders_item'
-import UsersOrder from '#models/users_order'
 import type { HttpContext } from '@adonisjs/core/http'
 import { DateTime } from 'luxon'
 import i18nManager from '@adonisjs/i18n/services/main'
-import UsersItem from '#models/users_item'
+import UsersItem from '#models/users_huntings_item'
 
 export default class ItemsController {
   async getListItem({ response, auth }: HttpContext) {
@@ -53,11 +52,7 @@ export default class ItemsController {
     const order = await Order.create({
       status: 'completed',
       createdAt: DateTime.now(),
-    })
-
-    await UsersOrder.create({
-      orderId: order.id,
-      userId: auth.user.id,
+      userId: user.id,
     })
 
     const orderItems = []

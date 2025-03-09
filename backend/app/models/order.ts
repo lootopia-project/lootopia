@@ -1,8 +1,8 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column, hasMany } from '@adonisjs/lucid/orm'
-import type { HasMany } from '@adonisjs/lucid/types/relations'
+import { BaseModel, belongsTo, column, hasMany } from '@adonisjs/lucid/orm'
+import type { BelongsTo, HasMany } from '@adonisjs/lucid/types/relations'
 import OrdersItem from '#models/orders_item'
-import UsersOrder from '#models/users_order'
+import Users from '#models/user'
 import LogHistory from '#models/log_history'
 export default class Order extends BaseModel {
   @column({ isPrimary: true })
@@ -11,14 +11,17 @@ export default class Order extends BaseModel {
   @column()
   declare status: string
 
+  @column()
+  declare userId: number
+
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
 
   @hasMany(() => OrdersItem)
   declare ordersItem: HasMany<typeof OrdersItem>
 
-  @hasMany(() => UsersOrder)
-  declare usersOrder: HasMany<typeof UsersOrder>
+  @belongsTo(() => Users)
+  declare usersOrder: BelongsTo<typeof Users>
   
   @hasMany(() => LogHistory)
   declare logHistory: HasMany<typeof LogHistory>

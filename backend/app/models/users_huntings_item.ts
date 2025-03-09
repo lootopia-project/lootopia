@@ -2,7 +2,8 @@ import { BaseModel, belongsTo, column } from '@adonisjs/lucid/orm'
 import type { BelongsTo } from '@adonisjs/lucid/types/relations'
 import User from '#models/user'
 import Item from '#models/item'
-export default class UsersItem extends BaseModel {
+import Hunting from '#models/hunting'
+export default class UsersHuntingItem extends BaseModel {
   @column({ isPrimary: true })
   declare id: number
 
@@ -13,6 +14,15 @@ export default class UsersItem extends BaseModel {
   declare itemId: number
 
   @column()
+  declare huntingId: number
+
+  @column()
+  declare history: boolean
+
+  @column()
+  declare shop: boolean
+
+  @column()
   declare quantity: number
 
   @belongsTo(() => User)
@@ -20,4 +30,7 @@ export default class UsersItem extends BaseModel {
 
   @belongsTo(() => Item)
   declare item: BelongsTo<typeof Item>
+
+  @belongsTo(() => Hunting)
+  declare hunting: BelongsTo<typeof Hunting>
 }
