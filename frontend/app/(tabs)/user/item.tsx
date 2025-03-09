@@ -1,6 +1,6 @@
 import { useErrors } from "@/hooks/providers/ErrorProvider";
 import { useLanguage } from "@/hooks/providers/LanguageProvider";
-import { getUsersItem } from "@/services/UsersService";
+import { getUsersItem, putOnSale } from "@/services/UsersService";
 import ItemUser from "@/type/feature/user/item_user";
 import { useEffect, useState } from "react";
 import { Modal, View, Text, Image, TouchableOpacity, TextInput, ScrollView } from "react-native";
@@ -33,7 +33,7 @@ const Item = () => {
         fetchItem();
     }, []);
 
-    const handleConfirmSell = () => {
+    const handleConfirmSell =async () => {
         if (!selectedItem) return;
     
         const quantityToSell = parseInt(sellQuantity, 10);
@@ -62,6 +62,12 @@ const Item = () => {
         }
     
         console.log(`Selling ${quantityToSell}x ${selectedItem.name} at ${priceToSell} each`);
+
+            const response=await putOnSale(selectedItem.id, priceToSell, quantityToSell);
+            if(!response.success){
+                setErrorMessage(response.message);
+                setErrorVisible(true);
+            }
     
         setSellModalVisible(false);
         setSelectedItem(null);

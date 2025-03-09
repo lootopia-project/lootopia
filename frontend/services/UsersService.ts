@@ -133,4 +133,25 @@ const getUsersItem = async (): Promise<ItemUser[]> => {
         }
     }
 }
-export { getInfoUser, updateInfoUser, updatePassword, CheckMail, CheckMailToken, getUsersItem }
+
+const putOnSale = async (id: number, price: number, quantity: number): Promise<Return> => {
+    const token = await AsyncStorage.getItem('token');
+    const config = {
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": token ? `${token}` : '',
+        },
+        withCredentials: true
+    }
+    try {
+        const response=await axios.post(`${API_URL}/item/putOnSale`, {id, price, quantity}, config)
+        return response.data
+    } catch (err: unknown) {
+        if ((err as AXIOS_ERROR).message) {
+            throw new Error("Error connecting")
+        } else {
+            throw new Error("Error connecting to server")
+        }
+    }
+}
+export { getInfoUser, updateInfoUser, updatePassword, CheckMail, CheckMailToken, getUsersItem, putOnSale }

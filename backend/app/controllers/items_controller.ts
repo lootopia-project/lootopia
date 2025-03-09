@@ -5,7 +5,7 @@ import OrdersItem from '#models/orders_item'
 import type { HttpContext } from '@adonisjs/core/http'
 import { DateTime } from 'luxon'
 import i18nManager from '@adonisjs/i18n/services/main'
-import UsersItem from '#models/users_huntings_item'
+import UsersHuntingItem from '#models/users_huntings_item'
 
 export default class ItemsController {
   async getListItem({ response, auth }: HttpContext) {
@@ -80,16 +80,17 @@ export default class ItemsController {
     })
 
     for (const item of ListItem) {
-      const existingItem = await UsersItem.query()
+      const existingItem = await UsersHuntingItem.query()
         .where('user_id', user.id)
         .where('item_id', item.id)
         .first()
+
 
       if (existingItem) {
         existingItem.quantity += 1
         await existingItem.save()
       } else {
-        await UsersItem.create({
+        await UsersHuntingItem.create({
           userId: user.id,
           itemId: item.id,
           quantity: 1,
