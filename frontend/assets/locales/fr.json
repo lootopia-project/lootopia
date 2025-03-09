@@ -135,6 +135,16 @@
     "Are you sure you want to buy these items?": "Êtes-vous sûr de vouloir acheter ces articles ?",
     "View Details": "Voir les détails",
     "Status": "Statut",
-    "Order": "Commande"
-    
+    "Order": "Commande",
+    "Item": "Article",
+    "Your Items": "Vos articles",
+    "Sell": "Vendre",
+    "Trade": "Échanger",
+    "Auction": "Enchères",
+    "You don't own any items yet": "Vous ne possédez pas encore d'articles",
+    "Price per unit": "Prix par unité",
+    "Quantity to sell": "Quantité à vendre",
+    "Sell Item": "Vendre l'article",
+    "You cannot sell more than you own":  "Vous ne pouvez pas vendre plus que ce que vous possédez",
+    "Please enter a valid quantity": "Veuillez entrer une quantité valide"
 }

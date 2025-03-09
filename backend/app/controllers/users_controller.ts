@@ -5,6 +5,7 @@ import User from '#models/user'
 import i18nManager from '@adonisjs/i18n/services/main'
 import MailService from '#services/mail_service'
 import AuthAccessToken from '#models/auth_access_token'
+import UsersItem from '#models/users_item'
 const AZURE_ACCOUNT_NAME = env.get('AZURE_ACCOUNT_NAME') || ''
 const AZURE_ACCOUNT_KEY = env.get('AZURE_ACCOUNT_KEY') || ''
 const AZURE_CONTAINER_PROFIL_IMAGE = env.get('AZURE_CONTAINER_PROFIL_IMAGE') || ''
@@ -155,5 +156,33 @@ export default class UsersController {
       success: false,
       message: 'User or token not found',
     })
+  }
+
+  async getItemUser({ response, auth }: HttpContext) {
+    const user = auth.user
+    if (!user) {
+      return response.unauthorized({ message: 'Unauthorized' })
+    }
+
+    const items = await UsersItem.query()
+      .where('user_id', user.id)
+      .preload('item', (query) => {
+        query.select('id', 'name', 'description', 'img', 'price', 'rarity_id')
+        query.preload('rarity', (query) => {
+          query.select('name')
+        })
+      })
+
+    const formattedItems = items.map((item) => ({
+      id: item.id,
+      name: item.item.name,
+      description: item.item.description,
+      img: item.item.img,
+      price: item.item.price,
+      rarity: item.item.rarity?.name || 'Unknown',
+      quantity: item.quantity,
+    }))
+
+    return response.ok(formattedItems)
   }
 }

@@ -135,5 +135,16 @@
     "Are you sure you want to buy these items?": "Are you sure you want to buy these items?",
     "View Details": "View Details",
     "Status": "Status",
-    "Order": "Order"
+    "Order": "Order",
+    "Item": "Item",
+    "Your Items": "Your Items",
+    "Sell": "Sell",
+    "Trade": "Trade",
+    "Auction": "Auction",
+    "You don't own any items yet": "You don't own any items yet",
+    "Price per unit": "Price per unit",
+    "Quantity to sell": "Quantity to sell",
+    "Sell Item": "Sell Item",
+    "You cannot sell more than you own": "You cannot sell more than you own",
+    "Please enter a valid quantity": "Please enter a valid quantity"
   }

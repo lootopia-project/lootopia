@@ -23,7 +23,12 @@ const Navbar = () => {
         <TouchableOpacity style={styles.navButton}>
           <Text>{i18n.t("Purchase History")}</Text>
         </TouchableOpacity>
+      </Link>
 
+      <Link href= "/user/item">
+        <TouchableOpacity style={styles.navButton}>
+          <Text>{i18n.t("Item")}</Text>
+        </TouchableOpacity>
       </Link>
     
       {/* <Link href="/user/recompenses">
