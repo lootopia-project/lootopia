@@ -8,9 +8,13 @@ import Footer from "@/components/navbar/footer";
 import "../global.css";
 import StripeProvider from "@/hooks/providers/StripeProvider";
 import { View } from "react-native";
+import { useFonts } from 'expo-font'
 
 export default function RootLayout() {
   const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY as string;
+  const [fontsLoaded] = useFonts({
+    'BerkshireSwash-Regular': require('../assets/fonts/BerkshireSwash-Regular.ttf'),
+  })
 
   return (
     <StripeProvider>
