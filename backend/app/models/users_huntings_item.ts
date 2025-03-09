@@ -22,9 +22,6 @@ export default class UsersHuntingItem extends BaseModel {
   @column()
   declare shop: boolean
 
-  @column()
-  declare quantity: number
-
   @belongsTo(() => User)
   declare user: BelongsTo<typeof User>
 

@@ -9,7 +9,6 @@ export default class extends BaseSchema {
       table.integer('user_id').unsigned().notNullable().references('users.id').onDelete('CASCADE')
       table.integer('item_id').unsigned().notNullable().references('items.id').onDelete('CASCADE')
       table.integer('hunting_id').unsigned().references('huntings.id').onDelete('CASCADE')
-      table.integer('quantity').notNullable().defaultTo(1)
       table.boolean('history').defaultTo(false)
       table.boolean('shop')
     })

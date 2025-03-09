@@ -20,8 +20,21 @@ const Item = () => {
     useEffect(() => {
         const fetchItem = async () => {
             try {
-                const response = await getUsersItem();
-                setItemsUser(response);
+                const response = await getUsersItem();    
+                const groupedItems: { [key: number]: ItemUser } = {};
+                response.forEach((item: ItemUser) => {
+                    if (!item.quantity) {
+                        item.quantity = 1;
+                    }
+    
+                    if (groupedItems[item.id]) {
+                        groupedItems[item.id].quantity += item.quantity; 
+                    } else {
+                        groupedItems[item.id] = { ...item, quantity: item.quantity }; 
+                    }
+                });
+    
+                setItemsUser(Object.values(groupedItems));
             } catch (error) {
                 setErrorMessage(i18n.t("An error occurred while fetching data"));
                 setErrorVisible(true);
@@ -29,9 +42,13 @@ const Item = () => {
                 setLoading(false);
             }
         };
-
+    
         fetchItem();
     }, []);
+    
+
+    console.log(itemsUser);
+    
 
     const handleConfirmSell =async () => {
         if (!selectedItem) return;

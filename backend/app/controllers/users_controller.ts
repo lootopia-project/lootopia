@@ -174,13 +174,12 @@ export default class UsersController {
       })
 
     const formattedItems = items.map((item) => ({
-      id: item.id,
+      id: item.item.id,
       name: item.item.name,
       description: item.item.description,
       img: item.item.img,
       price: item.item.price,
       rarity: item.item.rarity?.name || 'Unknown',
-      quantity: item.quantity,
     }))
 
     return response.ok(formattedItems)

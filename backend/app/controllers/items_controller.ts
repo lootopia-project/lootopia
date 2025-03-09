@@ -80,22 +80,10 @@ export default class ItemsController {
     })
 
     for (const item of ListItem) {
-      const existingItem = await UsersHuntingItem.query()
-        .where('user_id', user.id)
-        .where('item_id', item.id)
-        .first()
-
-
-      if (existingItem) {
-        existingItem.quantity += 1
-        await existingItem.save()
-      } else {
         await UsersHuntingItem.create({
           userId: user.id,
           itemId: item.id,
-          quantity: 1,
         })
-      }
     }
 
     await user.save()
