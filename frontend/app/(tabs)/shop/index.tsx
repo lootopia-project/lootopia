@@ -67,10 +67,8 @@
   return (
     <ScrollView className="flex-1 bg-gray-100" contentContainerStyle={{ flexGrow: 1 }}>
 
-      <View className="flex-1 bg-gray-100 items-center pt-6">
+      <View className="bg-gray-100 items-center pt-6">
         <View className="w-full flex-row items-center justify-between px-6">
-      
-
           <Text className="text-2xl font-bold text-center absolute left-1/2 -translate-x-1/2">
             {i18n.t("Shop")}
           </Text>
@@ -90,7 +88,7 @@
           numColumns={5}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
-            <View className="bg-white rounded-xl p-4 m-2 w-44 items-center shadow-lg">
+            <View className="bg-white rounded-xl p-4 m-2 w-40 items-center shadow-lg">
               <Image source={{ uri: item.img }} className="w-20 h-20 mb-2" resizeMode="contain" />
               <Text className="text-lg font-semibold text-center">{item.name}</Text>
               <Text className={`text-sm ${item.rarity === "Legendary" ? "text-yellow-500" : "text-gray-500"}`}>
