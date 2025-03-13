@@ -6,6 +6,7 @@ interface ItemUser {
     img: string
     description: string
     quantity: number
+    shop: boolean
 }
 
 export default ItemUser

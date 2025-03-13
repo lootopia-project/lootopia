@@ -6,6 +6,9 @@ import i18nManager from '@adonisjs/i18n/services/main'
 import MailService from '#services/mail_service'
 import AuthAccessToken from '#models/auth_access_token'
 import UsersItem from '#models/users_huntings_item'
+import Order from '#models/order'
+import OrdersItem from '#models/orders_item'
+import UsersHuntingItem from '#models/users_huntings_item'
 const AZURE_ACCOUNT_NAME = env.get('AZURE_ACCOUNT_NAME') || ''
 const AZURE_ACCOUNT_KEY = env.get('AZURE_ACCOUNT_KEY') || ''
 const AZURE_CONTAINER_PROFIL_IMAGE = env.get('AZURE_CONTAINER_PROFIL_IMAGE') || ''
@@ -164,22 +167,39 @@ export default class UsersController {
       return response.unauthorized({ message: 'Unauthorized' })
     }
 
-    const items = await UsersItem.query()
+    // 🔹 Récupérer tous les items de l'utilisateur
+    const items = await UsersHuntingItem.query()
       .where('user_id', user.id)
+      .andWhere('history', false)
       .preload('item', (query) => {
-        query.select('id', 'name', 'description', 'img', 'price', 'rarity_id')
-        query.preload('rarity', (query) => {
-          query.select('name')
-        })
+        query
+          .select('id', 'name', 'description', 'img', 'price', 'rarity_id')
+          .preload('rarity', (q) => q.select('name'))
       })
 
+    // 📌 Trouver l'order actif (une seule requête pour optimiser)
+    const order = await Order.query()
+      .where('user_id', user.id)
+      .andWhere('status', 'pending on sale')
+      .first()
+
+    // 📌 Si un order est trouvé, récupérer tous les items mis en vente (une seule requête aussi)
+    const orderItems = order
+      ? await OrdersItem.query().where('order_id', order.id).select('item_id', 'price')
+      : []
+
+    // 🔥 Convertir les items mis en vente en un objet pour accès rapide
+    const orderItemsMap = Object.fromEntries(orderItems.map((o) => [o.itemId, o.price]))
+
+    // 🛒 Formatter les items
     const formattedItems = items.map((item) => ({
       id: item.item.id,
       name: item.item.name,
       description: item.item.description,
       img: item.item.img,
-      price: item.item.price,
       rarity: item.item.rarity?.name || 'Unknown',
+      shop: item.shop,
+      price: item.shop ? (orderItemsMap[item.item.id] ?? item.item.price) : item.item.price,
     }))
 
     return response.ok(formattedItems)

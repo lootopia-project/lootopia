@@ -146,5 +146,8 @@
     "Quantity to sell": "Quantity to sell",
     "Sell Item": "Sell Item",
     "You cannot sell more than you own": "You cannot sell more than you own",
-    "Please enter a valid quantity": "Please enter a valid quantity"
+    "Please enter a valid quantity": "Please enter a valid quantity",
+    "Selling": "Selling",
+    "Order not found": "Order not found",
+    "Player Sale": "Player Sale",
   }

@@ -91,6 +91,12 @@
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
             <View className="bg-white rounded-xl p-4 m-2 w-44 items-center shadow-lg">
+               {item.sellerId && (
+                <View className="absolute top-2 right-2 bg-yellow-400 px-2 py-1 rounded-full">
+                  <Text className="text-xs font-bold text-white">{i18n.t("Player Sale")}</Text>
+                </View>
+              )}
+              
               <Image source={{ uri: item.img }} className="w-20 h-20 mb-2" resizeMode="contain" />
               <Text className="text-lg font-semibold text-center">{item.name}</Text>
               <Text className={`text-sm ${item.rarity === "Legendary" ? "text-yellow-500" : "text-gray-500"}`}>

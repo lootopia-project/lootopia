@@ -20,21 +20,32 @@ const Item = () => {
     useEffect(() => {
         const fetchItem = async () => {
             try {
-                const response = await getUsersItem();    
-                const groupedItems: { [key: number]: ItemUser } = {};
-                response.forEach((item: ItemUser) => {
-                    if (!item.quantity) {
-                        item.quantity = 1;
-                    }
+                const response = await getUsersItem();
     
-                    if (groupedItems[item.id]) {
-                        groupedItems[item.id].quantity += item.quantity; 
+                const groupedItems: { [key: string]: ItemUser } = {}; 
+                const onSaleItems: { [key: string]: ItemUser } = {}; 
+                const notForSaleItems: { [key: string]: ItemUser } = {}; 
+    
+                response.forEach((item: ItemUser) => {
+                    const itemKey = `${item.id}-${item.shop ? 'onSale' : 'notForSale'}`;
+    
+                    if (item.shop) {
+                        if (onSaleItems[itemKey]) {
+                            onSaleItems[itemKey].quantity += 1; 
+                        } else {
+                            onSaleItems[itemKey] = { ...item, quantity: 1 }; 
+                        }
                     } else {
-                        groupedItems[item.id] = { ...item, quantity: item.quantity }; 
+                        if (notForSaleItems[itemKey]) {
+                            notForSaleItems[itemKey].quantity += 1; 
+                        } else {
+                            notForSaleItems[itemKey] = { ...item, quantity: 1 }; 
+                        }
                     }
                 });
     
-                setItemsUser(Object.values(groupedItems));
+                setItemsUser([...Object.values(notForSaleItems), ...Object.values(onSaleItems)]); 
+    
             } catch (error) {
                 setErrorMessage(i18n.t("An error occurred while fetching data"));
                 setErrorVisible(true);
@@ -46,8 +57,9 @@ const Item = () => {
         fetchItem();
     }, []);
     
+    
+    
 
-    console.log(itemsUser);
     
 
     const handleConfirmSell =async () => {
@@ -142,6 +154,13 @@ const Item = () => {
                                 </View>
                             )}
 
+                             {/* 🔥 Symbole en haut à droite si en vente */}
+                                {item.shop && (
+                                    <View className="absolute top-2 right-2 bg-yellow-400 text-white px-2 py-1 rounded-full">
+                                        <Text className="text-xs font-bold">{i18n.t("Selling")}</Text>
+                                    </View>
+                                )}
+
                             <Image
                                 src={item.img}
                                 source={{ uri: item.img }}
@@ -174,6 +193,7 @@ const Item = () => {
                                 source={{ uri: selectedItem.img }}
                                 alt={selectedItem.name}
                                 className="w-24 h-24 mx-auto mb-2"
+                                resizeMode="contain"
                             />
 
                             <Text className="text-lg text-center">{selectedItem.name}</Text>

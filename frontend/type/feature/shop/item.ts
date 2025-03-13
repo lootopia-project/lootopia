@@ -5,6 +5,7 @@ interface Item {
     rarity: string
     img: string
     description: string
+    sellerId: number
 }
 
 export default Item

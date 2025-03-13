@@ -146,5 +146,8 @@
     "Quantity to sell": "Quantité à vendre",
     "Sell Item": "Vendre l'article",
     "You cannot sell more than you own":  "Vous ne pouvez pas vendre plus que ce que vous possédez",
-    "Please enter a valid quantity": "Veuillez entrer une quantité valide"
+    "Please enter a valid quantity": "Veuillez entrer une quantité valide",
+    "Selling": "Vente en cours",
+    "Order not found": "Commande introuvable",
+    "Player Sale": "Vente du joueur"
 }
