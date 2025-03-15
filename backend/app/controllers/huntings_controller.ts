@@ -2,6 +2,8 @@ import { HttpContext } from '@adonisjs/core/http'
 import Hunting from '#models/hunting'
 import { getLastMessagesForHunts } from '#services/firebase_service'
 import UsersHunting from '#models/users_hunting'
+import i18nManager from '@adonisjs/i18n/services/main'
+
 
 export default class HuntingsController {
   public async getAllHuntings({ auth, response }: HttpContext) {
@@ -11,19 +13,20 @@ export default class HuntingsController {
       return response.unauthorized({ message: 'User not authenticated', success: false })
     }
 
+    const i18n = i18nManager.locale(user.lang)
+
     try {
       const huntings = await Hunting.query().orderBy('id', 'desc')
 
       return response.json({
-        message: 'Liste des chasses récupérée avec succès',
+        message: i18n.t('_.Huntings List Succuess'),
         success: true,
         huntings,
       })
     } catch (error) {
-      console.error('Erreur lors de la récupération des chasses :', error)
-
+      console.error('_.Error getting huntings:', error)
       return response.internalServerError({
-        message: 'Erreur lors de la récupération des chasses',
+        message: i18n.t('_.Error getting huntings'),
         success: false,
       })
     }
@@ -34,21 +37,24 @@ export default class HuntingsController {
     if (!user) {
       return response.unauthorized({ message: 'User not authenticated', success: false })
     }
-  
+
+    const i18n = i18nManager.locale(user.lang)
+
     try {
       const huntings = await Hunting.query()
         .where('private', false)
         .orderBy('id', 'desc')
   
       return response.json({
-        message: 'Liste des chasses publiques récupérée avec succès',
+        message: i18n.t('_.Public Huntings List Succuess'),
+
         success: true,
         huntings,
       })
     } catch (error) {
-      console.error('Erreur lors de la récupération des chasses publiques :', error)
+      console.error('Error getting public huntings:', error)
       return response.internalServerError({
-        message: 'Erreur lors de la récupération des chasses publiques',
+        message: i18n.t('_.Error getting public huntings'),
         success: false,
       })
     }
@@ -60,6 +66,7 @@ export default class HuntingsController {
     if (!user) {
       return response.unauthorized({ message: 'Utilisateur non authentifié' })
     }
+    const i18n = i18nManager.locale(user.lang)
 
     try {
       const organizedHuntings = await Hunting.query().where('userId', user.id).select('id')
@@ -101,7 +108,7 @@ export default class HuntingsController {
     } catch (error) {
       console.error('Erreur lors de la récupération des chasses :', error)
       return response.internalServerError({
-        message: 'Erreur lors de la récupération des chasses.',
+        message: i18n.t('_.Error getting huntings'),
       })
     }
   }

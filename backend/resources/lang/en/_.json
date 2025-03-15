@@ -29,5 +29,9 @@
     "This link is valid for 15 minutes": "This link is valid for 15 minutes",
     "If you did not request a password reset, you can ignore this email": "If you did not request a password reset, you can ignore this email",
     "Password updated successfully": "Password updated successfully",
-    "Password is the same as the current one": "Password is the same as the current one"
+    "Password is the same as the current one": "Password is the same as the current one",
+    "Huntings List Succuess": "Huntings list retrieved successfully",
+    "Error getting huntings": "Error getting huntings",
+    "Public Huntings List Succuess": "Public huntings list retrieved successfully",
+    "Error getting public huntings": "Error getting public huntings"
 }

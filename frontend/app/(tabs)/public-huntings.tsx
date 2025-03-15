@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import {
   View,
   Text,
@@ -9,8 +9,10 @@ import {
   ActivityIndicator,
   ScrollView,
 } from 'react-native'
+import { Picker } from '@react-native-picker/picker'
 import { getPublicHuntings } from '@/services/HuntingService'
 import type Hunting from '@/type/feature/auth/hunting'
+import { useLanguage } from "@/hooks/providers/LanguageProvider";
 
 export default function PublicHuntings() {
   const [publicHuntings, setPublicHuntings] = useState<Hunting[]>([])
@@ -18,6 +20,8 @@ export default function PublicHuntings() {
   const [search, setSearch] = useState('')
   const [page, setPage] = useState(1)
   const itemsPerPage = 6
+  const { i18n, locale } = useLanguage();
+  const [sortOption, setSortOption] = useState<string>('')
 
   useEffect(() => {
     const fetchPublicHuntings = async () => {
@@ -34,15 +38,32 @@ export default function PublicHuntings() {
     fetchPublicHuntings()
   }, [])
 
-  const filteredHuntings = publicHuntings.filter((hunt) =>
-    hunt.title.toLowerCase().includes(search.toLowerCase())
-  )
+  const filteredHuntings = useMemo(() => {
+    return publicHuntings.filter(hunt =>
+      hunt.title.toLowerCase().includes(search.toLowerCase())
+    )
+  }, [publicHuntings, search])
 
-  const totalPages = Math.ceil(filteredHuntings.length / itemsPerPage)
-  const pageHuntings = filteredHuntings.slice(
-    (page - 1) * itemsPerPage,
-    page * itemsPerPage
-  )
+  // Tri selon sortOption
+  const sortedHuntings = useMemo(() => {
+    const huntsCopy = [...filteredHuntings]
+    if (sortOption === 'price_asc') {
+      huntsCopy.sort((a, b) => parseFloat(a.price.toString()) - parseFloat(b.price.toString()))
+    } else if (sortOption === 'price_desc') {
+      huntsCopy.sort((a, b) => parseFloat(b.price.toString()) - parseFloat(a.price.toString()))
+    } else if (sortOption === 'players_asc') {
+      huntsCopy.sort((a, b) => a.maxUser - b.maxUser)
+    } else if (sortOption === 'players_desc') {
+      huntsCopy.sort((a, b) => b.maxUser - a.maxUser)
+    }
+    return huntsCopy
+  }, [filteredHuntings, sortOption])
+
+  const totalPages = useMemo(() => Math.ceil(sortedHuntings.length / itemsPerPage), [sortedHuntings])
+  const pageHuntings = useMemo(() => {
+    return sortedHuntings.slice((page - 1) * itemsPerPage, page * itemsPerPage)
+  }, [sortedHuntings, page])
+
 
   return (
     <View style={{ flex: 1 }}>
@@ -75,7 +96,7 @@ export default function PublicHuntings() {
               fontFamily: 'BerkshireSwash-Regular',
             }}
           >
-            Rejoindre une chasse publique
+            {i18n.t("Join public hunt")}
           </Text>
 
           <View
@@ -100,18 +121,25 @@ export default function PublicHuntings() {
               onChangeText={setSearch}
               value={search}
             />
-            <TextInput
+            <Picker
+              selectedValue={sortOption}
+              onValueChange={(itemValue) => {
+                setSortOption(itemValue)
+                setPage(1)
+              }}
               style={{
-                width: 100,
+                width: 150,
                 backgroundColor: '#fff',
                 borderRadius: 8,
-                paddingHorizontal: 10,
-                paddingVertical: 8,
                 fontFamily: 'BerkshireSwash-Regular',
               }}
-              placeholder="Filtrer"
-              placeholderTextColor="#555"
-            />
+            >
+              <Picker.Item label="Filtrer" value="" />
+              <Picker.Item label={`${i18n.t("Price")} ↑`} value="price_asc" />
+              <Picker.Item label={`${i18n.t("Price")} ↓`} value="price_desc" />
+              <Picker.Item label={`${i18n.t("Players")} ↑`} value="players_asc" />
+              <Picker.Item label={`${i18n.t("Players")} ↓`} value="players_desc" />
+            </Picker>
           </View>
 
           {loading ? (
@@ -182,7 +210,7 @@ export default function PublicHuntings() {
                           fontFamily: 'BerkshireSwash-Regular',
                         }}
                       >
-                        Prix: {hunt.price}
+                        {i18n.t("Price")} : {hunt.price}
                       </Text>
                       <Text
                         style={{
@@ -202,7 +230,8 @@ export default function PublicHuntings() {
                           fontFamily: 'BerkshireSwash-Regular',
                         }}
                       >
-                        Fin: {new Date(hunt.endDate).toLocaleDateString()}
+
+                        {i18n.t("End")}:{new Date(hunt.endDate).toLocaleDateString()}
                       </Text>
                       <Text
                         style={{
@@ -212,7 +241,7 @@ export default function PublicHuntings() {
                           fontFamily: 'BerkshireSwash-Regular',
                         }}
                       >
-                        Statut: {hunt.status ? 'Active' : 'Inactive'}
+                        {i18n.t("Status")}: {hunt.status ? 'Active' : 'Inactive'}
                       </Text>
                       <TouchableOpacity
                         style={{
@@ -231,7 +260,7 @@ export default function PublicHuntings() {
                             fontFamily: 'BerkshireSwash-Regular',
                           }}
                         >
-                          Rejoindre
+                          {i18n.t("Join")}
                         </Text>
                       </TouchableOpacity>
                     </View>
@@ -259,7 +288,7 @@ export default function PublicHuntings() {
                         fontFamily: 'BerkshireSwash-Regular',
                       }}
                     >
-                      Précédent
+                      {i18n.t("Previous")}:
                     </Text>
                   </TouchableOpacity>
 
@@ -284,7 +313,7 @@ export default function PublicHuntings() {
                         fontFamily: 'BerkshireSwash-Regular',
                       }}
                     >
-                      Suivant
+                      {i18n.t("Next")}:
                     </Text>
                   </TouchableOpacity>
                 </View>
