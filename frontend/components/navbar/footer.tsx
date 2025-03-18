@@ -20,7 +20,7 @@ const Footer = () => {
       </TouchableOpacity>
       {/* bouton organisateur */}
       <TouchableOpacity style={styles.navItem}>
-        {<Link href={"/public-huntings"} style={styles.icon}>🗺️</Link>}
+        <Link href={"/hunting"} style={styles.icon}>🗺️</Link>
       </TouchableOpacity>
       <TouchableOpacity style={styles.navItem}>
         <Link href={"/message"} style={styles.icon}>✉️</Link>

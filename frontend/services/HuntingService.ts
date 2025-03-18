@@ -1,4 +1,4 @@
-import Hunting from "@/type/feature/auth/hunting";
+import Hunting from "@/type/feature/hunting/Hunting";
 import axios from "axios";
 import AXIOS_ERROR from "@/type/request/axios_error";
 import AsyncStorage from "@react-native-async-storage/async-storage";

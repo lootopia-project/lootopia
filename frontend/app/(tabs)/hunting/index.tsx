@@ -11,7 +11,7 @@ import {
 } from 'react-native'
 import { Picker } from '@react-native-picker/picker'
 import { getPublicHuntings } from '@/services/HuntingService'
-import type Hunting from '@/type/feature/auth/hunting'
+import { Hunting } from '@/type/feature/hunting/Hunting'
 import { useLanguage } from "@/hooks/providers/LanguageProvider";
 
 export default function PublicHuntings() {
@@ -20,7 +20,7 @@ export default function PublicHuntings() {
   const [search, setSearch] = useState('')
   const [page, setPage] = useState(1)
   const itemsPerPage = 6
-  const { i18n, locale } = useLanguage();
+  const { i18n } = useLanguage();
   const [sortOption, setSortOption] = useState<string>('')
 
   useEffect(() => {
@@ -173,7 +173,7 @@ export default function PublicHuntings() {
                     >
                       <Image
                         source={{
-                          uri: hunt.headerImg || 'https://via.placeholder.com/400x300',
+                          uri: hunt.headerImg || 'https://lootopia.blob.core.windows.net/lootopia-photos/FFJFCIJECEAEGCE.jpeg',
                         }}
                         style={{
                           width: '100%',

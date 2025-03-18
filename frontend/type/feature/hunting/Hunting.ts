@@ -19,3 +19,5 @@ export interface Hunting {
   user?: Users
 
 }
+
+export default Hunting
