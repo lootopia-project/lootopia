@@ -1,5 +1,5 @@
-import CheckoutScreen from "@/components/stripe/checkout";
+import Index from "@/components/stripe/index/index";
 
 export default function Checkout() {
-  return <CheckoutScreen />;
+  return <Index />;
 }

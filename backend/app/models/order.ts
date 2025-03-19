@@ -1,8 +1,9 @@
 import { DateTime } from 'luxon'
 import { BaseModel, column, hasMany } from '@adonisjs/lucid/orm'
 import type { HasMany } from '@adonisjs/lucid/types/relations'
-import OrdersReward from '#models/orders_reward'
+import OrdersItem from '#models/orders_item'
 import UsersOrder from '#models/users_order'
+import LogHistory from '#models/log_history'
 export default class Order extends BaseModel {
   @column({ isPrimary: true })
   declare id: number
@@ -10,15 +11,15 @@ export default class Order extends BaseModel {
   @column()
   declare status: string
 
-  @column()
-  declare finalPrice: number
-
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
 
-  @hasMany(() => OrdersReward)
-  declare ordersReward: HasMany<typeof OrdersReward>
+  @hasMany(() => OrdersItem)
+  declare ordersItem: HasMany<typeof OrdersItem>
 
   @hasMany(() => UsersOrder)
   declare usersOrder: HasMany<typeof UsersOrder>
+  
+  @hasMany(() => LogHistory)
+  declare logHistory: HasMany<typeof LogHistory>
 }

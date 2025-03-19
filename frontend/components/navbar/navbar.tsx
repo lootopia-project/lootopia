@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity, useColorScheme, StatusBar, SafeAreaView, StyleSheet, Image, Platform, useWindowDimensions } from "react-native";
 import { Colors } from "@/constants/Colors";
-import { Link } from "expo-router";
+import { Feather } from "@expo/vector-icons";
+import { Link, usePathname } from "expo-router";
 import { useAuth } from "@/hooks/providers/AuthProvider";
 import { useRouter } from "expo-router";
 import { useLanguage } from "@/hooks/providers/LanguageProvider";
@@ -11,6 +12,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const router = useRouter();
   const { width } = useWindowDimensions();
   const isMobile = (Platform.OS !== 'web') ? true : width < 768;
   const theme = useColorScheme() || "light";
@@ -18,11 +20,15 @@ const Navbar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const { i18n } = useLanguage();
   const [img, setImg] = useState("");
+  const [crowns, setCrowns] = useState(0);
   const { setErrorMessage, setErrorVisible } = useErrors();
+    const pathName = usePathname();
   useEffect(() => {
     const fetchImg = async () => {
       if (isAuthenticated) {
         const img = await AsyncStorage.getItem("img");
+        const crowns = await AsyncStorage.getItem("crowns") || "0";
+        setCrowns(parseInt(crowns, 10));
         setImg("https://lootopia.blob.core.windows.net/lootopia-photos/user.png");
         if (img) {
           setImg(img);
@@ -30,7 +36,7 @@ const Navbar = () => {
       }
     };
     fetchImg();
-  }, [isAuthenticated]);
+  }, [isAuthenticated,pathName]);
 
 
   const hangleLogout = async () => {
@@ -75,6 +81,32 @@ const Navbar = () => {
 
                 )
               }
+                {isAuthenticated && (
+                <View style={styles.crownContainer}>
+                  <Image
+                    source={{ uri: "https://lootopia.blob.core.windows.net/lootopia-object/crown.png" }}
+                    style={styles.crownIcon}
+                  />
+                <Text style={styles.crownText}>{crowns}</Text>
+          
+                <Link href="/shop/buy-crown" asChild>
+                  <TouchableOpacity>
+                    <Text style={styles.plusButton}>+</Text>
+                  </TouchableOpacity>
+                </Link>
+              </View>
+              )}
+
+                {/* 🛒 Icône du shop dans une autre div */}
+                {isAuthenticated && (
+                  <View style={styles.shopContainer}>
+                    <Link href="/shop" asChild>
+                      <TouchableOpacity>
+                        <Feather name="shopping-cart" size={26} color="white" />
+                      </TouchableOpacity>
+                    </Link>
+                  </View>
+                )}
               {/* dropdown right menu */}
               {isAuthenticated && !isMobile &&
                 (
@@ -248,7 +280,40 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 16,
     marginLeft: 20
-  }
+  },
+  crownContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#222",
+    padding: 6,
+    borderRadius: 8,
+  },
+  crownIcon: {
+    width: 24,
+    height: 24,
+    marginRight: 6,
+  },
+  crownText: {
+    fontSize: 16,
+    color: "white",
+    fontWeight: "bold",
+  },
+  plusButton: {
+    color: "white",
+    fontWeight: "bold",
+    fontSize: 20,
+    marginLeft: 8,
+  },
+  shopContainer: {
+    backgroundColor: "#222", 
+    padding: 8,
+    borderRadius: 8,
+    marginLeft: 12, 
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  
+  
 });
 
 export default Navbar;

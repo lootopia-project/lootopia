@@ -22,6 +22,7 @@ export default function Checkout() {
                     const parsed = JSON.parse(result) as ResultPayment;
                     setInfoPayment(parsed);
                     await AsyncStorage.removeItem("result");
+                    await AsyncStorage.removeItem("amount");
                 } else {
                     setErrorMessage(i18n.t("No payment yet"));
                     setErrorVisible(true);
