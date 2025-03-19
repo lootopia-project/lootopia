@@ -33,5 +33,9 @@
     "You bought {numberCrown} crowns": "You bought {numberCrown} crowns",
     "You have bought {numberItem} items for {price} crowns": "You have bought {numberItem} items for {price} crowns",
     "Not enough crowns": "Not enough crowns",
-    "Items bought successfully": "Items bought successfully"
+    "Items bought successfully": "Items bought successfully",
+    "Huntings List Succuess": "Huntings list retrieved successfully",
+    "Error getting huntings": "Error getting huntings",
+    "Public Huntings List Succuess": "Public huntings list retrieved successfully",
+    "Error getting public huntings": "Error getting public huntings"
 }
