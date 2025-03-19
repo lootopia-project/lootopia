@@ -18,6 +18,7 @@ const ShopCrownsController = () => import('#controllers/shop_crowns_controller')
 const ItemsController = () => import('#controllers/items_controller')
 const LogHistoriesController = () => import('#controllers/log_histories_controller')
 const OrdersController = () => import('#controllers/orders_controller')
+const SpotsController = () => import('#controllers/spots_controller')
 
 router.post('/login', [AuthController, 'login'])
 router.post('/register', [AuthController, 'register'])
@@ -55,6 +56,7 @@ router
     router.get('/shop/getListItem', [ItemsController, 'getListItem'])
     router.get('shop/getLogHistories', [LogHistoriesController, 'getLogHistories'])
     router.get('/shop/getOrderDetailWithId/:id', [OrdersController, 'getOrderDetailWithId'])
+    router.post('/getSpot', [SpotsController, 'getSpot'])
   })
   .use([
     middleware.auth({
