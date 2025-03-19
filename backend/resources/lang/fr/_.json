@@ -34,5 +34,9 @@
     "You bought {numberCrown} crowns": "Vous avez acheté {numberCrown} couronnes",
     "You have bought {numberItem} items for {price} crowns": "Vous avez acheté {numberItem} articles pour {price} couronnes",
     "Not enough crowns": "Pas assez de couronnes",
-    "Items bought successfully": "Articles achetés avec succès"
+    "Items bought successfully": "Articles achetés avec succès",
+    "Huntings List Succuess": "Liste des chasses récupérée avec succès",
+    "Error getting huntings": "Erreur lors de la récupération des chasses",
+    "Public Huntings List Succuess": "Liste des chasses publiques récupérée avec succès",
+    "Error getting public huntings": "Erreur lors de la récupération des chasses publiques"
 }
