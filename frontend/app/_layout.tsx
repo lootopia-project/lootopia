@@ -6,6 +6,7 @@ import { LanguageProvider } from "@/hooks/providers/LanguageProvider";
 import Navbar from "@/components/navbar/navbar";
 import Footer from "@/components/navbar/footer";
 import "../global.css";
+import 'leaflet/dist/leaflet.css';
 import StripeProvider from "@/hooks/providers/StripeProvider";
 import { View } from "react-native";
 
