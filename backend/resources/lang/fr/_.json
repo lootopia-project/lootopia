@@ -35,5 +35,6 @@
     "You have bought {numberItem} items for {price} crowns": "Vous avez acheté {numberItem} articles pour {price} couronnes",
     "Not enough crowns": "Pas assez de couronnes",
     "Items bought successfully": "Articles achetés avec succès",
-    "No items available for sale": "Aucun article disponible à la vente"
+    "No items available for sale": "Aucun article disponible à la vente",
+    "You have sold {itemName} for {price} crowns to {buyerName}": "Vous avez vendu {itemName} pour {price} couronnes à {buyerName}"
 }

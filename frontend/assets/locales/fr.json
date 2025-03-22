@@ -149,5 +149,7 @@
     "Please enter a valid quantity": "Veuillez entrer une quantité valide",
     "Selling": "Vente en cours",
     "Order not found": "Commande introuvable",
-    "Player Sale": "Vente du joueur"
+    "Player Sale": "Vente du joueur",
+    "Available": "Disponible",
+    "Not enough stock available": "Stock insuffisant"
 }

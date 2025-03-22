@@ -5,7 +5,6 @@ import User from '#models/user'
 import i18nManager from '@adonisjs/i18n/services/main'
 import MailService from '#services/mail_service'
 import AuthAccessToken from '#models/auth_access_token'
-import UsersItem from '#models/users_huntings_item'
 import Order from '#models/order'
 import OrdersItem from '#models/orders_item'
 import UsersHuntingItem from '#models/users_huntings_item'
@@ -162,46 +161,57 @@ export default class UsersController {
   }
 
   async getItemUser({ response, auth }: HttpContext) {
-    const user = auth.user
+    const user = auth.user;
     if (!user) {
-      return response.unauthorized({ message: 'Unauthorized' })
+        return response.unauthorized({ message: 'Unauthorized' });
     }
 
-    // 🔹 Récupérer tous les items de l'utilisateur
+    // 🔹 Récupérer tous les items de l'utilisateur (non historiques)
     const items = await UsersHuntingItem.query()
-      .where('user_id', user.id)
-      .andWhere('history', false)
-      .preload('item', (query) => {
-        query
-          .select('id', 'name', 'description', 'img', 'price', 'rarity_id')
-          .preload('rarity', (q) => q.select('name'))
-      })
+        .where('user_id', user.id)
+        .andWhere('history', false)
+        .preload('item', (query) => {
+            query
+                .select('id', 'name', 'description', 'img', 'price', 'rarity_id')
+                .preload('rarity', (q) => q.select('name'));
+        });
 
-    // 📌 Trouver l'order actif (une seule requête pour optimiser)
-    const order = await Order.query()
-      .where('user_id', user.id)
-      .andWhere('status', 'pending on sale')
-      .first()
+    // 📌 Récupérer **tous les orders** en attente de vente
+    const orders = await Order.query()
+        .where('user_id', user.id)
+        .andWhere('status', 'pending on sale');
 
-    // 📌 Si un order est trouvé, récupérer tous les items mis en vente (une seule requête aussi)
-    const orderItems = order
-      ? await OrdersItem.query().where('order_id', order.id).select('item_id', 'price')
-      : []
+    // 📌 Si plusieurs orders, récupérer **tous les items** mis en vente
+    const orderItems = await OrdersItem.query()
+        .whereIn(
+            'order_id',
+            orders.map((order) => order.id) // ✅ Récupérer tous les orders en attente
+        )
+        .select('item_id', 'price', 'order_id');
 
-    // 🔥 Convertir les items mis en vente en un objet pour accès rapide
-    const orderItemsMap = Object.fromEntries(orderItems.map((o) => [o.itemId, o.price]))
+    // 🔥 Associer chaque **item_id** à son prix de vente spécifique (plusieurs entrées possibles)
+    const orderItemsMap: { [key: number]: number[] } = {};
+    orderItems.forEach((orderItem) => {
+        if (!orderItemsMap[orderItem.itemId]) {
+            orderItemsMap[orderItem.itemId] = [];
+        }
+        orderItemsMap[orderItem.itemId].push(orderItem.price);
+    });
 
-    // 🛒 Formatter les items
+    // 🛒 Formatter les items avec le **bon prix de vente**
     const formattedItems = items.map((item) => ({
-      id: item.item.id,
-      name: item.item.name,
-      description: item.item.description,
-      img: item.item.img,
-      rarity: item.item.rarity?.name || 'Unknown',
-      shop: item.shop,
-      price: item.shop ? (orderItemsMap[item.item.id] ?? item.item.price) : item.item.price,
-    }))
+        id: item.item.id,
+        name: item.item.name,
+        description: item.item.description,
+        img: item.item.img,
+        rarity: item.item.rarity?.name || 'Unknown',
+        shop: item.shop,
+        price: item.shop && orderItemsMap[item.item.id]
+            ? Math.min(...orderItemsMap[item.item.id]) // ✅ Prend le **plus bas prix**
+            : item.item.price,
+    }));
 
-    return response.ok(formattedItems)
-  }
+    return response.ok(formattedItems);
+}
+
 }

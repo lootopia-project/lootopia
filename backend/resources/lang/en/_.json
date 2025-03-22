@@ -34,5 +34,6 @@
     "You have bought {numberItem} items for {price} crowns": "You have bought {numberItem} items for {price} crowns",
     "Not enough crowns": "Not enough crowns",
     "Items bought successfully": "Items bought successfully",
-    "No items available for sale": "No items available for sale"
+    "No items available for sale": "No items available for sale",
+    "You have sold {itemName} for {price} crowns to {buyerName}": "You have sold {itemName} for {price} crowns to {buyerName}"
 }

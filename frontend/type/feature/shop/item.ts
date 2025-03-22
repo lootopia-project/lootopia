@@ -6,6 +6,7 @@ interface Item {
     img: string
     description: string
     sellerId: number
+    quantity: number
 }
 
 export default Item
