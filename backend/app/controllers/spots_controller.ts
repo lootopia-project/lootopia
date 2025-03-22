@@ -44,7 +44,8 @@ export default class SpotsController {
     async pushSpotInMap ({ response, request }: HttpContext) {
         
         const { markers, square, center, zoom, status } = request.only(['markers', 'square', 'center', 'zoom', 'status'])
-        const map = new Map()        
+        const map = new Map()     
+        //partie modifiable sur les cartes (partie spots à ne pas toucher normalement)   
         map.scale_max = zoom
         map.scale_min = 1
         map.name = "nameMap"
