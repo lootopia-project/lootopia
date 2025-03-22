@@ -4,7 +4,6 @@ import { Colors } from "@/constants/Colors";
 import { Feather } from "@expo/vector-icons";
 import { Link, usePathname } from "expo-router";
 import { useAuth } from "@/hooks/providers/AuthProvider";
-import { useRouter } from "expo-router";
 import { useLanguage } from "@/hooks/providers/LanguageProvider";
 import LanguageSwitcher from "../lang";
 import { useErrors } from "@/hooks/providers/ErrorProvider";
@@ -12,7 +11,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
-  const router = useRouter();
   const { width } = useWindowDimensions();
   const isMobile = (Platform.OS !== 'web') ? true : width < 768;
   const theme = useColorScheme() || "light";

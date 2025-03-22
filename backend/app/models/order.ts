@@ -19,7 +19,7 @@ export default class Order extends BaseModel {
 
   @hasMany(() => UsersOrder)
   declare usersOrder: HasMany<typeof UsersOrder>
-  
+
   @hasMany(() => LogHistory)
   declare logHistory: HasMany<typeof LogHistory>
 }

@@ -29,7 +29,7 @@ useEffect(() => {
     };
 
     fetchCrown();
-}, [i18n]);
+}, [i18n, setErrorMessage, setErrorVisible]);
 
 
 const buyCrown = async (amount: number) => {

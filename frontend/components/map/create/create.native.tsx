@@ -36,7 +36,7 @@ const DrawingMap: React.FC = () => {
       setErrorVisible(true);
       setCenter([48.8566, 2.3522]);
     }
-  }, []);
+  }, [i18n, setErrorMessage, setErrorVisible]);
 
   let region: Region | undefined;
   if (center) {
@@ -62,7 +62,7 @@ const DrawingMap: React.FC = () => {
       }
     };
     saveData();
-  }, [markers, rectanglePoints, center, zoom]);
+  }, [markers, rectanglePoints, center, zoom, i18n, setErrorMessage, setErrorVisible]);
 
   const handleMapPress = (e: MapPressEvent) => {
     if (!mode) return;

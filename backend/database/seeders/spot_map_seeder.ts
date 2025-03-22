@@ -14,16 +14,19 @@ export default class extends BaseSeeder {
       {
         mapId: 1,
         spotId: 3,
-      },{
+      },
+      {
         mapId: 1,
         spotId: 4,
-      },{
+      },
+      {
         mapId: 1,
         spotId: 5,
-      },{
+      },
+      {
         mapId: 1,
         spotId: 6,
-      }
+      },
     ])
   }
 }

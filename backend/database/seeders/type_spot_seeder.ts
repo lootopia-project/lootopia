@@ -24,9 +24,9 @@ export default class extends BaseSeeder {
         name: 'bottomRight',
       },
       {
-        id:6,
-        name: 'center'
-      }
+        id: 6,
+        name: 'center',
+      },
     ])
   }
 }

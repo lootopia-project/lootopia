@@ -3,7 +3,7 @@
   import { buyItem, getListItem } from "@/services/ShopService";
   import Item from "@/type/feature/shop/item";
   import React, { useEffect, useState } from "react";
-  import { View, Text, Image, FlatList, TouchableOpacity, Modal, ScrollView } from "react-native";
+  import { View, Text, Image, FlatList, TouchableOpacity, ScrollView } from "react-native";
   import { Feather } from "@expo/vector-icons";
   import { useRouter } from "expo-router";
   import ModalCart from "@/components/shop/ModalCart";
@@ -29,7 +29,7 @@
         }
       };
       fetchItem();
-    }, [i18n]);
+    }, [i18n, setErrorMessage, setErrorVisible]);
 
     const addToCart = (item: Item) => {
       setCart((prevCart) => [...prevCart, item]);

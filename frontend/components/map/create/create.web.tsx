@@ -38,7 +38,7 @@ const DrawingMap: React.FC = () => {
             setErrorVisible(true);
             setCenter([48.8566, 2.3522]);
         }
-    }, []);
+    }, [i18n, setErrorMessage, setErrorVisible]);
 
     useEffect(() => {
         const saveData = async () => {
@@ -52,7 +52,7 @@ const DrawingMap: React.FC = () => {
             }
         };
         saveData();
-    }, [markers, rectanglePoints, center, zoom]);
+    }, [markers, rectanglePoints, center, zoom, i18n, setErrorMessage, setErrorVisible]);
 
     function MapClickHandler() {
         useMapEvents({
