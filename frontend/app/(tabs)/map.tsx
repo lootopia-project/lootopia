@@ -1,6 +1,6 @@
-import MapScreen from "@/components/map/read/read";
+import DrawingMap from "@/components/map/create/create";
 
 export default function MapIndex() {
     
-  return <MapScreen />;
+  return <DrawingMap />;
 }

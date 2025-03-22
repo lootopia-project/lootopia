@@ -57,6 +57,7 @@ router
     router.get('shop/getLogHistories', [LogHistoriesController, 'getLogHistories'])
     router.get('/shop/getOrderDetailWithId/:id', [OrdersController, 'getOrderDetailWithId'])
     router.post('/getSpot', [SpotsController, 'getSpot'])
+    router.post('/pushSpot', [SpotsController, 'pushSpotInMap'])
   })
   .use([
     middleware.auth({

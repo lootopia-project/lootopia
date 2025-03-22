@@ -1,6 +1,7 @@
 import React from 'react';
 import { MapContainer, TileLayer, Marker, Popup, Polygon } from 'react-leaflet';
 import MapParams from '@/type/feature/map/params';
+import 'leaflet/dist/leaflet.css';
 
 const MapScreen: React.FC<MapParams> = ({center,markers,square,zoom,status}:MapParams) => {
   const squarePositions = [

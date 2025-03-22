@@ -22,6 +22,20 @@ const getSpot = async (id:number) :Promise<MapParams> => {
   }
 };
 
+const pushSpot = async (spot: MapParams) :Promise<void> => {
+  const token = await AsyncStorage.getItem('token');
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": token ? `${token}` : '',
+    },
+    withCredentials: true
+  };
+  try {
+    await axios.post(`${API_URL}/pushSpot`,spot, config);
+  } catch (error) {
+    throw new Error("Erreur lors de la création du spot");
+  }
+};
 
-
-export { getSpot };
+export { getSpot, pushSpot };

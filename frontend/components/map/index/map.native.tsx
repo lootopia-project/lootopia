@@ -2,14 +2,15 @@ import React from 'react';
 import { StyleSheet } from 'react-native';
 import MapView, { Marker, Polygon, Region } from 'react-native-maps';
 import MapParams from '@/type/feature/map/params';
+import 'leaflet/dist/leaflet.css';
 
 const MapScreen: React.FC<MapParams> = ({center,markers,square,zoom}:MapParams) => {
   const latitudeDelta = 100 / zoom;
   const longitudeDelta = 100 / zoom;
 
   const region: Region = {
-    latitude: center[0],
-    longitude: center[1],
+    latitude: center ? center[0] : 0,
+    longitude: center ? center[1] : 0,
     latitudeDelta,
     longitudeDelta,
   };

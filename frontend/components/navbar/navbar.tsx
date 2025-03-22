@@ -149,6 +149,11 @@ const Navbar = () => {
               {isAuthenticated ?
                 <>
                   <TouchableOpacity>
+                    <Link href={"/map"} style={[styles.mobileMenuText, { color: Colors[theme].text }]}>
+                      {i18n.t("truc")}
+                    </Link>
+                  </TouchableOpacity>
+                  <TouchableOpacity>
                     <Link href={"/user/edit"} style={[styles.mobileMenuText, { color: Colors[theme].text }]}>
                       {i18n.t("Edit User")}
                     </Link>
