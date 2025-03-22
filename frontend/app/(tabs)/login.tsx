@@ -38,7 +38,7 @@ export default function LoginPage() {
 
   useEffect(() => {
     signOut();
-  }, []);
+  }, [signOut]);
 
   useEffect(() => {
     const register = async () => {
@@ -69,7 +69,7 @@ export default function LoginPage() {
     };
 
     register();
-  }, [user, sendData]);
+  }, [user, sendData, loginOrRegisterGoogle, i18n, setErrorMessage, setErrorVisible, router]);
 
   const handleLogin = async () => {
     try {

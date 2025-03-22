@@ -34,7 +34,7 @@ export default function Checkout() {
         };
 
         getInfoPayment();
-    }, []);
+    }, [i18n, setErrorMessage, setErrorVisible]);
 
     return (
         <View className="flex-1">

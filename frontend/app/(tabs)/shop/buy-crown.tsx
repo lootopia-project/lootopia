@@ -29,7 +29,7 @@ useEffect(() => {
     };
 
     fetchCrown();
-}, [i18n]);
+}, [i18n, setErrorMessage, setErrorVisible]);
 
 
 const buyCrown = async (amount: number) => {
@@ -45,8 +45,6 @@ const buyCrown = async (amount: number) => {
 return (
   <ScrollView className="flex-1 bg-gray-100">
     <View className="items-center pt-6">
-      <View className="w-full flex-row items-center justify-between px-6">
-      </View>
       <Text className="text-2xl font-bold mb-4">{i18n.t("Buy Crowns")}</Text>
       <FlatList
         data={crownShopItems}

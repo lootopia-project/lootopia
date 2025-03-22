@@ -1,7 +1,6 @@
 import axios from 'axios';
 import PaymentIntent from '@/type/feature/stripe/paymentIntent';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Return from '@/type/request/return';
 const API_URL = process.env.EXPO_PUBLIC_API_URL as string;
 
 

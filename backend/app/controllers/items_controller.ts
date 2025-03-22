@@ -103,6 +103,10 @@ export default class ItemsController {
     }
 
     await user.save()
-    return response.json({ message: i18n.t('Items bought successfully'), success: true,orderId:order.id })
+    return response.json({
+      message: i18n.t('Items bought successfully'),
+      success: true,
+      orderId: order.id,
+    })
   }
 }

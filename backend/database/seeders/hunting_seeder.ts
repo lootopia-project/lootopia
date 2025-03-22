@@ -44,7 +44,7 @@ export default class extends BaseSeeder {
       },
       {
         title: 'Chasse du coffre doré',
-        description: 'Trouvez le coffre légendaire rempli d\'or et de mystères.',
+        description: "Trouvez le coffre légendaire rempli d'or et de mystères.",
         price: 60,
         minUser: 3,
         maxUser: 6,
@@ -124,7 +124,8 @@ export default class extends BaseSeeder {
       },
       {
         title: 'Aventure en haute montagne',
-        description: 'Gravissez les sommets pour trouver des trésors cachés dans la neige éternelle.',
+        description:
+          'Gravissez les sommets pour trouver des trésors cachés dans la neige éternelle.',
         price: 75,
         minUser: 3,
         maxUser: 7,
