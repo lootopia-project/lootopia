@@ -11,7 +11,12 @@ export const getLastMessagesForHunts = async (
     const nameNoeud=env.get('NAME_NOEUD_FIREBASE')
 
     for (const huntId of huntIds) {
-      const ref = db.ref(`${nameNoeud}/${huntId}/messages`)
+      const ref = db.ref(`${nameNoeud}/hunting_chat/${huntId}/messages`)
+
+      const ref2 = db.ref(`${nameNoeud}/hunting_chat/${huntId}`)
+      const snapshot2 = await ref2.once('value')
+      const data = snapshot2.val()
+      const type = data.type
       const snapshot = await ref.limitToLast(limit).once('value')
 
       if (snapshot.exists()) {
@@ -36,6 +41,7 @@ export const getLastMessagesForHunts = async (
               text: lastMessage.text,
               date: lastMessage.timestamp,
             },
+            type:type
           })
         } else {
           results.push({

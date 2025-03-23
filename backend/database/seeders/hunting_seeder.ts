@@ -219,19 +219,23 @@ export default class extends BaseSeeder {
         hunt.userId === anthony.id ? 'anthony' :
         hunt.userId === yassine.id ? 'yassine' : 'unknown'
 
-      await treasureHuntsRef.child(String(hunt.id)).set({
-        id: hunt.id,
-        title: hunt.title,
-        description: hunt.description,
-        organizer,
-        messages: {
-          '0': {
-            sender: organizer,
-            text: 'Bienvenue dans la chasse au trésor !',
-            timestamp: new Date().toISOString(),
+        await treasureHuntsRef
+        .child(`hunting_chat/${hunt.id}`)
+        .set({
+          id: hunt.id,
+          title: hunt.title,
+          description: hunt.description,
+          organizer,
+          messages: {
+            '0': {
+              sender: organizer,
+              text: 'Bienvenue dans la chasse au trésor !',
+              timestamp: new Date().toISOString(),
+            },
           },
-        },
-      })
+          type: 'group',
+        })
+      
     }
   }
 }

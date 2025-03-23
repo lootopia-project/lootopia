@@ -55,6 +55,8 @@ router
     router.get('/shop/getListItem', [ItemsController, 'getListItem'])
     router.get('shop/getLogHistories', [LogHistoriesController, 'getLogHistories'])
     router.get('/shop/getOrderDetailWithId/:id', [OrdersController, 'getOrderDetailWithId'])
+    router.get('/users/getItemUser', [ItemsController, 'getItemUser'])
+    router.get('users/searchUsers', [UsersController, 'searchUsers'])
   })
   .use([
     middleware.auth({

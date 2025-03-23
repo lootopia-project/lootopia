@@ -1,4 +1,5 @@
 interface LastMessage{
+    message: any;
     id: number;
     role: string;
     lastMessage: {
@@ -6,6 +7,7 @@ interface LastMessage{
         text: string;
         date: string;
     };
+    type: string;
 }
 
 export default LastMessage;

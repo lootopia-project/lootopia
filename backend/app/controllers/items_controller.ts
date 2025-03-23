@@ -94,4 +94,19 @@ export default class ItemsController {
     await user.save()
     return response.json({ message: i18n.t('Items bought successfully'), success: true,orderId:order.id })
   }
+
+  async getItemUser({ auth, response }: HttpContext) {
+    const user = auth.user
+    if (user) {
+      const items = await user.related('usersItem').query()
+      return response.json({
+        success: true,
+        items,
+      })
+    }
+    return response.json({
+      success: false,
+      message: 'User not found',
+    })
+  }
 }

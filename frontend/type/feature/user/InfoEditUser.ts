@@ -10,6 +10,8 @@ interface InfoEditUser{
     phone: number;
     lang: string;
     checkMail: boolean;
+    ranking: number;
+    crowns: number;
 }
 
 export default InfoEditUser;

@@ -142,6 +142,11 @@
     "Join": "Rejoindre",
     "Previous": "Précédent",
     "Next": "Suivant",
-    "Players": "Joueurs"
+    "Players": "Joueurs",
+    "Unknown sender": "Expéditeur inconnu",
+    "No message": "Pas de message",
+    "Group messages": "Messages de groupe",
+    "Private messages": "Messages privés",
+    "No users found": "Aucun utilisateur trouvé",
     
 }

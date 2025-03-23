@@ -142,5 +142,10 @@
     "Join": "Join",
     "Previous": "Previous",
     "Next": "Next",
-    "Players": "Players"
+    "Players": "Players",
+    "Unknown sender": "Unknown sender",
+    "No message": "No message",
+    "Group messages": "Group messages",
+    "Private messages": "Private messages",
+    "No users found": "No users found"
   }

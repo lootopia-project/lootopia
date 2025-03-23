@@ -70,7 +70,6 @@ export default class HuntingsController {
 
     try {
       const organizedHuntings = await Hunting.query().where('userId', user.id).select('id')
-      console.log(organizedHuntings)
 
       const participatedHuntings = await UsersHunting.query()
         .where('user_id', user.id)
@@ -88,10 +87,12 @@ export default class HuntingsController {
           ? 'organizer'
           : 'participant'
         const message = huntMessages.find((hunt) => hunt.huntId === id)?.lastMessage
+        const type = huntMessages.find((hunt) => hunt.huntId === id)?.type
         return {
           id,
           role,
           message,
+          type,
         }
       })
 
