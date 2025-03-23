@@ -70,6 +70,7 @@ export default class HuntingsController {
 
     try {
       const organizedHuntings = await Hunting.query().where('userId', user.id).select('id')
+      console.log(organizedHuntings)
 
       const participatedHuntings = await UsersHunting.query()
         .where('user_id', user.id)
@@ -78,6 +79,7 @@ export default class HuntingsController {
         ...organizedHuntings.map((hunting) => hunting.id),
         ...participatedHuntings.map((userHunting) => userHunting.huntingId),
       ]
+
 
       const huntMessages = await getLastMessagesForHunts(huntIds, 1)
 

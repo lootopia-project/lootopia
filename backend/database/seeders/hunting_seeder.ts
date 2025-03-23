@@ -4,12 +4,16 @@ import db from '@adonisjs/lucid/services/db'
 import User from '#models/user'
 import { DateTime } from 'luxon'
 import World from '#models/world'
+import UsersHunting from '#models/users_hunting'
+import { adminDatabase } from '#services/firebase_admin'
+import env from '#start/env'
 
 export default class extends BaseSeeder {
   async run() {
     const kevin: User = await db.from('users').where('nickname', 'kevin').first()
     const anthony: User = await db.from('users').where('nickname', 'anthony').first()
     const yassine: User = await db.from('users').where('nickname', 'yassine').first()
+    const nameNoeud=env.get('NAME_NOEUD_FIREBASE')
 
     if (!kevin || !anthony || !yassine) {
       console.error('Un ou plusieurs utilisateurs sont introuvables.')
@@ -25,7 +29,7 @@ export default class extends BaseSeeder {
       worldId = world.id
     }
 
-    await Hunting.createMany([
+    const huntings = await Hunting.createMany([
       {
         title: 'Chasse au trésor mystique',
         description: 'Explorez les ruines antiques pour dénicher un trésor oublié.',
@@ -187,5 +191,47 @@ export default class extends BaseSeeder {
         worldId,
       },
     ])
+
+    const hunting2 = huntings[1]
+
+    await UsersHunting.createMany([
+      {
+        userId: kevin.id,
+        huntingId: hunting2.id,
+        score: 0,
+        opinion: 'Aucune opinion',
+      },
+      {
+        userId: yassine.id,
+        huntingId: hunting2.id,
+        score: 0,
+        opinion: 'Aucune opinion',
+      },
+    ])
+
+    // ✅ Synchro des chasses vers Firebase Realtime Database
+    const treasureHuntsRef = adminDatabase.ref(nameNoeud)
+    
+
+    for (const hunt of huntings) {
+      const organizer =
+        hunt.userId === kevin.id ? 'kevin' :
+        hunt.userId === anthony.id ? 'anthony' :
+        hunt.userId === yassine.id ? 'yassine' : 'unknown'
+
+      await treasureHuntsRef.child(String(hunt.id)).set({
+        id: hunt.id,
+        title: hunt.title,
+        description: hunt.description,
+        organizer,
+        messages: {
+          '0': {
+            sender: organizer,
+            text: 'Bienvenue dans la chasse au trésor !',
+            timestamp: new Date().toISOString(),
+          },
+        },
+      })
+    }
   }
 }

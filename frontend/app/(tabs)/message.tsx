@@ -11,6 +11,7 @@ import { useLanguage } from "@/hooks/providers/LanguageProvider";
 import LastMessageHunting from "@/type/feature/message/LastMessageHunting";
 import LastMessage from "@/type/feature/message/LastMessage";
 import { useErrors } from "@/hooks/providers/ErrorProvider";
+import { getMessage, sendMessage } from "@/services/MessageService";
 
 const Message = () => {
     const { i18n } = useLanguage();
@@ -29,6 +30,7 @@ const Message = () => {
         const fetchData = async () => {
             try {
                 const huntings: LastMessageHunting = await getHuntingsForMessages();
+                console.log(huntings);
                 setUser(huntings.user);
                 setLastMessage(huntings.lastMessage);
 
@@ -36,19 +38,7 @@ const Message = () => {
                     const huntData = await fetchTreasureHunt(discussionId.toString());
                     setOrganizerId(huntData.organizer);
 
-                    const messagesRef = ref(db, `treasureHunts/${discussionId}/messages`);
-                    onValue(messagesRef, (snapshot) => {
-                        if (snapshot.exists()) {
-                            const data = snapshot.val();
-                            const parsedMessages: Messages[] = Object.keys(data).map((key) => ({
-                                id: key,
-                                ...data[key],
-                            }));
-                            setMessages(parsedMessages);
-                        } else {
-                            setMessages([]);
-                        }
-                    });
+                    getMessage(discussionId.toString(), setMessages);
                 }
             } catch (error) {
                 setErrorMessage(i18n.t("An error occurred while fetching data"));
@@ -59,17 +49,16 @@ const Message = () => {
         fetchData();
     }, [db, discussionId, i18n, setErrorMessage, setErrorVisible]);
 
+
     const handleSend = async () => {
         if (text.trim()) {
             try {
-                const message = {
-                    sender: user?.nickname || "Anonyme",
-                    text: text.trim(),
-                    timestamp: new Date().toISOString(),
-                };
-
-                const messagesRef = ref(db, `treasureHunts/${discussionId}/messages`);
-                await push(messagesRef, message);
+                if (!discussionId) {
+                    setErrorMessage(i18n.t("No discussion selected"));
+                    setErrorVisible(true);
+                    return;
+                }
+                await sendMessage(discussionId.toString(), user, text);
                 setText("");
             } catch (error) {
                 setErrorMessage(i18n.t("An error occurred while sending the message."));
@@ -99,15 +88,15 @@ const Message = () => {
             {item.role === "organizer" && <FontAwesome name="star" size={20} color="gold" />}
             <View className="flex-1 ml-3">
                 <Text className="font-bold text-base text-black">
-                    {item.message?.sender || i18n.t("Unknown sender")}
+                    {item.lastMessage?.sender || i18n.t("Unknown sender")}
                 </Text>
                 <Text className="text-sm text-gray-600" numberOfLines={1} ellipsizeMode="tail">
-                    {item.message?.text || i18n.t("No message")}
+                    {item.lastMessage?.text || i18n.t("No message")}
                 </Text>
             </View>
             <Text className="text-sm text-gray-400 ml-2">
-                {item.message?.date
-                    ? new Date(item.message.date).toLocaleDateString()
+                {item.lastMessage?.date
+                    ? new Date(item.lastMessage.date).toLocaleDateString()
                     : i18n.t("No date")}
             </Text>
         </TouchableOpacity>
@@ -147,7 +136,7 @@ const Message = () => {
                             (a, b) =>
                                 new Date(a.timestamp ?? 0).getTime() - new Date(b.timestamp ?? 0).getTime()
                         )}
-                        keyExtractor={(item) => item.id}
+                        keyExtractor={(item) => item.id || ""}
                         renderItem={({ item }) => (
                             <View className="flex-row justify-between items-center mb-2">
                                 <View className="flex-row items-center">

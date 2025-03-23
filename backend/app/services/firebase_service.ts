@@ -1,4 +1,5 @@
 import { adminDatabase } from '#services/firebase_admin'
+import env from '#start/env'
 
 export const getLastMessagesForHunts = async (
   huntIds: number[],
@@ -7,9 +8,10 @@ export const getLastMessagesForHunts = async (
   try {
     const db = adminDatabase
     const results: Record<string, any>[] = []
+    const nameNoeud=env.get('NAME_NOEUD_FIREBASE')
 
     for (const huntId of huntIds) {
-      const ref = db.ref(`treasureHunts/${huntId}/messages`)
+      const ref = db.ref(`${nameNoeud}/${huntId}/messages`)
       const snapshot = await ref.limitToLast(limit).once('value')
 
       if (snapshot.exists()) {

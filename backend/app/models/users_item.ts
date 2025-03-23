@@ -12,9 +12,6 @@ export default class UsersItem extends BaseModel {
   @column()
   declare itemId: number
 
-  @column()
-  declare quantity: number
-
   @belongsTo(() => User)
   declare user: BelongsTo<typeof User>
 
