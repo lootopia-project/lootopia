@@ -26,7 +26,7 @@ const PurchaseHistory = () => {
             }
         };
         fetchHistory();
-    }, []);
+    }, [i18n, setErrorMessage, setErrorVisible]);
 
     return (
         <View className="flex-1 bg-gray-100 p-6">

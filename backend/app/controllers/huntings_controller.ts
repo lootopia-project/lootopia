@@ -4,10 +4,8 @@ import { getLastMessagesForHunts } from '#services/firebase_service'
 import UsersHunting from '#models/users_hunting'
 import i18nManager from '@adonisjs/i18n/services/main'
 
-
 export default class HuntingsController {
   public async getAllHuntings({ auth, response }: HttpContext) {
-
     const user = auth.user
     if (!user) {
       return response.unauthorized({ message: 'User not authenticated', success: false })
@@ -41,10 +39,8 @@ export default class HuntingsController {
     const i18n = i18nManager.locale(user.lang)
 
     try {
-      const huntings = await Hunting.query()
-        .where('private', false)
-        .orderBy('id', 'desc')
-  
+      const huntings = await Hunting.query().where('private', false).orderBy('id', 'desc')
+
       return response.json({
         message: i18n.t('_.Public Huntings List Succuess'),
 
@@ -59,7 +55,6 @@ export default class HuntingsController {
       })
     }
   }
-  
 
   async getHuntingsParticpatedOrOrganized({ auth, response }: HttpContext) {
     const user = auth.user
