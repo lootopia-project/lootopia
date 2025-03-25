@@ -142,6 +142,20 @@
     "Join": "Rejoindre",
     "Previous": "Précédent",
     "Next": "Suivant",
-    "Players": "Joueurs"
+    "Players": "Joueurs",
+    "Geolocation refused, fallback on Paris": "Géolocalisation refusée, fallback sur Paris",
+    "Backup error": "Erreur de sauvegarde",
+    "Please draw a rectangle": "Veuillez dessiner un rectangle",
+    "Position loading": "Chargement de la position",
+    "MarkerMode": "Mode Marqueur",
+    "RectangleMode": "Mode Rectangle",
+    "None": "Aucun",
+    "Markers": "Marqueurs",
+    "Rectangle": "Rectangle",
+    "TopLeft": "Haut Gauche",
+    "TopRight": "Haut Droite",
+    "BottomLeft": "Bas Gauche",
+    "BottomRight": "Bas Droite",
+    "Delete rectangle": "Supprimer le rectangle"
     
 }

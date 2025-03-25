@@ -1,7 +1,7 @@
 import { useErrors } from "@/hooks/providers/ErrorProvider";
 import { useLanguage } from "@/hooks/providers/LanguageProvider";
 import { getOrderDetail } from "@/services/ShopService";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import { View, Text, Image, ActivityIndicator, FlatList, TouchableOpacity } from "react-native";
 import { Link } from "expo-router";
@@ -14,7 +14,6 @@ const OrderDetail = () => {
     const { id } = useLocalSearchParams();
     const [orderDetail, setOrderDetail] = useState<OrderDetailType | null>(null);
     const [loading, setLoading] = useState(true);
-    const router = useRouter();
 
     useEffect(() => {
         const fetchOrder = async () => {
@@ -29,7 +28,7 @@ const OrderDetail = () => {
             }
         };
         fetchOrder();
-    }, [id]);
+    }, [id, i18n, setErrorMessage, setErrorVisible]);
 
     if (loading) {
         return (

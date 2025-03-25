@@ -35,7 +35,7 @@ export default function RegisterPage() {
 
   useEffect(() => {
     signOut()
-  }, [])
+  }, [signOut])
 
   useEffect(() => {
     const register = async () => {
@@ -64,7 +64,7 @@ export default function RegisterPage() {
     };
 
     register();
-  }, [user, sendData]); 
+  }, [user, sendData, loginOrRegisterGoogle, i18n, setErrorMessage, setErrorVisible]); 
 
   
 

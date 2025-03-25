@@ -142,5 +142,19 @@
     "Join": "Join",
     "Previous": "Previous",
     "Next": "Next",
-    "Players": "Players"
+    "Players": "Players",
+    "Geolocation refused, fallback on Paris": "Geolocation refused, fallback on Paris",
+    "Backup error": "Backup error",
+    "Please draw a rectangle": "Please draw a rectangle",
+    "Position loading": "Position loading",
+    "MarkerMode": "Marker Mode",
+    "RectangleMode": "Square Mode",
+    "None": "None",
+    "Markers": "Markers",
+    "Rectangle": "Rectangle",
+    "TopLeft": "Top Left",
+    "TopRight": "Top Right",
+    "BottomLeft": "Bottom Left",
+    "BottomRight": "Bottom Right",
+    "Delete rectangle": "Delete rectangle"
   }
