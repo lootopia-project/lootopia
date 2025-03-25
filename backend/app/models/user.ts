@@ -7,13 +7,12 @@ import Notification from '#models/notification'
 import type { HasMany } from '@adonisjs/lucid/types/relations'
 import UsersHunting from '#models/users_hunting'
 import Whitelist from '#models/whitelist'
-import Item from '#models/item'
 import Hunting from '#models/hunting'
 import encryption from '@adonisjs/core/services/encryption'
 import AuthAccessToken from '#models/auth_access_token'
-import UsersOrder from '#models/users_order'
+import Order from '#models/order'
 import LogHistory from '#models/log_history'
-import UsersItem from '#models/users_item'
+import UsersItem from '#models/users_huntings_item'
 
 const AuthFinder = withAuthFinder(() => hash.use('scrypt'), {
   uids: ['email', 'nickname'],
@@ -91,8 +90,8 @@ export default class User extends compose(BaseModel, AuthFinder) {
   @hasMany(() => AuthAccessToken)
   declare accessTokens: HasMany<typeof AuthAccessToken>
 
-  @hasMany(() => UsersOrder)
-  declare usersOrder: HasMany<typeof UsersOrder>
+  @hasMany(() => Order)
+  declare usersOrder: HasMany<typeof Order>
 
   @hasMany(() => LogHistory)
   declare logHistory: HasMany<typeof LogHistory>

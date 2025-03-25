@@ -5,8 +5,8 @@ import User from '#models/user'
 import World from '#models/world'
 import Whitelist from '#models/whitelist'
 import UsersHunting from '#models/users_hunting'
-import Item from '#models/item'
 import Map from '#models/map'
+import UsersHuntingItem from '#models/users_huntings_item'
 
 export default class Hunting extends BaseModel {
   @column({ isPrimary: true })
@@ -66,8 +66,8 @@ export default class Hunting extends BaseModel {
   @hasMany(() => UsersHunting)
   declare usersHunting: HasMany<typeof UsersHunting>
 
-  @hasMany(() => Item)
-  declare item: HasMany<typeof Item>
+  @hasMany(() => UsersHuntingItem)
+  declare item: HasMany<typeof UsersHuntingItem>
 
   @hasMany(() => Map)
   declare map: HasMany<typeof Map>

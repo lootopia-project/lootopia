@@ -26,11 +26,11 @@ const Navbar = () => {
 
       </Link>
     
-      {/* <Link href="/user/recompenses">
+      <Link href="/user/item">
         <TouchableOpacity style={styles.navButton}>
-          <Text>Récompenses</Text>
+          <Text>{i18n.t("Item")}</Text>
         </TouchableOpacity>
-      </Link> */}
+      </Link>
     </View>
   );
 };
@@ -39,7 +39,6 @@ const styles = StyleSheet.create({
   navContainer: {
     position: "absolute",
     right: 0,
-    top: 150,
   },
   navButton: {
     backgroundColor: "#F5DEB3",
