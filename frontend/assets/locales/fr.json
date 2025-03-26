@@ -161,6 +161,15 @@
     "No message": "Pas de message",
     "Group messages": "Messages de groupe",
     "Private messages": "Messages privés",
-    "No users found": "Aucun utilisateur trouvé"
+    "No users found": "Aucun utilisateur trouvé",
+    "New Message": "Nouveau message",
+    "Quantity": "Quantité",
+    "Propose": "Proposer",
+    "Propose a item": "Proposer un article",
+    "Your items to share": "Vos articles à partager",
+    "I propose":"Je propose",
+    "againts":"contre",
+    "Select an item":"Sélectionner un article",
+    "You only have":"Vous n'avez que"
 
 }

@@ -7,6 +7,7 @@ import type { HttpContext } from '@adonisjs/core/http'
 import { DateTime } from 'luxon'
 import i18nManager from '@adonisjs/i18n/services/main'
 import UsersItem from '#models/users_item'
+import User from '#models/user'
 
 export default class ItemsController {
   async getListItem({ response, auth }: HttpContext) {
@@ -99,18 +100,94 @@ export default class ItemsController {
     })
   }
 
-  async getItemUser({ auth, response }: HttpContext) {
-    const user = auth.user
-    if (user) {
-      const items = await user.related('usersItem').query()
+  async getItemsUser({ auth, response }: HttpContext) {
+    const user = auth.user;
+  
+    if (!user) {
       return response.json({
-        success: true,
-        items,
-      })
+        success: false,
+        message: 'User not found',
+      });
     }
+  
+    // On récupère tous les liens User <-> Item
+    const usersItems = await user
+      .related('usersItem')
+      .query()
+      .preload('item', (itemQuery) => {
+        itemQuery.select(['id', 'name', 'description', 'img', 'price']);
+      });
+  
+    const grouped = new Map<number, any>();
+  
+    for (const ui of usersItems) {
+      const item = ui.item;
+  
+      if (grouped.has(item.id)) {
+        grouped.get(item.id).quantity += 1;
+      } else {
+        grouped.set(item.id, { ...item.serialize(), quantity: 1 });
+      }
+    }
+  
+    const userItems = Array.from(grouped.values());
     return response.json({
-      success: false,
-      message: 'User not found',
-    })
+      success: true,
+      items: userItems,
+    });
   }
+  
+   async exchangeItemUsers({ request, response }: HttpContext) {
+    const exchange = request.body()
+    console.log(exchange)
+
+    const decodeEmail = (encoded: string) => {
+      return encoded.replace(/-at-/g, '@').replace(/_at_/g, '@').replace(/_/g, '.').replace(/-dot-/g, '.')
+    }
+
+    const proposerEmail = decodeEmail(exchange.proposer)
+    const receiverEmail = decodeEmail(exchange.receiver)
+
+    const proposer = await User.findByOrFail('email', proposerEmail)
+    const receiver = await User.findByOrFail('email', receiverEmail)
+
+    const itemToGiveId = exchange.item.id
+    const itemToGiveQty = exchange.item.quantity
+
+    const itemWantedId = exchange.requestedItem.id
+    const itemWantedQty = exchange.requestedItem.quantity
+
+    // Récupération des items du proposer
+    const proposerItems = await UsersItem.query()
+      .where('user_id', proposer.id)
+      .where('item_id', itemToGiveId)
+      .limit(itemToGiveQty)
+
+    if (proposerItems.length < itemToGiveQty) {
+      return response.badRequest({ error: 'Le proposer ne possède pas assez d’objets.' })
+    }
+
+    // Récupération des items du receiver
+    const receiverItems = await UsersItem.query()
+      .where('user_id', receiver.id)
+      .where('item_id', itemWantedId)
+      .limit(itemWantedQty)
+
+    if (receiverItems.length < itemWantedQty) {
+      return response.badRequest({ error: 'Le receiver ne possède pas assez d’objets.' })
+    }
+
+    for (const item of proposerItems) {
+      item.userId = receiver.id
+      await item.save()
+    }
+
+    for (const item of receiverItems) {
+      item.userId = proposer.id
+      await item.save()
+    }
+
+    return response.ok({ message: 'Echange réussi !' })
+  }
+  
 }

@@ -3,6 +3,7 @@ import axios from "axios/index";
 import AXIOS_ERROR from "@/type/request/axios_error";
 import InfoEditUser from "@/type/feature/user/InfoEditUser";
 import Return from "@/type/request/return";
+import ItemUsers from "@/type/feature/message/itemUsers";
 
 const API_URL=process.env.EXPO_PUBLIC_API_URL as string
 
@@ -111,4 +112,25 @@ const CheckMailToken = async (mailToken:string| null): Promise<Return> => {
         }
     }
 } 
-export { getInfoUser, updateInfoUser, updatePassword, CheckMail, CheckMailToken }
+
+const getItemsUser = async (): Promise<ItemUsers[]> => {
+    const token = await AsyncStorage.getItem('token');
+    const config = {
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": token ? `${token}` : '',
+        },
+        withCredentials: true
+    }
+    try {
+        const response=await axios.get(`${API_URL}/users/getItemsUser`, config)
+        return response.data.items
+    } catch (err: unknown) {
+        if ((err as AXIOS_ERROR).message) {
+            throw new Error("Error connecting")
+        } else {
+            throw new Error("Error connecting to server")
+        }
+    }
+}
+export { getInfoUser, updateInfoUser, updatePassword, CheckMail, CheckMailToken, getItemsUser }

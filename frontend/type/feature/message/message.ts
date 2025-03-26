@@ -3,6 +3,8 @@ interface Messages {
     sender: string;
     text: string;
     timestamp?: string;
+    status?: string;
+    type?: string;
 }
 
 export default Messages;

@@ -1,4 +1,4 @@
-import { get, getDatabase, onValue, push, ref, set } from "firebase/database";
+import { get, getDatabase, onValue, push, ref, set, update } from "firebase/database";
 import Messages from "@/type/feature/message/message";
 import Users from "@/type/feature/auth/users";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -41,7 +41,7 @@ export const sendMessageGroup = async (discussionId: string, user: Users | undef
     await push(messagesRef, message);
 }
 
-export const sendPrivateMessage = async (me:Users|undefined,otherEmail: string, text: string, setMessages: (messages: Messages[]) => void) => {
+export const sendPrivateMessage = async (me:Users|undefined,otherEmail: string, text: string, setMessages: (messages: Messages[]) => void,type:string) => {
     if (!me) {
         throw new Error("Vous devez être connecté pour envoyer un message.")
     }
@@ -54,10 +54,10 @@ export const sendPrivateMessage = async (me:Users|undefined,otherEmail: string, 
         sender: me?.nickname || "Anonyme",
         text: text.trim(),
         date: new Date().toISOString(),
+        status:type
     };
-
     const messagesRef = ref(db, chatPath);
-    await push(messagesRef, message);
+    const keyMessage=(await push(messagesRef, message)).key;
 
     onValue(messagesRef, (snapshot) => {
         if (snapshot.exists()) {
@@ -66,70 +66,101 @@ export const sendPrivateMessage = async (me:Users|undefined,otherEmail: string, 
                 id: key,
                 ...data[key],
             }));
-            
             setMessages(parsedMessages);
         } else {
             setMessages([]);
         }
     });
+    console.log("service "+messagesRef)
+    return keyMessage
 }
 
 const encodeEmail = (email: string) =>
     email.replace(/\./g, "_").replace(/@/g, "-at-")
 
-export const createPrivateDiscussion = async (myEmail: string, otherEmail: string, setMessages: (messages: Messages[]) => void,huntId:string|undefined) => {
-  try {
-    const encodedEmail1 = encodeEmail(myEmail)
-    const encodedEmail2 = encodeEmail(otherEmail)
-    
-    const [user1, user2] = [encodedEmail1, encodedEmail2].sort()
-    let chatPath = ''
-
-    if (!huntId) {
-      chatPath = `${nameNoeud}/hunting_chat/${huntId}/private_chat/${user1}-${user2}`
-    }else{
-        chatPath = `${nameNoeud}/private_chat/${huntId}`
-    }
-
-    const discussionRef = ref(db, chatPath)
-
-    const snapshot = await get(discussionRef)
-
-    if (!snapshot.exists()) {
-      await set(discussionRef, {
-        participants: [user1, user2],
-        messages: {
-          0: {
-            sender: "system",
-            text: "Bienvenue dans la discussion privée !",
-            date: new Date().toISOString(),
+export const createPrivateDiscussion = async (
+    myEmail: string,
+    otherEmail: string,
+    setMessages: (messages: Messages[]) => void,
+    huntId: string | undefined
+  ) => {
+    try {
+      const encodedEmail1 = encodeEmail(myEmail);
+      const encodedEmail2 = encodeEmail(otherEmail);
+  
+      const [user1, user2] = [encodedEmail1, encodedEmail2].sort();
+      let chatPath = "";
+      if (!huntId) {
+        chatPath = `${nameNoeud}/private_chat/${user1}-${user2}`;
+      } else {
+        chatPath = `${nameNoeud}/private_chat/${huntId}`;
+      }
+  
+      const discussionRef = ref(db, chatPath);
+      const snapshot = await get(discussionRef);
+  
+      if (!snapshot.exists()) {
+        const [email1, email2] = [myEmail, otherEmail].sort();
+        await set(discussionRef, {
+          participants: [email1, email2],
+          messages: {
+            0: {
+              sender: otherEmail,
+              text: "Bienvenue dans la discussion privée !",
+              date: new Date().toISOString(),
+            },
           },
-        },
-        type: "private",
-      })
-
-    } else {
-      const messagesRef = ref(db, chatPath+"/messages");
-      onValue(messagesRef, (snapshot) => {
+          type: "private",
+        });
+      } else {
+        const messagesRef = ref(db, `${chatPath}/messages`);
+        const exchangesRef = ref(db, `${chatPath}/exchanges`);
+  
+        // On récupère les échanges en parallèle
+        const exchangesSnap = await get(exchangesRef);
+        let exchanges: any[] = [];
+  
+        if (exchangesSnap.exists()) {
+          const raw = exchangesSnap.val();
+          exchanges = Object.values(raw);
+        }
+  
+        // On écoute les messages et on ajoute le status s’il y a un échange correspondant
+        onValue(messagesRef, (snapshot) => {
           if (snapshot.exists()) {
-              const data = snapshot.val();
-              const parsedMessages: Messages[] = Object.keys(data).map((key) => ({
-                  id: key,
-                  ...data[key],
-              }));
-              setMessages(parsedMessages);
+            const data = snapshot.val();
+            const parsedMessages: Messages[] = Object.keys(data).map((key) => {
+              const msg = {
+                id: key,
+                ...data[key],
+              };
+  
+              // Cherche un échange avec la même date (à la seconde près)
+              const matchingExchange = exchanges.find(
+                (ex) => ex.createdAt && ex.createdAt === msg.date
+              );
+  
+              // Si trouvé, on ajoute le status
+              if (matchingExchange) {
+                (msg as any).status = matchingExchange.status;
+              }
+  
+              return msg;
+            });
+            setMessages(parsedMessages);
           } else {
-              setMessages([]);
+            setMessages([]);
           }
-      });
+        });
+      }
+  
+      return chatPath;
+    } catch (error) {
+      console.error("❌ Erreur lors de la création de la discussion :", error);
+      throw error;
     }
-
-    return chatPath
-  } catch (error) {
-    console.error("❌ Erreur lors de la création de la discussion :", error)
-    throw error
-  }
-}
+  };
+  
 
 
 export const searchUsersMessage = async (search: string) => {
@@ -170,21 +201,27 @@ export const getLastPrivateMessages = (myEmail: string, setLastMessages: (messag
                 .map(([chatId, chatData]: any) => {
                     const allMessages = chatData.messages || {};
                     const messagesArray = Object.values(allMessages) as any[];
+                    let participants = chatData.participants;
+
+                    const encodeEmailForFirebase = (email: string) =>
+                    email.replace(/@/g, '-at-').replace(/\./g, '_');
+
+                    const encodedUserEmail = encodeEmailForFirebase(myEmail);
+                    
+                    participants = participants?.filter((participant: string) => participant !== encodedUserEmail)[0];
                     const sorted = messagesArray.sort(
                         (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
                       );
                       const message = sorted[0];
-                      console.log("🚀 ~ file: MessageService.ts ~ line 76 ~ sendPrivateMessage ~ message", message)
-
                     return {
                         id: chatId,
-                        ...{ message , type: chatData.type },
+                        ...{ message , type: chatData.type,receiver:participants},
                     };
                 });
-                console.log("🚀 ~ file: MessageService.ts ~ line 76 ~ sendPrivateMessage ~ filteredMessages", filteredMessages)
             setLastMessages(filteredMessages);
         } else {
             setLastMessages([]);
         }
     });
 }
+

@@ -8,6 +8,7 @@ interface LastMessage{
         date: string;
     };
     type: string;
+    receiver: string;
 }
 
 export default LastMessage;

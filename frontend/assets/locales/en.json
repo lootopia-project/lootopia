@@ -157,10 +157,18 @@
     "BottomLeft": "Bottom Left",
     "BottomRight": "Bottom Right",
     "Delete rectangle": "Delete rectangle",
-    "Players": "Players",
     "Unknown sender": "Unknown sender",
     "No message": "No message",
     "Group messages": "Group messages",
     "Private messages": "Private messages",
-    "No users found": "No users found"
+    "No users found": "No users found",
+    "New Message": "New Message",
+    "Quantity": "Quantity",
+    "Propose": "Propose",
+    "Propose a item": "Propose a item",
+    "Your items to share": "Your items to share",
+    "I propose":"I propose",
+    "against":"against",
+    "Select an item":"Select an item",
+    "You only have":"You only have"
   }
