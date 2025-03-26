@@ -19,7 +19,7 @@ const Navbar = () => {
         </TouchableOpacity>
       </Link>
 
-      <Link href= "/shop/purchase-history">
+      <Link href= "/user/purchase-history">
         <TouchableOpacity style={styles.navButton}>
           <Text>{i18n.t("Purchase History")}</Text>
         </TouchableOpacity>
@@ -28,7 +28,7 @@ const Navbar = () => {
     
       <Link href="/user/item">
         <TouchableOpacity style={styles.navButton}>
-          <Text>{i18n.t("Item")}</Text>
+          <Text>{i18n.t("Items")}</Text>
         </TouchableOpacity>
       </Link>
     </View>

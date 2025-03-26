@@ -58,6 +58,8 @@ router
     router.get('/shop/getOrderDetailWithId/:id', [OrdersController, 'getOrderDetailWithId'])
     router.post('/getSpot', [SpotsController, 'getSpot'])
     router.post('/pushSpot', [SpotsController, 'pushSpotInMap'])
+    router.get('/shop/getListItemUser', [ItemsController, 'getListItemUser'])
+    router.post('/shop/addItemToShop', [ItemsController, 'addItemToShop'])
   })
   .use([
     middleware.auth({

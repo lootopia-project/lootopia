@@ -22,7 +22,7 @@ export default class Order extends BaseModel {
 
   @belongsTo(() => Users)
   declare usersOrder: BelongsTo<typeof Users>
-  
+
   @hasMany(() => LogHistory)
   declare logHistory: HasMany<typeof LogHistory>
 }

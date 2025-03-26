@@ -11,7 +11,8 @@ export default class extends BaseSeeder {
         description: 'A key that can open the door to the abyss',
         price: 1000,
         rarityId: 1,
-        
+        typeId: 1,
+        shop: true,
       },
       {
         id: 2,
@@ -20,6 +21,8 @@ export default class extends BaseSeeder {
         description: 'An hourglass that can control time',
         price: 500,
         rarityId: 2,
+        typeId: 3,
+        shop: true,
       },
       {
         id: 3,
@@ -28,6 +31,8 @@ export default class extends BaseSeeder {
         description: 'A compass that can show the way to the lost',
         price: 200,
         rarityId: 3,
+        typeId: 3,
+        shop: true,
       },
       {
         id: 4,
@@ -36,6 +41,8 @@ export default class extends BaseSeeder {
         description: 'A book that contains all the knowledge of the world',
         price: 100,
         rarityId: 4,
+        typeId: 2,
+        shop: true,
       },
       {
         id: 5,
@@ -44,6 +51,8 @@ export default class extends BaseSeeder {
         description: 'A pair of eyes that can see the unseen',
         price: 50,
         rarityId: 3,
+        typeId: 2,
+        shop: true,
       },
       {
         id: 6,
@@ -52,6 +61,8 @@ export default class extends BaseSeeder {
         description: 'A mirror that can show the true self',
         price: 20,
         rarityId: 4,
+        typeId: 2,
+        shop: true,
       },
       {
         id: 7,
@@ -60,6 +71,8 @@ export default class extends BaseSeeder {
         description: 'A lantern that can show the past',
         price: 10,
         rarityId: 1,
+        typeId: 1,
+        shop: false,
       },
       {
         id: 8,
@@ -68,6 +81,7 @@ export default class extends BaseSeeder {
         description: 'A ring that can protect the wearer',
         price: 5,
         rarityId: 2,
+        shop: false,
       },
       {
         id: 9,
@@ -76,6 +90,8 @@ export default class extends BaseSeeder {
         description: 'A coin that can whisper the future',
         price: 1,
         rarityId: 3,
+        typeId: 1,
+        shop: true,
       },
     ])
   }

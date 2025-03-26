@@ -50,7 +50,7 @@ const OrderDetail = () => {
 
     return (
         <View className="flex-1 p-4 bg-gray-100">
-            <Link href="/shop/purchase-history" asChild>
+            <Link href="/user/purchase-history" asChild>
                 <TouchableOpacity className="flex-row items-center mb-4">
                 <ArrowLeftIcon size={24} color="black" />
                     <Text className="ml-2 text-lg font-semibold text-gray-700">
@@ -78,7 +78,7 @@ const OrderDetail = () => {
                             <Text className="text-gray-700">{item.price} 💰</Text>
                         </View>
                          <Text className="text-gray-500 text-sm text-right w-60">
-                            {i18n.t(item.item.description)}
+                            {item.item.description}
                         </Text>
                     </View>
                 )}

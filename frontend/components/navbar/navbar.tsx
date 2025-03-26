@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity, useColorScheme, StatusBar, SafeAreaView, StyleSheet, Image, Platform, useWindowDimensions } from "react-native";
 import { Colors } from "@/constants/Colors";
 import { Feather } from "@expo/vector-icons";
-import { Link, usePathname } from "expo-router";
+import { Link, usePathname, router } from "expo-router";
 import { useAuth } from "@/hooks/providers/AuthProvider";
 import { useLanguage } from "@/hooks/providers/LanguageProvider";
 import LanguageSwitcher from "../lang";
@@ -40,7 +40,10 @@ const Navbar = () => {
   const hangleLogout = async () => {
     try {
 
-      await logout();
+      const response = await logout();
+      if (response.message) {
+        router.push("/");
+      }
     
     } catch (error) {
       setErrorMessage(i18n.t("An error occurred while logging out"));
@@ -146,11 +149,6 @@ const Navbar = () => {
             <View style={styles.mobileMenu}>
               {isAuthenticated ?
                 <>
-                  <TouchableOpacity>
-                    <Link href={"/map"} style={[styles.mobileMenuText, { color: Colors[theme].text }]}>
-                      {i18n.t("truc")}
-                    </Link>
-                  </TouchableOpacity>
                   <TouchableOpacity>
                     <Link href={"/user/edit"} style={[styles.mobileMenuText, { color: Colors[theme].text }]}>
                       {i18n.t("Edit User")}

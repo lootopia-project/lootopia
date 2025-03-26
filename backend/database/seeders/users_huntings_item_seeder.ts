@@ -1,7 +1,24 @@
 import { BaseSeeder } from '@adonisjs/lucid/seeders'
-import { UsersHuntingsItemFactory } from '#database/factories/users_huntings_item_factory'
+import UsersHuntingItem from '#models/users_huntings_item'
+import Item from '#models/item'
+import { faker } from '@faker-js/faker'
+
 export default class extends BaseSeeder {
-  async run() {
-    await UsersHuntingsItemFactory.createMany(15)
+  public async run() {
+    const items = await Item.all()
+
+    const records = Array.from({ length: 20 }, () => {
+      const item = faker.helpers.arrayElement(items)
+      return {
+        history: false,
+        huntingId: null,
+        itemId: item.id,
+        userId: faker.number.int({ min: 1, max: 3 }),
+        shop: false,
+        price: item.price,
+      }
+    })
+
+    await UsersHuntingItem.createMany(records)
   }
 }

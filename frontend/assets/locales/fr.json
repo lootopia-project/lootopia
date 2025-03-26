@@ -157,5 +157,11 @@
     "BottomLeft": "Bas Gauche",
     "BottomRight": "Bas Droite",
     "Delete rectangle": "Supprimer le rectangle",
-    "Items": "Objets"    
+    "Items": "Objets",
+    "Back to shop": "Retour vers la Boutique",
+    "Add to the shop": "Ajouter à la Boutique",
+    "Item already in shop": "Objet déjà dans la Boutique",
+    "Item added to shop": "Objet ajouté à la Boutique",
+    "Change the price if you want": "Changez le prix si vous le souhaitez",
+    "Price is invalid": "Le prix est invalide"
 }

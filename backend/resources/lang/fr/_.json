@@ -38,5 +38,7 @@
     "Huntings List Succuess": "Liste des chasses récupérée avec succès",
     "Error getting huntings": "Erreur lors de la récupération des chasses",
     "Public Huntings List Succuess": "Liste des chasses publiques récupérée avec succès",
-    "Error getting public huntings": "Erreur lors de la récupération des chasses publiques"
+    "Error getting public huntings": "Erreur lors de la récupération des chasses publiques",
+    "Item not found": "Article non trouvé",
+    "You have bought {numberItem} items for {price} crowns from user": "Vous avez acheté {numberItem} articles pour {price} couronnes d'un autre utilisateur"
 }

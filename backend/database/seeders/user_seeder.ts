@@ -10,7 +10,7 @@ export default class extends BaseSeeder {
         name: 'anthony',
         surname: 'mathieu',
         isPartner: true,
-        crowns: 100,
+        crowns: 1000000,
         phone: '1234567891',
         img: 'https://lootopia.blob.core.windows.net/lootopia-photos/user.png',
         ranking: 1,

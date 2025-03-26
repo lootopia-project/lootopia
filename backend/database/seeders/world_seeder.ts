@@ -10,7 +10,7 @@ export default class extends BaseSeeder {
       {
         id: 2,
         name: 'Real',
-      }
+      },
     ])
   }
 }
