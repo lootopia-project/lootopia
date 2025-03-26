@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from "react";
-import { FlatList, View, Text, TouchableOpacity } from "react-native";
+import { FlatList, View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import ViewMessageProps from "../../type/feature/message/ViewMessageProps";
 
 const ViewMessage = (props: ViewMessageProps) => {
@@ -23,11 +23,11 @@ const ViewMessage = (props: ViewMessageProps) => {
   useEffect(() => {
     const timeout = setTimeout(() => {
       if (flatListRef.current) {
-        flatListRef.current.scrollToEnd({ animated: false }); 
+        flatListRef.current.scrollToEnd({ animated: false });
       }
-    }, 100); 
-  
-    return () => clearTimeout(timeout); 
+    }, 100);
+
+    return () => clearTimeout(timeout);
   }, []);
 
   return (
@@ -48,33 +48,58 @@ const ViewMessage = (props: ViewMessageProps) => {
         const discussionKey = `${email1}-${email2}`;
 
         return (
-          <View className={`flex w-full mb-2 ${isMe ? "items-end" : "items-start"}`}>
+          <View
+            style={{
+              width: "100%",
+              paddingHorizontal: 8,
+              marginBottom: 8,
+              alignItems: isMe ? "flex-end" : "flex-start",
+            }}
+          >
             <View
-              className={`rounded-xl px-4 py-2 max-w-[80%] ${isMe ? "bg-blue-500" : "bg-gray-300"}`}
+              style={{
+                backgroundColor: isMe ? "#3B82F6" : "#E5E7EB",
+                alignSelf: isMe ? "flex-end" : "flex-start",
+                paddingVertical: 12,
+                paddingHorizontal: 16,
+                maxWidth: "80%",
+                borderTopRightRadius: isMe ? 0 : 16,
+                borderTopLeftRadius: isMe ? 16 : 0,
+                borderBottomLeftRadius: 16,
+                borderBottomRightRadius: 16,
+                shadowColor: "#000",
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.2,
+                shadowRadius: 3,
+                elevation: 2,
+              }}
             >
-              <Text className={`text-sm ${isMe ? "text-white" : "text-black"}`}>
+              <Text className={`text-base ${isMe ? "text-white" : "text-black"}`}>
                 {item.text}
               </Text>
 
+              {/* Gestion des échanges */}
               {isProposition && (
                 <>
                   {item.status === "pending" && !isMe && (
-                    <View className="flex-row mt-2 justify-end space-x-2">
+                    <View style={styles.actionContainer}>
                       <TouchableOpacity
-                        className="bg-green-600 px-3 py-1 rounded-md"
+                        style={[styles.button, styles.acceptButton]}
                         onPress={() => respondToExchange(discussionKey, "accepted", item.id)}
                       >
-                        <Text className="text-white text-sm">J'accepte</Text>
+                        <Text style={styles.buttonText}>J'accepte</Text>
                       </TouchableOpacity>
                       <TouchableOpacity
-                        className="bg-red-600 px-3 py-1 rounded-md"
+                        style={[styles.button, styles.rejectButton]}
                         onPress={() => respondToExchange(discussionKey, "rejected", item.id)}
                       >
-                        <Text className="text-white text-sm">Je refuse</Text>
+                        <Text style={styles.buttonText}>Je refuse</Text>
                       </TouchableOpacity>
                     </View>
                   )}
 
+
+                  {/* Statut : en attente (expéditeur) */}
                   {item.status === "pending" && isMe && (
                     <View className="mt-2 self-end">
                       <Text className="text-sm font-semibold px-2 py-1 rounded-md bg-yellow-200 text-yellow-800">
@@ -83,14 +108,14 @@ const ViewMessage = (props: ViewMessageProps) => {
                     </View>
                   )}
 
+                  {/* Statut : accepté ou refusé (tout le monde) */}
                   {(item.status === "accepted" || item.status === "rejected") && (
                     <View className="mt-2 self-end">
                       <Text
-                        className={`text-sm font-semibold px-2 py-1 rounded-md ${
-                          item.status === "accepted"
+                        className={`text-sm font-semibold px-2 py-1 rounded-md ${item.status === "accepted"
                             ? "bg-green-200 text-green-800"
                             : "bg-red-200 text-red-800"
-                        }`}
+                          }`}
                       >
                         {item.status === "accepted" ? "✅ Accepté" : "❌ Refusé"}
                       </Text>
@@ -99,18 +124,45 @@ const ViewMessage = (props: ViewMessageProps) => {
                 </>
               )}
             </View>
-            <Text className="text-xs text-gray-500 mt-1">
-              {item.timestamp &&
-                new Date(item.timestamp).toLocaleTimeString([], {
+
+            <Text className="text-xs text-gray-400 mt-1">
+              {item.update &&
+                new Date(item.update).toLocaleTimeString([], {
                   hour: "2-digit",
                   minute: "2-digit",
                 })}
             </Text>
           </View>
-        );
+        )
+
       }}
     />
   );
 };
+
+const styles = StyleSheet.create({
+  actionContainer: {
+    flexDirection: "row",
+    marginTop: 12,
+    justifyContent: "flex-end",
+    gap: 8,
+  },
+  button: {
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 8,
+  },
+  acceptButton: {
+    backgroundColor: "#16a34a", // green-600
+  },
+  rejectButton: {
+    backgroundColor: "#dc2626", // red-600
+  },
+  buttonText: {
+    color: "white",
+    fontSize: 14,
+    fontWeight: "bold",
+  },
+});
 
 export default ViewMessage;

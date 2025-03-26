@@ -93,15 +93,29 @@ const ItemExchangeCard: React.FC<ItemExchangeCardProps> = ({
         setShowItemModal(false);
     };
 
+    console.log("ItemExchangeCard", item);
+
 
     return (
         <View className="border-b border-gray-300 mb-4 pb-4">
             <View className="flex-row items-center mb-2">
                 <Image
-                    source={{ uri: item.img }}
-                    className="w-12 h-12 rounded-md mr-3"
+                    source={{
+                        uri: item.img && item.img.startsWith("http")
+                            ? item.img
+                            : "https://cdn-icons-png.flaticon.com/512/8140/8140405.png",
+                    }}
+                    style={{
+                        width: 48,
+                        height: 48,
+                        borderRadius: 8,
+                        marginRight: 12,
+                    }}
                     resizeMode="contain"
                 />
+
+
+
                 <View className="flex-1">
                     <Text className="text-black font-semibold">{item.name}</Text>
                     <Text className="text-gray-500 text-sm">

@@ -62,8 +62,8 @@ const PreviewMessage: React.FC<PreviewMessageProps> = ({
           <Text className="ml-2 text-lg font-bold text-black">{i18n.t("Back")}</Text>
         </TouchableOpacity>
 
-        <View className="flex-row justify-around mb-4">
-          <TouchableOpacity onPress={() => setActiveTab("group")}>
+        <View className="flex-row justify-center space-x-4 mb-4">
+        <TouchableOpacity onPress={() => setActiveTab("group")}>
             <Text className={`text-lg font-bold ${activeTab === "group" ? "text-blue-600" : "text-gray-500"}`}>
               {i18n.t("Group messages")}
             </Text>

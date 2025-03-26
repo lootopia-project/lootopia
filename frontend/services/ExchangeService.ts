@@ -57,8 +57,7 @@ export const proposeExchange = async (discussionKey: string, exchangeData: any) 
     });
 
     if(status==="accepted"){
-
-  
+    }
     // ✅ Mise à jour du message lié à l’échange
     if (messageId) {
       const messageRef = ref(
@@ -69,7 +68,7 @@ export const proposeExchange = async (discussionKey: string, exchangeData: any) 
       } else {
         console.warn("⚠️ Aucun messageId associé à cet échange.");
       }
-    }
+    
   };
 
 

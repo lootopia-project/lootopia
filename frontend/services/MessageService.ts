@@ -53,7 +53,7 @@ export const sendPrivateMessage = async (me:Users|undefined,otherEmail: string, 
     const message = {
         sender: me?.nickname || "Anonyme",
         text: text.trim(),
-        date: new Date().toISOString(),
+        timestamp: new Date().toISOString(),
         status:type
     };
     const messagesRef = ref(db, chatPath);
