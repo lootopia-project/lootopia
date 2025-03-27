@@ -155,6 +155,11 @@ const Navbar = () => {
                     </Link>
                   </TouchableOpacity>
                   <TouchableOpacity>
+                    <Link href={"/user/item"} style={[styles.mobileMenuText, { color: Colors[theme].text }]}>
+                      {i18n.t("Items")}
+                    </Link>
+                  </TouchableOpacity>
+                  <TouchableOpacity>
                     <Link href={"/user/2fa"} style={[styles.mobileMenuText, { color: Colors[theme].text }]}>
                       {i18n.t("Multi-Factor Authentication")}
                     </Link>

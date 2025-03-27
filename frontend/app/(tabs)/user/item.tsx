@@ -50,11 +50,8 @@ const ItemView = () => {
 
     return (
         <View className="flex-1 items-center">
-            <FlatList
-                data={items}
-                numColumns={5}
-                keyExtractor={(item) => item.id.toString()}
-                renderItem={({ item }) => (
+            <View className='flex flex-row flex-wrap justify-center mb-20'>
+                {items.map((item) => (
                     <View className="bg-white rounded-xl p-4 m-2 w-40 items-center shadow-lg justify-between">
                         <Image source={{ uri: item.img }} className="w-20 h-20 mb-2" resizeMode="contain" />
                         <Text className="text-lg font-semibold text-center">{item.name}</Text>
@@ -72,8 +69,8 @@ const ItemView = () => {
                             <Text className="text-white font-bold whitespace-nowrap">{i18n.t("Add to the shop")}</Text>
                         </TouchableOpacity>
                     </View>
-                )}
-            />
+                ))}
+            </View>
             <Modal
                 transparent
                 animationType="fade"

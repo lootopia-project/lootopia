@@ -163,5 +163,9 @@
     "Item already in shop": "Item already in shop",
     "Item added to shop": "Item added to shop",
     "Change the price if you want": "Change the price if you want",
-    "Price is invalid": "Price is invalid"
+    "Price is invalid": "Price is invalid",
+    "All items": "All items",
+    "From shop only": "From shop only",
+    "Not from shop": "From players only",
+    "Search": "Search"
   }

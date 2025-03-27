@@ -163,5 +163,9 @@
     "Item already in shop": "Objet déjà dans la Boutique",
     "Item added to shop": "Objet ajouté à la Boutique",
     "Change the price if you want": "Changez le prix si vous le souhaitez",
-    "Price is invalid": "Le prix est invalide"
+    "Price is invalid": "Le prix est invalide",
+    "All items": "Tous les objets",
+    "From shop only": "Seulement de la Boutique",
+    "Not from shop": "Seulement des Joueurs",
+    "Search": "Rechercher"
 }

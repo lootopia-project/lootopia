@@ -6,6 +6,7 @@ import type { HttpContext } from '@adonisjs/core/http'
 import { DateTime } from 'luxon'
 import i18nManager from '@adonisjs/i18n/services/main'
 import UsersHuntingItem from '#models/users_huntings_item'
+import User from '#models/user'
 
 export default class ItemsController {
   async getListItem({ response, auth }: HttpContext) {
@@ -120,7 +121,7 @@ export default class ItemsController {
     //buy items from other users
     if (nonShopItems.length > 0) {
       const nonShopItemIds = nonShopItems.map((item: { id: number }) => item.id)
-      const items = await UsersHuntingItem.query().preload('item').whereIn('id', nonShopItemIds)
+      const items = await UsersHuntingItem.query().preload('user').preload('item').whereIn('id', nonShopItemIds)
       const totalPrice = items.reduce((acc, item) => acc + item.price, 0)
       if (user.crowns < totalPrice) {
         return response.json({
@@ -159,6 +160,10 @@ export default class ItemsController {
           itemId: item.item.id,
           price: item.price,
         })
+        //update crowns of the user who sold the item      
+        await User.query()
+          .where('id', item.user.id)
+          .update({ crowns: item.user.crowns + item.price })
       }
     }
     await user.save()
