@@ -45,5 +45,7 @@
     "User not found": "Utilisateur introuvable",
     "✅Accepted": "✅Accepté",
     "❌Rejected": "❌Rejeté",
-    "Waiting for a response": "En attente d'une réponse"
+    "Waiting for a response": "En attente d'une réponse",
+    "You have exchanged {numberItem} items with {proposer}": "Vous avez échangé {numberItem} articles avec {proposer}",
+    "You have exchanged {numberItem} items with {receiver}": "Vous avez échangé {numberItem} articles avec {receiver}"
 }

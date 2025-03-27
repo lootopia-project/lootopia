@@ -44,5 +44,7 @@
     "User not found": "User not found",
     "✅Accepted": "✅Accepted",
     "❌Rejected": "❌Rejected",
-    "Waiting for a response": "Waiting for a response"
+    "Waiting for a response": "Waiting for a response",
+    "You have exchanged {numberItem} items with {receiver}": "You have exchanged {numberItem} items with {receiver}",
+    "You have received {numberItem} items from {proposer}": "You have received {numberItem} items from {proposer}"
 }

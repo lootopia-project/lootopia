@@ -181,6 +181,14 @@ export default class ItemsController {
         await itemInstance.save();
       }
     }
+
+      await LogHistory.create({
+        userId: proposer.id,
+        log: i18n.t('_.You have exchanged {numberItem} items with {receiver}', {
+          numberItem: exchange.itemsOffered.length,
+          receiver: receiver.nickname,
+        }),
+      });
   
     for (const item of exchange.itemsRequested) {
       const receiverItems = await UsersItem.query()
@@ -199,6 +207,14 @@ export default class ItemsController {
         await itemInstance.save();
       }
     }
+
+    await LogHistory.create({
+      userId: receiver.id,
+      log: i18n.t('_.You have exchanged {numberItem} items with {proposer}', {
+        numberItem: exchange.itemsRequested.length,
+        proposer: proposer.nickname,
+      }),
+    });
   
     return response.json({ message: i18n.t('_.Items exchanged successfully'), success: true });
   }
