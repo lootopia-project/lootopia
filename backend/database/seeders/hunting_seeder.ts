@@ -13,7 +13,7 @@ export default class extends BaseSeeder {
     const kevin: User = await db.from('users').where('nickname', 'kevin').first()
     const anthony: User = await db.from('users').where('nickname', 'anthony').first()
     const yassine: User = await db.from('users').where('nickname', 'yassine').first()
-    const nameNoeud=env.get('NAME_NOEUD_FIREBASE')
+    const nameNoeud = env.get('NAME_NOEUD_FIREBASE')
 
     if (!kevin || !anthony || !yassine) {
       console.error('Un ou plusieurs utilisateurs sont introuvables.')
@@ -212,32 +212,32 @@ export default class extends BaseSeeder {
 
     // ✅ Synchro des chasses vers Firebase Realtime Database
     const treasureHuntsRef = adminDatabase.ref(nameNoeud)
-    await treasureHuntsRef.remove(); // 🧹 Vide tout le contenu du noeud `nameNoeud`
-
+    await treasureHuntsRef.remove() // 🧹 Vide tout le contenu du noeud `nameNoeud`
 
     for (const hunt of huntings) {
       const organizer =
-        hunt.userId === kevin.id ? 'kevin' :
-        hunt.userId === anthony.id ? 'anthony' :
-        hunt.userId === yassine.id ? 'yassine' : 'unknown'
+        hunt.userId === kevin.id
+          ? 'kevin'
+          : hunt.userId === anthony.id
+            ? 'anthony'
+            : hunt.userId === yassine.id
+              ? 'yassine'
+              : 'unknown'
 
-        await treasureHuntsRef
-        .child(`hunting_chat/${hunt.id}`)
-        .set({
-          id: hunt.id,
-          title: hunt.title,
-          description: hunt.description,
-          organizer,
-          messages: {
-            '0': {
-              sender: organizer,
-              text: 'Bienvenue dans la chasse au trésor !',
-              timestamp: new Date().toISOString(),
-            },
+      await treasureHuntsRef.child(`hunting_chat/${hunt.id}`).set({
+        id: hunt.id,
+        title: hunt.title,
+        description: hunt.description,
+        organizer,
+        messages: {
+          '0': {
+            sender: organizer,
+            text: 'Bienvenue dans la chasse au trésor !',
+            timestamp: new Date().toISOString(),
           },
-          type: 'group',
-        })
-      
+        },
+        type: 'group',
+      })
     }
   }
 }

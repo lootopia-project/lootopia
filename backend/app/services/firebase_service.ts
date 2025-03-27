@@ -8,7 +8,7 @@ export const getLastMessagesForHunts = async (
   try {
     const db = adminDatabase
     const results: Record<string, any>[] = []
-    const nameNoeud=env.get('NAME_NOEUD_FIREBASE')
+    const nameNoeud = env.get('NAME_NOEUD_FIREBASE')
 
     for (const huntId of huntIds) {
       const ref = db.ref(`${nameNoeud}/hunting_chat/${huntId}/messages`)
@@ -41,7 +41,7 @@ export const getLastMessagesForHunts = async (
               text: lastMessage.text,
               date: lastMessage.timestamp,
             },
-            type:type
+            type: type,
           })
         } else {
           results.push({

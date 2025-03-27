@@ -74,7 +74,6 @@ export default class HuntingsController {
         ...participatedHuntings.map((userHunting) => userHunting.huntingId),
       ]
 
-
       const huntMessages = await getLastMessagesForHunts(huntIds, 1)
 
       let lastMessage = huntIds.map((id) => {

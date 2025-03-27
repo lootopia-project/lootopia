@@ -60,7 +60,7 @@ router
     router.post('/pushSpot', [SpotsController, 'pushSpotInMap'])
     router.get('/users/getItemsUser', [ItemsController, 'getItemsUser'])
     router.get('users/searchUsers', [UsersController, 'searchUsers'])
-    router.post ('/users/exchangeItemUsers', [ItemsController, 'exchangeItemUsers'])
+    router.post('/users/exchangeItemUsers', [ItemsController, 'exchangeItemUsers'])
   })
   .use([
     middleware.auth({
