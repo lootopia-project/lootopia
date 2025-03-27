@@ -3,6 +3,7 @@ import Users from "@/type/feature/auth/users";
 import LastMessage from "@/type/feature/message/LastMessage";
 import { FontAwesome } from "@expo/vector-icons"
 import { TouchableOpacity, View, Text, FlatList, Modal, TextInput, Image, Button } from "react-native"
+import { useAuth } from "@/hooks/providers/AuthProvider";
 
 interface PreviewMessageProps {
     lastMessages: LastMessage[];
@@ -16,7 +17,8 @@ interface PreviewMessageProps {
     startNewDiscussion: (user: Users) => void;
     redirectWelcome: () => void;
     handleConversationClick: (huntId: string, receiver: string) => void;
-  }
+}
+
 const PreviewMessage: React.FC<PreviewMessageProps> = ({
     lastMessages,
     setActiveTab,
@@ -30,40 +32,41 @@ const PreviewMessage: React.FC<PreviewMessageProps> = ({
     redirectWelcome,
     handleConversationClick
 }) => {
-      const { i18n } = useLanguage();
+    const { i18n } = useLanguage();
+    const renderItem = ({ item }: { item: LastMessage }) => {
 
-        const renderItem = ({ item }: { item: LastMessage }) => (
-          <TouchableOpacity
-            className="flex-row items-center p-3 border-b border-gray-300"
-            onPress={() => handleConversationClick(String(item.id), item.receiver)}
-          >
-            {item.role === "organizer" && <FontAwesome name="star" size={20} color="gold" />}
-            <View className="flex-1 ml-3">
-              <Text className="font-bold text-base text-black">
-                {activeTab === "private" ? item.receiver : item.message?.sender}
-              </Text>
-              <Text className="text-sm text-gray-600" numberOfLines={1} ellipsizeMode="tail">
-                {item.message?.text || i18n.t("No message")}
-              </Text>
-            </View>
-            <Text className="text-sm text-gray-400 ml-2">
-              {item.message?.date
-                ? new Date(item.message.date).toLocaleDateString()
-                : i18n.t("No date")}
+      return (
+        <TouchableOpacity
+          className="flex-row items-center p-3 border-b border-gray-300"
+          onPress={() => handleConversationClick(String(item.id), item.receiver)}
+        >
+          {item.role === "organizer" && <FontAwesome name="star" size={20} color="gold" />}
+          <View className="flex-1 ml-3">
+            <Text className="font-bold text-base text-black">
+            {activeTab === "private" ? item.receiver : item.message?.sender}
             </Text>
-          </TouchableOpacity>
-        );
-      
-    
+            <Text className="text-sm text-gray-600" numberOfLines={1} ellipsizeMode="tail">
+              {item.message?.text || i18n.t("No message")}
+            </Text>
+          </View>
+          <Text className="text-sm text-gray-400 ml-2">
+            {item.message?.date
+              ? new Date(item.message.date).toLocaleDateString()
+              : i18n.t("No date")}
+          </Text>
+        </TouchableOpacity>
+      );
+    };
+
     return (
-        <View className="flex-1 bg-gray-100 p-4">
+      <View className="flex-1 bg-gray-100 p-4">
         <TouchableOpacity className="flex-row items-center mb-4" onPress={redirectWelcome}>
           <FontAwesome name="arrow-left" size={20} color="black" />
           <Text className="ml-2 text-lg font-bold text-black">{i18n.t("Back")}</Text>
         </TouchableOpacity>
 
         <View className="flex-row justify-center space-x-4 mb-4">
-        <TouchableOpacity onPress={() => setActiveTab("group")}>
+          <TouchableOpacity onPress={() => setActiveTab("group")}>
             <Text className={`text-lg font-bold ${activeTab === "group" ? "text-blue-600" : "text-gray-500"}`}>
               {i18n.t("Group messages")}
             </Text>
@@ -135,7 +138,7 @@ const PreviewMessage: React.FC<PreviewMessageProps> = ({
           </View>
         </Modal>
       </View>
-    )
+    );
 }
 
-export default PreviewMessage
+export default PreviewMessage;

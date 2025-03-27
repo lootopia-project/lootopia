@@ -9,6 +9,7 @@ interface LastMessage{
     };
     type: string;
     receiver: string;
+    participants: string[];
 }
 
 export default LastMessage;

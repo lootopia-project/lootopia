@@ -38,5 +38,12 @@
     "Huntings List Succuess": "Liste des chasses récupérée avec succès",
     "Error getting huntings": "Erreur lors de la récupération des chasses",
     "Public Huntings List Succuess": "Liste des chasses publiques récupérée avec succès",
-    "Error getting public huntings": "Erreur lors de la récupération des chasses publiques"
+    "Error getting public huntings": "Erreur lors de la récupération des chasses publiques",
+    "The receiver doesn't have enough of the item": "Le destinataire n'a pas assez de l'article",
+    "Items exchanged successfully": "Articles échangés avec succès",
+    "The proposer doesn't have enough of the item": "Le demandeur n'a pas assez de l'article",
+    "User not found": "Utilisateur introuvable",
+    "✅Accepted": "✅Accepté",
+    "❌Rejected": "❌Rejeté",
+    "Waiting for a response": "En attente d'une réponse"
 }

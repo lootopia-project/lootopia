@@ -37,5 +37,12 @@
     "Huntings List Succuess": "Huntings list retrieved successfully",
     "Error getting huntings": "Error getting huntings",
     "Public Huntings List Succuess": "Public huntings list retrieved successfully",
-    "Error getting public huntings": "Error getting public huntings"
+    "Error getting public huntings": "Error getting public huntings",
+    "The receiver doesn't have enough of the item": "The receiver doesn't have enough of the item",
+    "Items exchanged successfully": "Items exchanged successfully",
+    "The proposer doesn't have enough of the item": "The proposer doesn't have enough of the item",
+    "User not found": "User not found",
+    "✅Accepted": "✅Accepted",
+    "❌Rejected": "❌Rejected",
+    "Waiting for a response": "Waiting for a response"
 }

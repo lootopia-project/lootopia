@@ -170,6 +170,9 @@
     "I propose":"Je propose",
     "againts":"contre",
     "Select an item":"Sélectionner un article",
-    "You only have":"Vous n'avez que"
+    "You only have":"Vous n'avez que",
+    "I accept":"J'accepte",
+    "I refuse":"Je refuse",
+    "Waiting for a response": "En attente d'une réponse"
 
 }

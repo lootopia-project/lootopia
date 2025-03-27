@@ -110,7 +110,6 @@ export default class ItemsController {
       });
     }
   
-    // On récupère tous les liens User <-> Item
     const usersItems = await user
       .related('usersItem')
       .query()
@@ -137,57 +136,72 @@ export default class ItemsController {
     });
   }
   
-   async exchangeItemUsers({ request, response }: HttpContext) {
-    const exchange = request.body()
-    console.log(exchange)
-
+  async exchangeItemUsers({ auth, request, response }: HttpContext) {
+    const user = auth.user;
+    
+    if (!user) {
+      return response.json({
+        success: false,
+        message: 'User not found',
+      });
+    }
+    const i18n = i18nManager.locale(user.lang)
+  
+    const exchange = request.body();
+    console.log(exchange);
+  
     const decodeEmail = (encoded: string) => {
-      return encoded.replace(/-at-/g, '@').replace(/_at_/g, '@').replace(/_/g, '.').replace(/-dot-/g, '.')
+      return encoded
+        .replace(/-at-/g, '@')
+        .replace(/_at_/g, '@')
+        .replace(/_/g, '.')
+        .replace(/-dot-/g, '.');
+    };
+  
+    const proposerEmail = decodeEmail(exchange.proposer);
+    const receiverEmail = decodeEmail(exchange.receiver);
+  
+    const proposer = await User.findByOrFail('email', proposerEmail);
+    const receiver = await User.findByOrFail('email', receiverEmail);
+  
+    for (const item of exchange.itemsOffered) {
+      const proposerItems = await UsersItem.query()
+        .where('user_id', proposer.id)
+        .where('item_id', item.id)
+        .limit(item.quantity);
+  
+      if (proposerItems.length < item.quantity) {
+        return response.json({
+          message: i18n.t("_.The proposer doesn't have enough of the item")+item.name,
+        });
+      }
+  
+      for (const itemInstance of proposerItems) {
+        itemInstance.userId = receiver.id;
+        await itemInstance.save();
+      }
     }
-
-    const proposerEmail = decodeEmail(exchange.proposer)
-    const receiverEmail = decodeEmail(exchange.receiver)
-
-    const proposer = await User.findByOrFail('email', proposerEmail)
-    const receiver = await User.findByOrFail('email', receiverEmail)
-
-    const itemToGiveId = exchange.item.id
-    const itemToGiveQty = exchange.item.quantity
-
-    const itemWantedId = exchange.requestedItem.id
-    const itemWantedQty = exchange.requestedItem.quantity
-
-    // Récupération des items du proposer
-    const proposerItems = await UsersItem.query()
-      .where('user_id', proposer.id)
-      .where('item_id', itemToGiveId)
-      .limit(itemToGiveQty)
-
-    if (proposerItems.length < itemToGiveQty) {
-      return response.badRequest({ error: 'Le proposer ne possède pas assez d’objets.' })
+  
+    for (const item of exchange.itemsRequested) {
+      const receiverItems = await UsersItem.query()
+        .where('user_id', receiver.id)
+        .where('item_id', item.id)
+        .limit(item.quantity);
+  
+      if (receiverItems.length < item.quantity) {
+        return response.json({
+          message: i18n.t("_.The receiver doesn't have enough of the item")+item.name,
+        });
+      }
+  
+      for (const itemInstance of receiverItems) {
+        itemInstance.userId = proposer.id;
+        await itemInstance.save();
+      }
     }
-
-    // Récupération des items du receiver
-    const receiverItems = await UsersItem.query()
-      .where('user_id', receiver.id)
-      .where('item_id', itemWantedId)
-      .limit(itemWantedQty)
-
-    if (receiverItems.length < itemWantedQty) {
-      return response.badRequest({ error: 'Le receiver ne possède pas assez d’objets.' })
-    }
-
-    for (const item of proposerItems) {
-      item.userId = receiver.id
-      await item.save()
-    }
-
-    for (const item of receiverItems) {
-      item.userId = proposer.id
-      await item.save()
-    }
-
-    return response.ok({ message: 'Echange réussi !' })
+  
+    return response.json({ message: i18n.t('_.Items exchanged successfully'), success: true });
   }
+  
   
 }

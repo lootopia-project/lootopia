@@ -170,5 +170,10 @@
     "I propose":"I propose",
     "against":"against",
     "Select an item":"Select an item",
-    "You only have":"You only have"
+    "You only have":"You only have",
+    "I accept":"I accept",
+    "I refuse":"I refuse",
+    "✅Accepted": "✅Accepted",
+    "❌Refused": "❌Refused",
+    "Waiting for a response": "Waiting for a response"
   }

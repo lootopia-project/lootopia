@@ -56,6 +56,7 @@ export const sendPrivateMessage = async (me:Users|undefined,otherEmail: string, 
         timestamp: new Date().toISOString(),
         status:type
     };
+    console.log(message)
     const messagesRef = ref(db, chatPath);
     const keyMessage=(await push(messagesRef, message)).key;
 
@@ -71,7 +72,6 @@ export const sendPrivateMessage = async (me:Users|undefined,otherEmail: string, 
             setMessages([]);
         }
     });
-    console.log("service "+messagesRef)
     return keyMessage
 }
 
@@ -107,7 +107,7 @@ export const createPrivateDiscussion = async (
             0: {
               sender: otherEmail,
               text: "Bienvenue dans la discussion privée !",
-              date: new Date().toISOString(),
+              timestamp: new Date().toISOString(),
             },
           },
           type: "private",
@@ -208,9 +208,9 @@ export const getLastPrivateMessages = (myEmail: string, setLastMessages: (messag
 
                     const encodedUserEmail = encodeEmailForFirebase(myEmail);
                     
-                    participants = participants?.filter((participant: string) => participant !== encodedUserEmail)[0];
+                    participants = participants?.filter((participant: string) => participant !== myEmail)[0];
                     const sorted = messagesArray.sort(
-                        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+                        (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
                       );
                       const message = sorted[0];
                     return {

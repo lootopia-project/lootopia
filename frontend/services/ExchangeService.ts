@@ -28,8 +28,9 @@ export const proposeExchange = async (discussionKey: string, exchangeData: any) 
   
     const exchangePath = `${nameNoeud}/private_chat/${discussionKey}/exchanges`;
     const exchangeRef = ref(db, exchangePath);
+
     const exchangeSnapshot = await get(exchangeRef);
-  
+
     if (!exchangeSnapshot.exists()) {
       console.warn("❌ Aucun échange trouvé pour cette discussion.");
       return;
@@ -56,8 +57,7 @@ export const proposeExchange = async (discussionKey: string, exchangeData: any) 
       updatedAt: new Date().toISOString(),
     });
 
-    if(status==="accepted"){
-    }
+  
     // ✅ Mise à jour du message lié à l’échange
     if (messageId) {
       const messageRef = ref(
@@ -65,13 +65,38 @@ export const proposeExchange = async (discussionKey: string, exchangeData: any) 
         `${nameNoeud}/private_chat/${discussionKey}/messages/${messageId}`
       );
       await update(messageRef, { status });
-      } else {
-        console.warn("⚠️ Aucun messageId associé à cet échange.");
-      }
-    
+        if(status==="accepted"){
+          const exchange = exchanges[pendingKey];
+          console.log(exchange)
+
+          exchangeItem(exchange)
+      } 
+    }
   };
 
 
+  
+  export const exchangeItem= async (exchangeData: any) => {
+    const token = await AsyncStorage.getItem("token");
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: token ? token : "",
+      },
+      withCredentials: true,
+    };
+    try {
+      const response = await axios.post(`${API_URL}/users/exchangeItemUsers`, exchangeData, config);
+      return response.data;
+    } catch (err: unknown) {
+      if ((err as AXIOS_ERROR).message) {
+        throw new Error("Error connecting");
+      } else {
+        throw new Error("Error connecting to server");
+      }
+    }
+  }
+  
   export const listenToExchanges = (chatId: string, callback: (exchangeList: any[]) => void) => {
     const db = getDatabase();
     const exchangesRef = ref(db, `private_chat/${chatId}/exchanges`);
@@ -85,24 +110,3 @@ export const proposeExchange = async (discussionKey: string, exchangeData: any) 
       }
     });
   };
-  
-export const exchangeItem= async (exchangeData: any) => {
-  const token = await AsyncStorage.getItem("token");
-  const config = {
-      headers: {
-          "Content-Type": "application/json",
-          Authorization: token ? token : "",
-      },
-      withCredentials: true,
-  };
-  try {
-      const response = await axios.post(`${API_URL}/users/exchangeItem`, exchangeData, config);
-      return response.data;
-  } catch (err: unknown) {
-      if ((err as AXIOS_ERROR).message) {
-          throw new Error("Error connecting");
-      } else {
-          throw new Error("Error connecting to server");
-      }
-  }
-}

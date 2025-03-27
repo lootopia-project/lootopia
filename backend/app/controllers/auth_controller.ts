@@ -61,6 +61,7 @@ export default class AuthController {
   }
 
   async checkIsLogin({ auth, response }: HttpContext) {
+    console.log('checkIsLogin')
     const user = auth.use('api').user
     if (user) {
       const lang = user.lang

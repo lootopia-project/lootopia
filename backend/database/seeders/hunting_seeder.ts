@@ -212,7 +212,8 @@ export default class extends BaseSeeder {
 
     // ✅ Synchro des chasses vers Firebase Realtime Database
     const treasureHuntsRef = adminDatabase.ref(nameNoeud)
-    
+    await treasureHuntsRef.remove(); // 🧹 Vide tout le contenu du noeud `nameNoeud`
+
 
     for (const hunt of huntings) {
       const organizer =
