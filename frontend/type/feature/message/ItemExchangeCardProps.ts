@@ -4,6 +4,7 @@ interface ItemExchangeCardProps {
     item: { id: number; name: string; quantity: number; img: string };
     allItems: { id: number; name: string }[];
     usersConnected: Users;
+    itemUser:{ id: number; name: string }[]
     usersTalked: string;
     i18n: { t: (key: string) => string };
     cleanEmail: (email: string) => string;

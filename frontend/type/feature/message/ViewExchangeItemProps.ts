@@ -1,4 +1,5 @@
 import Users from "../auth/users";
+import Item from "../shop/item";
 import ItemUsers from "./itemUsers";
 import Messages from "./message";
 

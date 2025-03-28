@@ -8,6 +8,8 @@ import {
 } from "react-native";
 import ViewMessageProps from "../../type/feature/message/ViewMessageProps";
 import { useLanguage } from "@/hooks/providers/LanguageProvider";
+import { set } from "date-fns";
+import { useErrors } from "@/hooks/providers/ErrorProvider";
 
 const ViewMessage = (props: ViewMessageProps) => {
   const { i18n } = useLanguage();
@@ -21,6 +23,7 @@ const ViewMessage = (props: ViewMessageProps) => {
   } = props;
 
   const flatListRef = useRef<FlatList>(null);
+  const { setErrorMessage, setErrorVisible } = useErrors();
 
   useEffect(() => {
     if (flatListRef.current) {
@@ -84,28 +87,38 @@ const ViewMessage = (props: ViewMessageProps) => {
               {isProposition && (
                 <>
                   {item.status === "pending" && !isMe && (
-                    <View style={styles.actionContainer}>
-                      <TouchableOpacity
-                        style={[styles.button, styles.acceptButton]}
-                        onPress={() =>
-                          respondToExchange(discussionKey, "accepted", item.id)
-                        }
-                      >
-                        <Text style={styles.buttonText}>
-                          {i18n.t("I accept")}
-                        </Text>
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                        style={[styles.button, styles.rejectButton]}
-                        onPress={() =>
-                          respondToExchange(discussionKey, "rejected", item.id)
-                        }
-                      >
-                        <Text style={styles.buttonText}>
-                          {i18n.t("I refuse")}
-                        </Text>
-                      </TouchableOpacity>
-                    </View>
+                    <>
+                      <View style={styles.actionContainer}>
+                        <TouchableOpacity
+                          style={[styles.button, styles.acceptButton]}
+                          onPress={async () => {
+                            const response = await respondToExchange(
+                              discussionKey,
+                              "accepted",
+                              item.id
+                            );
+                            if (!response.success&& response.message) {
+                              setErrorVisible(true);
+                              setErrorMessage(response.message);
+                            }
+                          }}
+                        >
+                          <Text style={styles.buttonText}>
+                            {i18n.t("I accept")}
+                          </Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                          style={[styles.button, styles.rejectButton]}
+                          onPress={() =>
+                            respondToExchange(discussionKey, "rejected", item.id)
+                          }
+                        >
+                          <Text style={styles.buttonText}>
+                            {i18n.t("I refuse")}
+                          </Text>
+                        </TouchableOpacity>
+                      </View>
+                    </>
                   )}
 
                   {item.status === "pending" && isMe && (

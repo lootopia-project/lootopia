@@ -54,6 +54,7 @@ const ViewExchangeItem: React.FC<ViewExchangeItemProps> = ({
                   usersConnected && usersTalked ? (
                     <ItemExchangeCard
                       item={item}
+                      itemUser={itemUser}
                       allItems={allItems}
                       usersConnected={usersConnected}
                       usersTalked={usersTalked}

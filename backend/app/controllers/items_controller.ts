@@ -7,32 +7,29 @@ import { DateTime } from 'luxon'
 import i18nManager from '@adonisjs/i18n/services/main'
 import UsersHuntingItem from '#models/users_huntings_item'
 import User from '#models/user'
-import UsersItem from '#models/users_item'
-import User from '#models/user'
 
 export default class ItemsController {
-    async getAllItem({ response, auth }: HttpContext) {
-        const items = await Item.query()
-            .select('id', 'name', 'description', 'img', 'price', 'rarity_id')
-            .whereNull('hunting_id')
-            .preload('rarity', (query) => {
-                query.select('name')
-            })
+  async getAllItem({ response, auth }: HttpContext) {
+    const items = await Item.query()
+      .select('id', 'name', 'description', 'img', 'price', 'rarity_id')
+      .whereNull('hunting_id')
+      .preload('rarity', (query) => {
+        query.select('name')
+      })
 
-        const formattedItems = items.map((item) => ({
-            id: item.id,
-            name: item.name,
-            description: item.description,
-            img: item.img,
-            price: item.price,
-            rarity: item.rarity?.name || 'Unknown',
-        }))
+    const formattedItems = items.map((item) => ({
+      id: item.id,
+      name: item.name,
+      description: item.description,
+      img: item.img,
+      price: item.price,
+      rarity: item.rarity?.name || 'Unknown',
+    }))
 
-        return response.ok(formattedItems)
-    }
+    return response.ok(formattedItems)
+  }
 
-
-    async getListItem({ response, auth }: HttpContext) {
+  async getListItem({ response, auth }: HttpContext) {
     const items = await Item.query()
       .select('id', 'name', 'description', 'img', 'price', 'rarity_id')
       .andWhere('shop', true)
@@ -144,7 +141,10 @@ export default class ItemsController {
     //buy items from other users
     if (nonShopItems.length > 0) {
       const nonShopItemIds = nonShopItems.map((item: { id: number }) => item.id)
-      const items = await UsersHuntingItem.query().preload('user').preload('item').whereIn('id', nonShopItemIds)
+      const items = await UsersHuntingItem.query()
+        .preload('user')
+        .preload('item')
+        .whereIn('id', nonShopItemIds)
       const totalPrice = items.reduce((acc, item) => acc + item.price, 0)
       if (user.crowns < totalPrice) {
         return response.json({
@@ -252,4 +252,157 @@ export default class ItemsController {
     await itemExist.save()
     return response.ok({ message: i18n.t('_.Item added to shop') })
   }
+
+  async exchangeItemUsers({ auth, request, response }: HttpContext) {
+    const user = auth.user
+    console.log('ccc')
+
+    if (!user) {
+      return response.json({
+        success: false,
+        message: 'User not found',
+      })
+    }
+    const i18n = i18nManager.locale(user.lang)
+
+    const exchange = request.body()
+
+    const proposerEmail = decodeEmail(exchange.proposer)
+    const receiverEmail = decodeEmail(exchange.receiver)
+
+    const proposer = await User.findByOrFail('email', proposerEmail)
+    const receiver = await User.findByOrFail('email', receiverEmail)
+
+    for (const item of exchange.itemsOffered) {
+      const proposerItems = await UsersHuntingItem.query()
+        .where('user_id', proposer.id)
+        .where('item_id', item.id)
+        .where('item_id', item.id)
+        .where('shop', false)
+        .where('history', false)
+        .limit(item.quantity)
+
+      console.log('proposerItems', proposerItems.length, item.quantity)
+      if (proposerItems.length < item.quantity) {
+        return response.json({
+          message: i18n.t("_.The proposer doesn't have enough of the item") + item.name,
+        })
+      }
+
+      for (const itemInstance of proposerItems) {
+        itemInstance.userId = receiver.id
+        await itemInstance.save()
+      }
+    }
+
+    await LogHistory.create({
+      userId: proposer.id,
+      log: i18n.t('_.You have exchanged {numberItem} items with {receiver}', {
+        numberItem: exchange.itemsOffered.length,
+        receiver: receiver.nickname,
+      }),
+    })
+
+    for (const item of exchange.itemsRequested) {
+      const receiverItems = await UsersHuntingItem.query()
+        .where('user_id', receiver.id)
+        .where('item_id', item.id)
+        .where('shop', false)
+        .where('history', false)
+        .limit(item.quantity)
+      console.log('receiverItems', receiverItems.length, item.quantity)
+
+      if (receiverItems.length < item.quantity) {
+        return response.json({
+          message: i18n.t("_.The receiver doesn't have enough of the item") + item.name,
+        })
+      }
+
+      for (const itemInstance of receiverItems) {
+        itemInstance.userId = proposer.id
+        await itemInstance.save()
+      }
+    }
+
+    await LogHistory.create({
+      userId: receiver.id,
+      log: i18n.t('_.You have exchanged {numberItem} items with {proposer}', {
+        numberItem: exchange.itemsRequested.length,
+        proposer: proposer.nickname,
+      }),
+    })
+
+    return response.json({ message: i18n.t('_.Items exchanged successfully'), success: true })
+  }
+
+  async verifyReceiverItems({ request, response }: HttpContext) {
+    const exchange = request.body()
+    const i18n = i18nManager.locale(exchange.lang)
+
+    const receiverEmail = decodeEmail(exchange.receiver)
+    const receiver = await User.findByOrFail('email', receiverEmail)
+
+    for (const item of exchange.itemsRequested) {
+      const count = await UsersHuntingItem.query()
+        .where('user_id', receiver.id)
+        .where('item_id', item.id)
+        .where('shop', false)
+        .where('history', false)
+        .limit(item.quantity)
+
+      if (count.length < item.quantity) {
+        console.log('count', count.length, item.quantity)
+        return response.ok({
+          success: false,
+          message: i18n.t("_.The receiver doesn't have enough of the item") + item.name,
+        })
+      }
+    }
+
+    return response.ok({ success: true })
+  }
+
+  async getItemsMessageUser({ auth, response }: HttpContext) {
+    const user = auth.user
+
+    if (!user) {
+      return response.json({
+        success: false,
+        message: 'User not found',
+      })
+    }
+
+    const usersItems = await user
+      .related('usersItem')
+      .query()
+      .preload('item', (itemQuery) => {
+        itemQuery.select(['id', 'name', 'description', 'img', 'price'])
+      })
+
+    const grouped = new Map<number, any>()
+
+    for (const ui of usersItems) {
+      const item = ui.item
+
+      if (grouped.has(item.id)) {
+        grouped.get(item.id).quantity += 1
+      } else {
+        grouped.set(item.id, { ...item.serialize(), quantity: 1 })
+      }
+    }
+
+    const userItems = Array.from(grouped.values())
+    return response.json({
+      success: true,
+      items: userItems,
+    })
+  }
+}
+
+const decodeEmail = (encoded: string) => {
+  return encoded
+    .replace(/-at-/g, '@')
+    .replace(/_at_/g, '@')
+    .replace(/_/g, '.')
+    .replace(/-dot-/g, '.')
 }

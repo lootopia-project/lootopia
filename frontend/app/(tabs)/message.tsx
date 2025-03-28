@@ -22,20 +22,21 @@ import LastMessage from "@/type/feature/message/LastMessage";
 import { useErrors } from "@/hooks/providers/ErrorProvider";
 import {
   createPrivateDiscussion,
+  getItemsMessageUser,
   getLastPrivateMessages,
   getMessage,
   searchUsersMessage,
   sendMessageGroup,
   sendPrivateMessage,
 } from "@/services/MessageService";
-import { getInfoUser, getItemsUser } from "@/services/UsersService";
+import { getInfoUser } from "@/services/UsersService";
 import ItemUsers from "@/type/feature/message/itemUsers";
-import { getListItem } from "@/services/ShopService";
-import Item from "@/type/feature/shop/item";
+
 import PreviewMessage from "@/components/message/PreviewMessage";
 import ViewMessage from "@/components/message/ViewMessage";
 import ViewExchangeItem from "@/components/message/ViewExchangeItem";
 import { respondToExchange } from "@/services/ExchangeService";
+import { getAllItem } from "@/services/ShopService";
 
 
 const Message = () => {
@@ -53,7 +54,7 @@ const Message = () => {
   const [activeTab, setActiveTab] = useState<"group" | "private">("group");
   const [usersTalked, setUsersTalked] = useState<string>()
   const [showItemModal, setShowItemModal] = useState(false);
-  const [allItems, setAllItems] = useState<Item[]>([]);
+  const [allItems, setAllItems] = useState<ItemUsers[]>([]);
   const router = useRouter();
   const { setErrorMessage, setErrorVisible } = useErrors();
   const [itemUser, setItemUser] = useState<ItemUsers[]>([]);
@@ -92,7 +93,8 @@ const Message = () => {
           setUser(huntings.user);
           setLastMessage(huntings.lastMessage);
         } else {
-          setAllItems(await getListItem())
+          console.log(await getItemsMessageUser())
+          setAllItems(await getAllItem())
           await getLastPrivateMessages(usersConnected?.email || "", setLastMessage);
         }
       } catch (error) {
@@ -146,9 +148,8 @@ const Message = () => {
       setDiscussionId(Number(huntId));
       setDiscussionClicked(true);
     } else {
-      await getItemsUser()
       await createPrivateDiscussion(usersConnected?.email || "", receiver || "", setMessages, huntId)
-      setItemUser(await getItemsUser())
+      setItemUser(await getItemsMessageUser())
       setDiscussionClicked(true);
     }
   };
@@ -161,7 +162,7 @@ const Message = () => {
   const startNewDiscussion = async (selectedUser: Users) => {
     setUsersTalked(selectedUser.email)
     await createPrivateDiscussion(user?.email || "", selectedUser.email, setMessages, undefined)
-    setItemUser(await getItemsUser())
+    setItemUser(await getItemsMessageUser())
     setDiscussionClicked(true);
     setSearchingNew(false);
     setSearchQuery("");

@@ -14,6 +14,7 @@ import ItemExchangeCardProps from "@/type/feature/message/ItemExchangeCardProps"
 
 const ItemExchangeCard: React.FC<ItemExchangeCardProps> = ({
     item,
+    itemUser,
     allItems,
     usersConnected,
     usersTalked,
@@ -48,7 +49,7 @@ const ItemExchangeCard: React.FC<ItemExchangeCardProps> = ({
 
     const handlePropose = async () => {
         const parsedItemsOffered = itemsOffered.map((o) => {
-            const itemRef = allItems.find((i) => i.id === Number(o.id));
+            const itemRef = itemUser.find((i) => i.id === Number(o.id));
             return {
                 id: itemRef?.id || o.id,
                 name: itemRef?.name || o.name,
@@ -57,7 +58,7 @@ const ItemExchangeCard: React.FC<ItemExchangeCardProps> = ({
         });
 
         const parsedItemsRequested = itemsRequested.map((r) => {
-            const itemRef = allItems.find((i) => i.id === Number(r.id));
+            const itemRef = itemUser.find((i) => i.id === Number(r.id));
             return {
                 id: itemRef?.id,
                 name: itemRef?.name || "",
@@ -110,6 +111,8 @@ const ItemExchangeCard: React.FC<ItemExchangeCardProps> = ({
         setText("");
         setShowItemModal(false);
     };
+
+
 
     return (
         <ScrollView className="border-b border-gray-300 mb-4 pb-4">

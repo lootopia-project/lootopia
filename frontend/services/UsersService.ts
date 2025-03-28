@@ -113,24 +113,5 @@ const CheckMailToken = async (mailToken:string| null): Promise<Return> => {
     }
 } 
 
-const getItemsUser = async (): Promise<ItemUsers[]> => {
-    const token = await AsyncStorage.getItem('token');
-    const config = {
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": token ? `${token}` : '',
-        },
-        withCredentials: true
-    }
-    try {
-        const response=await axios.get(`${API_URL}/users/getItemsUser`, config)
-        return response.data.items
-    } catch (err: unknown) {
-        if ((err as AXIOS_ERROR).message) {
-            throw new Error("Error connecting")
-        } else {
-            throw new Error("Error connecting to server")
-        }
-    }
-}
-export { getInfoUser, updateInfoUser, updatePassword, CheckMail, CheckMailToken, getItemsUser }
+
+export { getInfoUser, updateInfoUser, updatePassword, CheckMail, CheckMailToken }

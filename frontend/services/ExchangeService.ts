@@ -17,8 +17,6 @@ export const proposeExchange = async (discussionKey: string, exchangeData: any) 
 
   };
   
-
-
   export const respondToExchange = async (
     discussionKey: string,
     status: "accepted" | "rejected",
@@ -38,7 +36,6 @@ export const proposeExchange = async (discussionKey: string, exchangeData: any) 
   
     const exchanges = exchangeSnapshot.val();
   
-    // Trouve la clé de l’échange en attente
     const pendingKey = Object.keys(exchanges).find(
       (key) => exchanges[key]?.messageId === messageId
     );
@@ -48,29 +45,28 @@ export const proposeExchange = async (discussionKey: string, exchangeData: any) 
       return;
     }
 
-    const exchangeUpdateRef = ref(
-      db,
-      `${nameNoeud}/private_chat/${discussionKey}/exchanges/${pendingKey}`
-    );
-    await update(exchangeUpdateRef, {
-      status,
-      updatedAt: new Date().toISOString(),
-    });
-
-  
-    // ✅ Mise à jour du message lié à l’échange
     if (messageId) {
       const messageRef = ref(
         db,
         `${nameNoeud}/private_chat/${discussionKey}/messages/${messageId}`
       );
-      await update(messageRef, { status });
-        if(status==="accepted"){
-          const exchange = exchanges[pendingKey];
-          console.log(exchange)
-
-          exchangeItem(exchange)
-      } 
+      if (status === "accepted") {
+        const exchange = exchanges[pendingKey];
+        const verification = await verifyReceiverItems(exchange);
+      
+        if (verification.success) {
+          await update(messageRef, { status: "accepted" });
+          exchangeItem(exchange);
+          return {success: false, message: verification.message};
+        }
+        else{
+          await update(messageRef, { status: "rejected" }); 
+          return {success: false, message: verification.message};
+        }
+      }else{
+        await update(messageRef, { status: "rejected" }); 
+        return {success: false, message: ""};
+      }
     }
   };
 
@@ -86,6 +82,7 @@ export const proposeExchange = async (discussionKey: string, exchangeData: any) 
       withCredentials: true,
     };
     try {
+      console.log("exchangeData", exchangeData);
       const response = await axios.post(`${API_URL}/users/exchangeItemUsers`, exchangeData, config);
       return response.data;
     } catch (err: unknown) {
@@ -110,3 +107,22 @@ export const proposeExchange = async (discussionKey: string, exchangeData: any) 
       }
     });
   };
+
+  export const verifyReceiverItems = async (exchangeData: any) => {
+    const token = await AsyncStorage.getItem("token");
+    const config = {
+      headers: {
+          "Content-Type": "application/json",
+          Authorization: token ? token : "",
+      },
+      withCredentials: true,
+    };
+  
+    try {
+      const response = await axios.post(`${API_URL}/items/verifyReceiverItems`, exchangeData, config);
+      return response.data; 
+    } catch (err) {
+      return { success: false, error: "Server error" };
+    }
+  };
+  

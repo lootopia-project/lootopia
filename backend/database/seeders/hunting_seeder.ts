@@ -20,7 +20,7 @@ export default class extends BaseSeeder {
       return
     }
 
-    await Hunting.createMany([
+    const huntings = await Hunting.createMany([
       {
         title: 'Chasse au trésor mystique',
         description: 'Explorez les ruines antiques pour dénicher un trésor oublié.',
