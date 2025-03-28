@@ -155,6 +155,13 @@ export default class ItemsController {
         await UsersHuntingItem.query().where('id', item.id).update({ shop: false, history: true })
       }
       for (const item of items) {
+        await LogHistory.create({
+          userId: item.user.id,
+          log: i18n.t('_.You have sold an Item {item}', {
+            item: item.item.name,
+          }),
+          orderId: order.id,
+        })
         await UsersHuntingItem.create({
           userId: user.id,
           itemId: item.item.id,

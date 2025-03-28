@@ -39,6 +39,7 @@
     "Public Huntings List Succuess": "Public huntings list retrieved successfully",
     "Error getting public huntings": "Error getting public huntings",
     "Item not found": "Item not found",
-    "You have bought {numberItem} items for {price} crowns from user": "You have bought {numberItem} items for {price} crowns from another user"
+    "You have bought {numberItem} items for {price} crowns from user": "You have bought {numberItem} items for {price} crowns from another user",
+    "You have sold an Item {item}": "You have sold an item {item}"
 
 }

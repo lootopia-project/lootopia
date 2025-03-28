@@ -167,5 +167,6 @@
     "All items": "Tous les objets",
     "From shop only": "Seulement de la Boutique",
     "Not from shop": "Seulement des Joueurs",
-    "Search": "Rechercher"
+    "Search": "Rechercher",
+    "You have sold an Item {item}": "Vous avez vendu un objet {{item}}"
 }
