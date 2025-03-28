@@ -81,10 +81,12 @@ export default class HuntingsController {
           ? 'organizer'
           : 'participant'
         const message = huntMessages.find((hunt) => hunt.huntId === id)?.lastMessage
+        const type = huntMessages.find((hunt) => hunt.huntId === id)?.type
         return {
           id,
           role,
           message,
+          type,
         }
       })
 

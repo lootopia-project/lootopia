@@ -156,4 +156,13 @@ export default class UsersController {
       message: 'User or token not found',
     })
   }
+  async searchUsers({ response, request }: HttpContext) {
+    const { search } = request.only(['search'])
+    const users = await User.query()
+      .select('id', 'nickname', 'email', 'img', 'ranking', 'crowns')
+      .where('nickname', 'like', `%${search}%`)
+      .orWhere('email', 'like', `%${search}%`)
+      .limit(10)
+    return response.json(users)
+  }
 }

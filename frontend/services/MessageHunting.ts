@@ -10,7 +10,7 @@ import { firebaseConfig } from "@/config/firebaseConfig";
 
 // ✅ Initialisation de Firebase
 const app = initializeApp(firebaseConfig);
-
+const nameNoeud = process.env.EXPO_PUBLIC_NAME_NOEUD_FIREBASE as string;
 // ✅ Initialisation de Firebase Auth
 const auth = getAuth(app);
 
@@ -62,7 +62,7 @@ export const fetchTreasureHunt = async (huntId: string): Promise<any> => {
         await authenticateUser();
 
         const dbRef = ref(database);
-        const snapshot = await get(child(dbRef, `treasureHunts/${huntId}`));
+        const snapshot = await get(child(dbRef, `${nameNoeud}/hunting_chat/${huntId}`));
 
         if (snapshot.exists()) {
             return snapshot.val();

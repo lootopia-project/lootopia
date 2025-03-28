@@ -40,5 +40,15 @@
     "Public Huntings List Succuess": "Liste des chasses publiques récupérée avec succès",
     "Error getting public huntings": "Erreur lors de la récupération des chasses publiques",
     "Item not found": "Article non trouvé",
-    "You have bought {numberItem} items for {price} crowns from user": "Vous avez acheté {numberItem} articles pour {price} couronnes d'un autre utilisateur"
+    "You have bought {numberItem} items for {price} crowns from user": "Vous avez acheté {numberItem} articles pour {price} couronnes d'un autre utilisateur",
+    "Error getting public huntings": "Erreur lors de la récupération des chasses publiques",
+    "The receiver doesn't have enough of the item": "Le destinataire n'a pas assez de l'article",
+    "Items exchanged successfully": "Articles échangés avec succès",
+    "The proposer doesn't have enough of the item": "Le demandeur n'a pas assez de l'article",
+    "User not found": "Utilisateur introuvable",
+    "✅Accepted": "✅Accepté",
+    "❌Rejected": "❌Rejeté",
+    "Waiting for a response": "En attente d'une réponse",
+    "You have exchanged {numberItem} items with {proposer}": "Vous avez échangé {numberItem} articles avec {proposer}",
+    "You have exchanged {numberItem} items with {receiver}": "Vous avez échangé {numberItem} articles avec {receiver}"
 }

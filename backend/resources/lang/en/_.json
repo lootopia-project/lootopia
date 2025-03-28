@@ -40,6 +40,15 @@
     "Error getting public huntings": "Error getting public huntings",
     "Item not found": "Item not found",
     "You have bought {numberItem} items for {price} crowns from user": "You have bought {numberItem} items for {price} crowns from another user",
-    "You have sold an Item {item}": "You have sold an item {item}"
-
+    "You have sold an Item {item}": "You have sold an item {item}",
+    "The receiver doesn't have enough of the item": "The receiver doesn't have enough of the item",
+    "Items exchanged successfully": "Items exchanged successfully",
+    "The proposer doesn't have enough of the item": "The proposer doesn't have enough of the item",
+    "User not found": "User not found",
+    "✅Accepted": "✅Accepted",
+    "❌Rejected": "❌Rejected",
+    "Waiting for a response": "Waiting for a response",
+    "You have exchanged {numberItem} items with {receiver}": "You have exchanged {numberItem} items with {receiver}",
+    "You have received {numberItem} items from {proposer}": "You have received {numberItem} items from {proposer}"
+    
 }
