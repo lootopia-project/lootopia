@@ -2,9 +2,8 @@ import { BaseModel, belongsTo, column, hasMany } from '@adonisjs/lucid/orm'
 import type { BelongsTo, HasMany } from '@adonisjs/lucid/types/relations'
 import TypeItem from '#models/type_item'
 import Rarity from '#models/rarity'
-import Hunting from '#models/hunting'
 import OrdersItem from '#models/orders_item'
-import UsersItem from '#models/users_item'
+import UsersHuntingItem from '#models/users_huntings_item'
 
 export default class Item extends BaseModel {
   @column({ isPrimary: true })
@@ -29,6 +28,9 @@ export default class Item extends BaseModel {
   declare img: string
 
   @column()
+  declare shop: boolean
+
+  @column()
   declare huntingId: number
 
   @belongsTo(() => TypeItem)
@@ -37,12 +39,9 @@ export default class Item extends BaseModel {
   @belongsTo(() => Rarity)
   declare rarity: BelongsTo<typeof Rarity>
 
-  @belongsTo(() => Hunting)
-  declare hunting: BelongsTo<typeof Hunting>
-
   @hasMany(() => OrdersItem)
   declare ordersItem: HasMany<typeof OrdersItem>
 
-  @hasMany(() => UsersItem)
-  declare usersItem: HasMany<typeof UsersItem>
+  @hasMany(() => UsersHuntingItem)
+  declare usershuntingItem: HasMany<typeof UsersHuntingItem>
 }

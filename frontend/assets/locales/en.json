@@ -156,5 +156,16 @@
     "TopRight": "Top Right",
     "BottomLeft": "Bottom Left",
     "BottomRight": "Bottom Right",
-    "Delete rectangle": "Delete rectangle"
+    "Delete rectangle": "Delete rectangle",
+    "Items": "Items",
+    "Back to shop": "Back to the Shop",
+    "Add to the shop": "Add to the shop",
+    "Item already in shop": "Item already in shop",
+    "Item added to shop": "Item added to shop",
+    "Change the price if you want": "Change the price if you want",
+    "Price is invalid": "Price is invalid",
+    "All items": "All items",
+    "From shop only": "From shop only",
+    "Not from shop": "From players only",
+    "Search": "Search"
   }

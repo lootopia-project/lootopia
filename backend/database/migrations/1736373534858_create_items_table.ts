@@ -12,6 +12,7 @@ export default class extends BaseSchema {
       table.string('description').notNullable()
       table.integer('rarity_id').unsigned().references('id').inTable('rarities').onDelete('CASCADE')
       table.integer('type_id').unsigned().references('id').inTable('type_items').onDelete('CASCADE')
+      table.boolean('shop').defaultTo(false)
       table
         .integer('hunting_id')
         .unsigned()

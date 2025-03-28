@@ -3,7 +3,6 @@ import Hunting from '#models/hunting'
 import db from '@adonisjs/lucid/services/db'
 import User from '#models/user'
 import { DateTime } from 'luxon'
-import World from '#models/world'
 
 export default class extends BaseSeeder {
   async run() {
@@ -14,15 +13,6 @@ export default class extends BaseSeeder {
     if (!kevin || !anthony || !yassine) {
       console.error('Un ou plusieurs utilisateurs sont introuvables.')
       return
-    }
-
-    let worldId: number
-    const world = await World.first()
-    if (!world) {
-      const newWorld = await World.create({ name: 'Monde Par Défaut' })
-      worldId = newWorld.id
-    } else {
-      worldId = world.id
     }
 
     await Hunting.createMany([
@@ -40,7 +30,7 @@ export default class extends BaseSeeder {
         textColor: '#FFFFFF',
         headerImg: 'https://lootopia.blob.core.windows.net/lootopia-photos/FFJFCIJECEAEGCE.jpeg',
         userId: kevin.id,
-        worldId,
+        worldId: 1,
       },
       {
         title: 'Chasse du coffre doré',
@@ -56,7 +46,7 @@ export default class extends BaseSeeder {
         textColor: '#FFD700',
         headerImg: 'https://lootopia.blob.core.windows.net/lootopia-photos/FFJFCIJECEAEGCE.jpeg',
         userId: anthony.id,
-        worldId,
+        worldId: 1,
       },
       {
         title: 'Expédition dans la jungle perdue',
@@ -72,7 +62,7 @@ export default class extends BaseSeeder {
         textColor: '#228B22',
         headerImg: 'https://lootopia.blob.core.windows.net/lootopia-photos/FFJFCIJECEAEGCE.jpeg',
         userId: yassine.id,
-        worldId,
+        worldId: 1,
       },
       {
         title: 'Aventure sous-marine',
@@ -88,7 +78,7 @@ export default class extends BaseSeeder {
         textColor: '#00BFFF',
         headerImg: 'https://lootopia.blob.core.windows.net/lootopia-photos/FFJFCIJECEAEGCE.jpeg',
         userId: kevin.id,
-        worldId,
+        worldId: 1,
       },
       {
         title: 'Mystère du désert brûlant',
@@ -104,7 +94,7 @@ export default class extends BaseSeeder {
         textColor: '#FFA500',
         headerImg: 'https://lootopia.blob.core.windows.net/lootopia-photos/FFJFCIJECEAEGCE.jpeg',
         userId: anthony.id,
-        worldId,
+        worldId: 1,
       },
       {
         title: 'Expédition polaire',
@@ -120,7 +110,7 @@ export default class extends BaseSeeder {
         textColor: '#FFFFFF',
         headerImg: 'https://lootopia.blob.core.windows.net/lootopia-photos/FFJFCIJECEAEGCE.jpeg',
         userId: yassine.id,
-        worldId,
+        worldId: 1,
       },
       {
         title: 'Aventure en haute montagne',
@@ -137,7 +127,7 @@ export default class extends BaseSeeder {
         textColor: '#FFFFFF',
         headerImg: 'https://lootopia.blob.core.windows.net/lootopia-photos/FFJFCIJECEAEGCE.jpeg',
         userId: kevin.id,
-        worldId,
+        worldId: 1,
       },
       {
         title: 'Chasse dans la cité oubliée',
@@ -153,7 +143,7 @@ export default class extends BaseSeeder {
         textColor: '#FFFFFF',
         headerImg: 'https://lootopia.blob.core.windows.net/lootopia-photos/FFJFCIJECEAEGCE.jpeg',
         userId: anthony.id,
-        worldId,
+        worldId: 1,
       },
       {
         title: 'Légende du coffre maudit',
@@ -169,7 +159,7 @@ export default class extends BaseSeeder {
         textColor: '#FFFFFF',
         headerImg: 'https://lootopia.blob.core.windows.net/lootopia-photos/FFJFCIJECEAEGCE.jpeg',
         userId: yassine.id,
-        worldId,
+        worldId: 1,
       },
       {
         title: 'Aventure des cavernes oubliées',
@@ -185,7 +175,7 @@ export default class extends BaseSeeder {
         textColor: '#FFFFFF',
         headerImg: 'https://lootopia.blob.core.windows.net/lootopia-photos/FFJFCIJECEAEGCE.jpeg',
         userId: kevin.id,
-        worldId,
+        worldId: 1,
       },
     ])
   }

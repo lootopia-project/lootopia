@@ -29,12 +29,12 @@ const PurchaseHistory = () => {
     }, [i18n, setErrorMessage, setErrorVisible]);
 
     return (
-        <View className="flex-1 bg-gray-100 p-6">
+        <View className="flex-1 bg-gray-100 p-6" id="purchase-history">
             <Link href="/shop" asChild>
                 <TouchableOpacity className="flex-row items-center mb-4">
                 <ArrowLeftIcon size={24} color="black" />
                     <Text className="ml-2 text-lg font-semibold text-gray-700">
-                    {i18n.t("Back")}
+                    {i18n.t("Back to shop")}
                     </Text>
                 </TouchableOpacity>
             </Link>
