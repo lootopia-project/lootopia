@@ -4,11 +4,11 @@ import OrderDetail from "@/type/feature/shop/order_detail";
 import ShopCrown from "@/type/feature/shop/shop_crown"
 import Return from "@/type/request/return";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import axios from "axios";
+import axios from 'axios';
 
 const API_URL=process.env.EXPO_PUBLIC_API_URL as string
 
-export const getShopCrown = async (): Promise<ShopCrown[]> => {
+const getShopCrown = async (): Promise<ShopCrown[]> => {
     const token = await AsyncStorage.getItem('token');
     const config = {
         headers: {
@@ -26,7 +26,7 @@ export const getShopCrown = async (): Promise<ShopCrown[]> => {
     }
 }
 
-export const getListItem = async (): Promise<Item[]> => {
+const getListItem = async (): Promise<Item[]> => {
     const token = await AsyncStorage.getItem('token');
     const config = {
         headers: {
@@ -44,7 +44,7 @@ export const getListItem = async (): Promise<Item[]> => {
     }
 }
 
-export const buyItem = async (ListItem:Item[]): Promise<Return> => {
+const buyItem = async (ListItem:Item[]): Promise<Return> => {
     const token = await AsyncStorage.getItem('token');
     const config = {
         headers: {
@@ -61,7 +61,7 @@ export const buyItem = async (ListItem:Item[]): Promise<Return> => {
     }
 }
 
-export const getLogHistories = async (): Promise<LogHistory[]> => {
+const getLogHistories = async (): Promise<LogHistory[]> => {
     const token = await AsyncStorage.getItem('token');
     const config = {
         headers: {
@@ -79,7 +79,7 @@ export const getLogHistories = async (): Promise<LogHistory[]> => {
     }
 }
 
-export const getOrderDetail = async (orderId: number): Promise<OrderDetail> => {
+const getOrderDetail = async (orderId: number): Promise<OrderDetail> => {
     const token = await AsyncStorage.getItem('token');
     const config = {
         headers: {
@@ -96,3 +96,31 @@ export const getOrderDetail = async (orderId: number): Promise<OrderDetail> => {
         throw new Error("Error connecting to server")
     }
 }
+
+const getListItemUser = async (): Promise<Item[]> => {
+    const token = await AsyncStorage.getItem('token');
+    const config = {
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": token ? `${token}` : '',
+        },
+        withCredentials: true
+    }
+    const response = await axios.get(`${API_URL}/shop/getListItemUser`, config)
+    return response.data as Item[]
+}
+
+const addItemToShop = async (item: Item): Promise<Return> => {
+    const token = await AsyncStorage.getItem('token');
+    const config = {
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": token ? `${token}` : '',
+        },
+        withCredentials: true
+    }
+    const response = await axios.post(`${API_URL}/shop/addItemToShop`, { item:item }, config)
+    return response.data as Return
+}
+
+export { getShopCrown, getListItem, buyItem, getLogHistories, getOrderDetail ,getListItemUser, addItemToShop}

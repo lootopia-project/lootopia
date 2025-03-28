@@ -8,7 +8,7 @@ export default function RootLayout() {
 
     return (
         <View style={{ flex: 1, flexDirection: "row" }}>
-            <ScrollView style={{ flex: 7 }}>
+            <ScrollView style={{ flex: 7 }} id="main-content" contentContainerStyle={{ flexGrow: 1 }}>
                 <Slot />
             </ScrollView>
             {isWeb && (

@@ -19,18 +19,18 @@ const Navbar = () => {
         </TouchableOpacity>
       </Link>
 
-      <Link href= "/shop/purchase-history">
+      <Link href= "/user/purchase-history">
         <TouchableOpacity style={styles.navButton}>
           <Text>{i18n.t("Purchase History")}</Text>
         </TouchableOpacity>
 
       </Link>
     
-      {/* <Link href="/user/recompenses">
+      <Link href="/user/item">
         <TouchableOpacity style={styles.navButton}>
-          <Text>Récompenses</Text>
+          <Text>{i18n.t("Items")}</Text>
         </TouchableOpacity>
-      </Link> */}
+      </Link>
     </View>
   );
 };
@@ -39,7 +39,6 @@ const styles = StyleSheet.create({
   navContainer: {
     position: "absolute",
     right: 0,
-    top: 150,
   },
   navButton: {
     backgroundColor: "#F5DEB3",
