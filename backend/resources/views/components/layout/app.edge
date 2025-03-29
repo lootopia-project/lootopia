@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>{{ title || "Cozy Gatherings" }}</title>
+  @if ($slots.meta)
+    {{{ await $slots.meta() }}}
+  @endif
+</head>
+@eval(await auth.check())
+<body>
+  @include('components/navbar')
+  {{{ await $slots.main() }}}
+  @vite(['resources/js/app.js'])
+</body>
+</html>

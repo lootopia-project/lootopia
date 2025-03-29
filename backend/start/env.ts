@@ -35,4 +35,11 @@ export default await Env.create(new URL('../', import.meta.url), {
   STRIPE_API_KEY: Env.schema.string(),
   STRIPE_WEBHOOK: Env.schema.string.optional(),
   STRIPE_API_VERSION: Env.schema.string.optional(),
+
+  /*
+  |----------------------------------------------------------
+  | Variables for configuring session package
+  |----------------------------------------------------------
+  */
+  SESSION_DRIVER: Env.schema.enum(['cookie', 'memory'] as const)
 })

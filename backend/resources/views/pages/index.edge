@@ -1,0 +1,13 @@
+@layout.app()
+@slot('meta')
+<meta name="description" content="Page of login">
+@endslot
+@slot('main')
+<div class="flex min-h-screen justify-center bg-gray-100">
+    <h1>truc</h1>
+    
+    {{auth.isAuthenticated}}
+
+</div>
+@endslot
+@end

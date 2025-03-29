@@ -19,6 +19,9 @@ const ItemsController = () => import('#controllers/items_controller')
 const LogHistoriesController = () => import('#controllers/log_histories_controller')
 const OrdersController = () => import('#controllers/orders_controller')
 const SpotsController = () => import('#controllers/spots_controller')
+const AdminAuthsController = () => import('#controllers/admin_auths_controller')
+
+
 
 router.post('/login', [AuthController, 'login'])
 router.post('/register', [AuthController, 'register'])
@@ -66,3 +69,27 @@ router
       guards: ['api'],
     }),
   ])
+
+
+router.get('/', async ({ view, auth, response }) => {
+  const check = await auth.check()
+  if (check) {
+    return response.redirect('/home')
+  }
+  return view.render('pages/login')
+})
+router.post('/admin/login', [AdminAuthsController, "login"])
+router.get('/admin/logout', [AdminAuthsController, "logout"])
+router.group(() => {
+  router.get('/home', async ({ view, auth }) => {
+      console.log('auth.isAuthenticated:', auth.isAuthenticated) // ← devrait être true
+    return view.render('pages/index')
+  })
+  
+
+})
+.use([
+  middleware.auth({
+    guards: ['web'],
+  }),
+])
