@@ -57,7 +57,6 @@ export const sendPrivateMessage = async (me: Users | undefined, otherEmail: stri
     timestamp: new Date().toISOString(),
     status: type
   };
-  console.log(message)
   const messagesRef = ref(db, chatPath);
   const keyMessage = (await push(messagesRef, message)).key;
 

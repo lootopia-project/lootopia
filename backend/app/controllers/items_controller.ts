@@ -255,7 +255,6 @@ export default class ItemsController {
 
   async exchangeItemUsers({ auth, request, response }: HttpContext) {
     const user = auth.user
-    console.log('ccc')
 
     if (!user) {
       return response.json({
@@ -282,7 +281,6 @@ export default class ItemsController {
         .where('history', false)
         .limit(item.quantity)
 
-      console.log('proposerItems', proposerItems.length, item.quantity)
       if (proposerItems.length < item.quantity) {
         return response.json({
           message: i18n.t("_.The proposer doesn't have enough of the item") + item.name,
@@ -310,7 +308,6 @@ export default class ItemsController {
         .where('shop', false)
         .where('history', false)
         .limit(item.quantity)
-      console.log('receiverItems', receiverItems.length, item.quantity)
 
       if (receiverItems.length < item.quantity) {
         return response.json({
@@ -351,7 +348,6 @@ export default class ItemsController {
         .limit(item.quantity)
 
       if (count.length < item.quantity) {
-        console.log('count', count.length, item.quantity)
         return response.ok({
           success: false,
           message: i18n.t("_.The receiver doesn't have enough of the item") + item.name,

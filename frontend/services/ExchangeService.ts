@@ -82,7 +82,6 @@ export const proposeExchange = async (discussionKey: string, exchangeData: any) 
       withCredentials: true,
     };
     try {
-      console.log("exchangeData", exchangeData);
       const response = await axios.post(`${API_URL}/users/exchangeItemUsers`, exchangeData, config);
       return response.data;
     } catch (err: unknown) {
