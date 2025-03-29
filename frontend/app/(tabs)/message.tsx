@@ -93,7 +93,6 @@ const Message = () => {
           setUser(huntings.user);
           setLastMessage(huntings.lastMessage);
         } else {
-          console.log(await getItemsMessageUser())
           setAllItems(await getAllItem())
           await getLastPrivateMessages(usersConnected?.email || "", setLastMessage);
         }

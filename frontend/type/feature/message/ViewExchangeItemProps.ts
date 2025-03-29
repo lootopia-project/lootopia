@@ -5,7 +5,7 @@ import Messages from "./message";
 
 interface ViewExchangeItemProps {
     itemUser: ItemUsers[];
-    allItems: { id: number; name: string }[];
+    allItems: { id: number; name: string , img: string }[];
     usersConnected: Users|undefined;
     usersTalked: string;
     i18n: { t: (key: string) => string };

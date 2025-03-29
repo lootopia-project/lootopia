@@ -47,32 +47,23 @@ const ViewExchangeItem: React.FC<ViewExchangeItemProps> = ({
             </Text>
 
             <View style={{ flex: 1 }}>
-              <FlatList
-                data={itemUser || []}
-                keyExtractor={(item) => item.id.toString()}
-                renderItem={({ item }) =>
-                  usersConnected && usersTalked ? (
-                    <ItemExchangeCard
-                      item={item}
-                      itemUser={itemUser}
-                      allItems={allItems}
-                      usersConnected={usersConnected}
-                      usersTalked={usersTalked}
-                      i18n={i18n}
-                      cleanEmail={cleanEmail}
-                      setText={setText}
-                      setErrorMessage={setErrorMessage}
-                      setErrorVisible={setErrorVisible}
-                      setShowItemModal={setShowItemModal}
-                      setMessages={setMessages}
-                    />
-                  ) : null
-                }
-                ListEmptyComponent={
-                  <Text style={styles.emptyText}>{i18n.t("No items found")}</Text>
-                }
-              />
+              {usersConnected && usersTalked && (
+                <ItemExchangeCard
+                  itemUser={itemUser}
+                  allItems={allItems}
+                  usersConnected={usersConnected}
+                  usersTalked={usersTalked}
+                  i18n={i18n}
+                  cleanEmail={cleanEmail}
+                  setText={setText}
+                  setErrorMessage={setErrorMessage}
+                  setErrorVisible={setErrorVisible}
+                  setShowItemModal={setShowItemModal}
+                  setMessages={setMessages}
+                />
+              )}
             </View>
+
 
             <Button title={i18n.t("Close")} onPress={() => setShowItemModal(false)} />
           </View>
