@@ -2,6 +2,8 @@ import AXIOS_ERROR from "@/type/request/axios_error";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { get, getDatabase, onValue, push, ref, update } from "firebase/database";
+import {getConfig} from "@/services/csrfService";
+
 const nameNoeud= process.env.EXPO_PUBLIC_NAME_NOEUD_FIREBASE as string;
 const API_URL = process.env.EXPO_PUBLIC_API_URL as string
 
@@ -73,14 +75,7 @@ export const proposeExchange = async (discussionKey: string, exchangeData: any) 
 
   
   export const exchangeItem= async (exchangeData: any) => {
-    const token = await AsyncStorage.getItem("token");
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: token ? token : "",
-      },
-      withCredentials: true,
-    };
+    const config = await getConfig();
     try {
       const response = await axios.post(`${API_URL}/users/exchangeItemUsers`, exchangeData, config);
       return response.data;
@@ -108,15 +103,7 @@ export const proposeExchange = async (discussionKey: string, exchangeData: any) 
   };
 
   export const verifyReceiverItems = async (exchangeData: any) => {
-    const token = await AsyncStorage.getItem("token");
-    const config = {
-      headers: {
-          "Content-Type": "application/json",
-          Authorization: token ? token : "",
-      },
-      withCredentials: true,
-    };
-  
+    const config = await getConfig();
     try {
       const response = await axios.post(`${API_URL}/items/verifyReceiverItems`, exchangeData, config);
       return response.data; 

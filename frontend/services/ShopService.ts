@@ -73,14 +73,7 @@ const addItemToShop = async (item: Item): Promise<Return> => {
 }
 
 const getAllItem = async (): Promise<ItemUsers[]> => {
-    const token = await AsyncStorage.getItem('token');
-    const config = {
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": token ? `${token}` : '',
-        },
-        withCredentials: true
-    }
+    const config = await getConfig();
     const response = await axios.get(`${API_URL}/items/getAllItem`, config)
     return response.data as ItemUsers[]
 }
