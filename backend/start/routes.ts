@@ -68,6 +68,11 @@ router
     router.post('/pushSpot', [SpotsController, 'pushSpotInMap'])
     router.get('/shop/getListItemUser', [ItemsController, 'getListItemUser'])
     router.post('/shop/addItemToShop', [ItemsController, 'addItemToShop'])
+    router.get('users/searchUsers', [UsersController, 'searchUsers'])
+    router.post('/users/exchangeItemUsers', [ItemsController, 'exchangeItemUsers'])
+    router.get('items/getAllItem', [ItemsController, 'getAllItem'])
+    router.post('/items/verifyReceiverItems', [ItemsController, 'verifyReceiverItems'])
+    router.get('/items/getItemsMessageUser', [ItemsController, 'getItemsMessageUser'])
   })
   .use([
     middleware.auth({

@@ -77,4 +77,6 @@ const CheckMailToken = async (mailToken:string| null): Promise<Return> => {
         }
     }
 } 
+
+
 export { getInfoUser, updateInfoUser, updatePassword, CheckMail, CheckMailToken }
