@@ -6,8 +6,7 @@ export default class AdminAuthsController {
         const admin = await Admin.verifyCredentials(email, password)
         if (admin) {
           await auth.use('web').login(admin)
-          
-          return view.render('pages/index')
+          return response.redirect('/home')
         }
         return response.redirect('/')
       }

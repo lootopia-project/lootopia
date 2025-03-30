@@ -31,6 +31,11 @@ router.post('/users/CheckMailToken', [UsersController, 'CheckMailToken'])
 router.post('/users/loginOrRegisterGoogle', [AuthController, 'loginOrRegisterGoogle'])
 router.post('/forgot-password', [AuthController, 'forgotPassword'])
 router.post('/reset-password', [AuthController, 'resetPassword'])
+router.post('/csrf-token', async ({request, response}) => { 
+  return response.json({
+    csrfToken: request.csrfToken,
+  })
+})
 router
   .post('stripe/webhook', [PaymentsController, 'handleWebhook'])
   .use(middleware.verifyStripeWebhook())
@@ -82,11 +87,10 @@ router.post('/admin/login', [AdminAuthsController, "login"])
 router.get('/admin/logout', [AdminAuthsController, "logout"])
 router.group(() => {
   router.get('/home', async ({ view, auth }) => {
-      console.log('auth.isAuthenticated:', auth.isAuthenticated) // ← devrait être true
-    return view.render('pages/index')
+    return view.render('pages/index',{
+      auth: auth,
+    })
   })
-  
-
 })
 .use([
   middleware.auth({

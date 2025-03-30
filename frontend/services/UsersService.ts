@@ -3,18 +3,12 @@ import axios from "axios/index";
 import AXIOS_ERROR from "@/type/request/axios_error";
 import InfoEditUser from "@/type/feature/user/InfoEditUser";
 import Return from "@/type/request/return";
+import {getConfig} from "@/services/csrfService";
 
 const API_URL=process.env.EXPO_PUBLIC_API_URL as string
 
 const getInfoUser= async (): Promise<InfoEditUser> => {
-    const token = await AsyncStorage.getItem('token');
-    const config = {
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": token ? `${token}` : '',
-        },
-        withCredentials: true
-    }
+    const config = await getConfig()
     try {
         const response = await axios.get<InfoEditUser>(`${API_URL}/users/getInfoUser`, config)
         return response.data
@@ -28,14 +22,7 @@ const getInfoUser= async (): Promise<InfoEditUser> => {
 }
 
 const updateInfoUser = async (infoEditUser: InfoEditUser): Promise<Return> => {
-    const token = await AsyncStorage.getItem('token');
-    const config = {
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": token ? `${token}` : '',
-        },
-        withCredentials: true
-    }
+    const config = await getConfig()
     try {
         const response=await axios.post(`${API_URL}/users/updateInfoUser`, infoEditUser, config)
         return response.data
@@ -49,14 +36,7 @@ const updateInfoUser = async (infoEditUser: InfoEditUser): Promise<Return> => {
 }
 
 const updatePassword = async (currentPassword: string, newPassword: string): Promise<Return> => {
-    const token = await AsyncStorage.getItem('token');
-    const config = {
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": token ? `${token}` : '',
-        },
-        withCredentials: true
-    }
+    const config = await getConfig()
     try {
         const response=await axios.post(`${API_URL}/users/updatePassword`, {currentPassword, newPassword}, config)
         return response.data
@@ -71,14 +51,7 @@ const updatePassword = async (currentPassword: string, newPassword: string): Pro
 }
 
 const CheckMail = async (): Promise<Return> => {
-    const token = await AsyncStorage.getItem('token');
-    const config = {
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": token ? `${token}` : '',
-        },
-        withCredentials: true
-    }
+    const config = await getConfig()
     try {
         const response=await axios.post(`${API_URL}/users/CheckMail`, {} ,config)
         return response.data
@@ -92,14 +65,7 @@ const CheckMail = async (): Promise<Return> => {
 } 
 
 const CheckMailToken = async (mailToken:string| null): Promise<Return> => {
-    const token = await AsyncStorage.getItem('token');
-    const config = {
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": token ? `${token}` : '',
-        },
-        withCredentials: true
-    }
+    const config = await getConfig()
     try {
         const response=await axios.post(`${API_URL}/users/CheckMailToken`, {mailToken:mailToken} ,config)
         return response.data

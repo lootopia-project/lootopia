@@ -5,19 +5,12 @@ import LOGIN from '@/type/feature/auth/login';
 import RETURN from '@/type/request/return';
 import { requestFcmToken} from "./firebase";
 import UsersGoogle from "@/type/feature/auth/user_google";
-
+import {getConfig} from "@/services/csrfService";
 const API_URL=process.env.EXPO_PUBLIC_API_URL as string
 
-
-const config = {
-    headers: {
-        "Content-Type": "application/json",
-    },
-    withCredentials: true
-}
-
-
 const loginUser = async (userData: LOGIN): Promise<RETURN> => {
+  const config = await getConfig()
+  
     try {
         const { email, password } = userData;
         const fcmToken = await requestFcmToken();
@@ -58,15 +51,9 @@ const loginUser = async (userData: LOGIN): Promise<RETURN> => {
 
 const logoutUser = async () : Promise<RETURN> =>{
     try {
-      const tokenLogout = await AsyncStorage.getItem('token');
-      const configLogout = {
-          headers: {
-              "Content-Type": "application/json",
-              "Authorization": tokenLogout ? `${tokenLogout}` : '',
-          },
-          withCredentials: true
-      }
-        const response = await axios.post<RETURN>(`${API_URL}/logout`, {}, configLogout)
+      const config = await getConfig()
+
+        const response = await axios.post<RETURN>(`${API_URL}/logout`, {}, config)
         return response.data
     } catch (err: unknown) {
         if ((err as AXIOS_ERROR).message) {
@@ -79,15 +66,10 @@ const logoutUser = async () : Promise<RETURN> =>{
 
 const checkIsLogin = async () : Promise<RETURN> =>{
   try {
-    const token = await AsyncStorage.getItem('token');
-    const config = {
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": token ? `${token}` : '',
-        },
-        withCredentials: true
-    }
-      const response = await axios.post<RETURN>(`${API_URL}/checkIsLogin`, {}, config)
+    const config = await getConfig()
+    console.log("config",config);
+    
+    const response = await axios.post<RETURN>(`${API_URL}/checkIsLogin`, {}, config)
 
       return response.data
   } catch (err: unknown) {
@@ -101,6 +83,8 @@ const checkIsLogin = async () : Promise<RETURN> =>{
 }
 
 const registerUser = async (userData: LOGIN): Promise<RETURN> => {
+  const config = await getConfig()
+
   try {
     const { email, password } = userData;
     const response = await axios.post<RETURN>(
@@ -124,6 +108,8 @@ const registerUser = async (userData: LOGIN): Promise<RETURN> => {
 
 
 const LoginOrRegisterGoogle= async (users:UsersGoogle): Promise <RETURN> => {
+  const config = await getConfig()
+
   try {
     const { email, firstName, lastName, img ,provider,mode} = users;
     const fcmToken = await requestFcmToken();
@@ -164,6 +150,8 @@ const LoginOrRegisterGoogle= async (users:UsersGoogle): Promise <RETURN> => {
 }
 
 const forgotPassword = async (email: string,locale:string): Promise<RETURN> => {
+  const config = await getConfig()
+
   try {
     const response = await axios.post<RETURN>(
       `${API_URL}/forgot-password`,
@@ -185,6 +173,8 @@ const forgotPassword = async (email: string,locale:string): Promise<RETURN> => {
 }
 
 const resetPassword = async (token: string, password: string): Promise<RETURN> => {
+  const config = await getConfig()
+
   try {
     const response = await axios.post<RETURN>(
       `${API_URL}/reset-password`,

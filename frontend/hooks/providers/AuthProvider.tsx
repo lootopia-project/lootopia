@@ -8,6 +8,7 @@ import { useRouter, usePathname } from "expo-router";
 import { useLanguage } from "@/hooks/providers/LanguageProvider";
 import { CheckDoubleAuth, CheckRecoveryCode } from "@/services/DoubleAuth";
 import UsersGoogle from "@/type/feature/auth/user_google";
+import {getCsrfToken} from "@/services/csrfService";
 
 const defaultContextValue: AUTH_CONTEXT_TYPE = {
     isAuthenticated: false,
@@ -47,7 +48,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     useEffect(() => {
         const initializeAuthState = async () => {
             try {
-                AsyncStorage.getItem("token");
+                await getCsrfToken();
                 const data = await checkIsLogin();
                 if (data.message === true) {
                     setIsAuthenticated(true);
