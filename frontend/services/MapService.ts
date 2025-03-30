@@ -1,5 +1,4 @@
 import axios from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import MapParams from '@/type/feature/map/params';
 import {getConfig} from "@/services/csrfService";
 

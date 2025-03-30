@@ -1,4 +1,3 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios/index";
 import AXIOS_ERROR from "@/type/request/axios_error";
 import InfoEditUser from "@/type/feature/user/InfoEditUser";

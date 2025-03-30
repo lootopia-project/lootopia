@@ -1,7 +1,6 @@
 import Hunting from "@/type/feature/hunting/Hunting";
 import axios from "axios";
 import AXIOS_ERROR from "@/type/request/axios_error";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import LastMessageHunting from "@/type/feature/message/LastMessageHunting";
 import {getConfig} from "@/services/csrfService";
 
