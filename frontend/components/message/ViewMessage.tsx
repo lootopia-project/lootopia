@@ -10,6 +10,7 @@ import ViewMessageProps from "../../type/feature/message/ViewMessageProps";
 import { useLanguage } from "@/hooks/providers/LanguageProvider";
 import { set } from "date-fns";
 import { useErrors } from "@/hooks/providers/ErrorProvider";
+import { getItemsMessageUser } from "@/services/MessageService";
 
 const ViewMessage = (props: ViewMessageProps) => {
   const { i18n } = useLanguage();
@@ -20,6 +21,7 @@ const ViewMessage = (props: ViewMessageProps) => {
     usersTalked,
     respondToExchange,
     cleanEmail,
+    setItemsUser
   } = props;
 
   const flatListRef = useRef<FlatList>(null);
@@ -100,6 +102,9 @@ const ViewMessage = (props: ViewMessageProps) => {
                             if (!response.success&& response.message) {
                               setErrorVisible(true);
                               setErrorMessage(response.message);
+                            }
+                            else if (response.success) {
+                              setItemsUser(await getItemsMessageUser())
                             }
                           }}
                         >

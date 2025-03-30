@@ -197,21 +197,19 @@ export const getLastPrivateMessages = (myEmail: string, setLastMessages: (messag
         .map(([chatId, chatData]: any) => {
           const allMessages = chatData.messages || {};
           const messagesArray = Object.values(allMessages) as any[];
-          let participants = chatData.participants;
-
-          const encodeEmailForFirebase = (email: string) =>
-            email.replace(/@/g, '-at-').replace(/\./g, '_');
-
-          const encodedUserEmail = encodeEmailForFirebase(myEmail);
-
-          participants = participants?.filter((participant: string) => participant !== myEmail)[0];
+          const participants = chatData.participants?.filter((participant: string) => participant !== myEmail) || [];
           const sorted = messagesArray.sort(
             (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
           );
           const message = sorted[0];
           return {
             id: chatId,
-            ...{ message, type: chatData.type, receiver: participants },
+            role: "participant", 
+            lastMessage: message?.text || "",
+            participants: participants,
+            message,
+            type: chatData.type,
+            receiver: participants[0],
           };
         });
       setLastMessages(filteredMessages);

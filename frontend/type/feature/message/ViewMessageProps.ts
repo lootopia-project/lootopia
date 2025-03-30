@@ -1,6 +1,6 @@
 import Users from "@/type/feature/auth/users";
 import Messages from "@/type/feature/message/message";
-import Return from "@/type/request/return";
+import ItemUsers from "./itemUsers";
 
 interface ViewMessageProps {
     messages: Messages[];
@@ -9,6 +9,7 @@ interface ViewMessageProps {
     usersTalked: string;
     respondToExchange: (discussionKey: string, status: "accepted" | "rejected", messageId?: string) => Promise<{ success: boolean; message?: any } | undefined>;
     cleanEmail: (email: string) => string;
+    setItemsUser:(items:ItemUsers[]) => void;
 }
 
 export default ViewMessageProps;

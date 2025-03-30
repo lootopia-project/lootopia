@@ -169,7 +169,6 @@
     "Not from shop": "Seulement des Joueurs",
     "Search": "Rechercher",
     "You have sold an Item {item}": "Vous avez vendu un objet {{item}}",
-    "Delete rectangle": "Supprimer le rectangle",
     "Unknown sender": "Expéditeur inconnu",
     "No message": "Pas de message",
     "Group messages": "Messages de groupe",
@@ -186,6 +185,11 @@
     "You only have":"Vous n'avez que",
     "I accept":"J'accepte",
     "I refuse":"Je refuse",
-    "Waiting for a response": "En attente d'une réponse"
+    "Waiting for a response": "En attente d'une réponse",
+    "No date available": "Aucune date disponible",
+    "✅Accepted": "✅Accepté",
+    "❌Refused": "❌Refusé",
+    "Loading conversations": "Chargement des conversations",
+    "Search users": "Rechercher des utilisateurs"
 
 }

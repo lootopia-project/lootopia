@@ -175,6 +175,7 @@ const Message = () => {
     (email ?? "").replace(/@/g, "-at-").replace(/\./g, "_");
 
 
+
   return (
     <>
       {!discussionClicked ? (
@@ -214,6 +215,7 @@ const Message = () => {
             usersTalked={usersTalked || ""}
             respondToExchange={respondToExchange}
             cleanEmail={cleanEmail}
+            setItemsUser={setItemUser}
           />
 
           <TextInput

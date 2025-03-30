@@ -168,7 +168,6 @@
     "From shop only": "From shop only",
     "Not from shop": "From players only",
     "Search": "Search",
-    "Delete rectangle": "Delete rectangle",
     "Unknown sender": "Unknown sender",
     "No message": "No message",
     "Group messages": "Group messages",
@@ -187,5 +186,8 @@
     "I refuse":"I refuse",
     "✅Accepted": "✅Accepted",
     "❌Refused": "❌Refused",
-    "Waiting for a response": "Waiting for a response"
+    "Waiting for a response": "Waiting for a response",
+    "No date": "No date",
+    "Loading conversations": "Loading conversations",
+    "Search users": "Search users"
   }
