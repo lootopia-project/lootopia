@@ -103,9 +103,6 @@ const ViewMessage = (props: ViewMessageProps) => {
                               setErrorVisible(true);
                               setErrorMessage(response.message);
                             }
-                            else if (response.success) {
-                              setItemsUser(await getItemsMessageUser())
-                            }
                           }}
                         >
                           <Text style={styles.buttonText}>

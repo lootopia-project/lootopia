@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import ItemExchangeCard from "./ItemExchangeCard";
 import ViewExchangeItemProps from "@/type/feature/message/ViewExchangeItemProps";
+import { getItemsMessageUser } from "@/services/MessageService";
 
 const ViewExchangeItem: React.FC<ViewExchangeItemProps> = ({
   itemUser,
@@ -24,12 +25,13 @@ const ViewExchangeItem: React.FC<ViewExchangeItemProps> = ({
   setShowItemModal,
   showItemModal,
   setMessages,
+  setItemUser
 }) => {
   return (
     <>
       <TouchableOpacity
         style={styles.proposeButton}
-        onPress={() => setShowItemModal(true)}
+        onPress={async () => { setShowItemModal(true); setItemUser(await getItemsMessageUser()); }}
       >
         <Text style={styles.proposeButtonText}>📦 {i18n.t("Propose a item")}</Text>
       </TouchableOpacity>

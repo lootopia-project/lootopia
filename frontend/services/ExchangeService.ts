@@ -61,7 +61,7 @@ export const proposeExchange = async (discussionKey: string, exchangeData: any) 
         }
         else{
           await update(messageRef, { status: "rejected" }); 
-          return {success: false, message: verification.message};
+          return {success: true, message: verification.message};
         }
       }else{
         await update(messageRef, { status: "rejected" }); 

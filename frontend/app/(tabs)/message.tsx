@@ -239,6 +239,7 @@ const Message = () => {
               setShowItemModal={setShowItemModal}
               showItemModal={showItemModal}
               setMessages={setMessages}
+              setItemUser={setItemUser}
             />
           )}
 

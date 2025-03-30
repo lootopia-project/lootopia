@@ -16,6 +16,7 @@ interface ViewExchangeItemProps {
     setShowItemModal: (visible: boolean) => void;
     showItemModal: boolean;
     setMessages: (messages: Messages[]) => void;
+    setItemUser: (itemUser: ItemUsers[]) => void;
   }
 
   export default ViewExchangeItemProps;
