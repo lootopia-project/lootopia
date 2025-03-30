@@ -42,7 +42,7 @@ export default defineConfig({
     () => import('@vbusatta/adonis-stripe/provider'),
     () => import('@adonisjs/session/session_provider'),
     () => import('@adonisjs/shield/shield_provider'),
-    () => import('@adonisjs/vite/vite_provider')
+    () => import('@adonisjs/vite/vite_provider'),
   ],
 
   /*
@@ -87,10 +87,10 @@ export default defineConfig({
     {
       pattern: 'public/**',
       reloadServer: false,
-    }
+    },
   ],
   hooks: {
-    onBuildStarting: [() => import('@adonisjs/vite/build_hook')]
+    onBuildStarting: [() => import('@adonisjs/vite/build_hook')],
   },
-  assetsBundler: false
+  assetsBundler: false,
 })

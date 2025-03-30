@@ -21,8 +21,6 @@ const OrdersController = () => import('#controllers/orders_controller')
 const SpotsController = () => import('#controllers/spots_controller')
 const AdminAuthsController = () => import('#controllers/admin_auths_controller')
 
-
-
 router.post('/login', [AuthController, 'login'])
 router.post('/register', [AuthController, 'register'])
 router.post('/users/checkDoubleAuth', [DoubleAuthsController, 'checkDoubleAuth'])
@@ -31,7 +29,7 @@ router.post('/users/CheckMailToken', [UsersController, 'CheckMailToken'])
 router.post('/users/loginOrRegisterGoogle', [AuthController, 'loginOrRegisterGoogle'])
 router.post('/forgot-password', [AuthController, 'forgotPassword'])
 router.post('/reset-password', [AuthController, 'resetPassword'])
-router.post('/csrf-token', async ({request, response}) => { 
+router.post('/csrf-token', async ({ request, response }) => {
   return response.json({
     csrfToken: request.csrfToken,
   })
@@ -80,7 +78,6 @@ router
     }),
   ])
 
-
 router.get('/', async ({ view, auth, response }) => {
   const check = await auth.check()
   if (check) {
@@ -88,17 +85,18 @@ router.get('/', async ({ view, auth, response }) => {
   }
   return view.render('pages/login')
 })
-router.post('/admin/login', [AdminAuthsController, "login"])
-router.get('/admin/logout', [AdminAuthsController, "logout"])
-router.group(() => {
-  router.get('/home', async ({ view, auth }) => {
-    return view.render('pages/index',{
-      auth: auth,
+router.post('/admin/login', [AdminAuthsController, 'login'])
+router.get('/admin/logout', [AdminAuthsController, 'logout'])
+router
+  .group(() => {
+    router.get('/home', async ({ view, auth }) => {
+      return view.render('pages/index', {
+        auth: auth,
+      })
     })
   })
-})
-.use([
-  middleware.auth({
-    guards: ['web'],
-  }),
-])
+  .use([
+    middleware.auth({
+      guards: ['web'],
+    }),
+  ])
