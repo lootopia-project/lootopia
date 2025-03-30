@@ -1,3 +1,4 @@
+import ItemUsers from "@/type/feature/message/itemUsers";
 import Item from "@/type/feature/shop/item";
 import LogHistory from "@/type/feature/shop/log_history";
 import OrderDetail from "@/type/feature/shop/order_detail";
@@ -123,4 +124,17 @@ const addItemToShop = async (item: Item): Promise<Return> => {
     return response.data as Return
 }
 
-export { getShopCrown, getListItem, buyItem, getLogHistories, getOrderDetail ,getListItemUser, addItemToShop}
+const getAllItem = async (): Promise<ItemUsers[]> => {
+    const token = await AsyncStorage.getItem('token');
+    const config = {
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": token ? `${token}` : '',
+        },
+        withCredentials: true
+    }
+    const response = await axios.get(`${API_URL}/items/getAllItem`, config)
+    return response.data as ItemUsers[]
+}
+
+export { getShopCrown, getListItem, buyItem, getLogHistories, getOrderDetail ,getListItemUser, addItemToShop,getAllItem}

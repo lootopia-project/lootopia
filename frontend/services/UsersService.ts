@@ -3,6 +3,7 @@ import axios from "axios/index";
 import AXIOS_ERROR from "@/type/request/axios_error";
 import InfoEditUser from "@/type/feature/user/InfoEditUser";
 import Return from "@/type/request/return";
+import ItemUsers from "@/type/feature/message/itemUsers";
 
 const API_URL=process.env.EXPO_PUBLIC_API_URL as string
 
@@ -111,4 +112,6 @@ const CheckMailToken = async (mailToken:string| null): Promise<Return> => {
         }
     }
 } 
+
+
 export { getInfoUser, updateInfoUser, updatePassword, CheckMail, CheckMailToken }

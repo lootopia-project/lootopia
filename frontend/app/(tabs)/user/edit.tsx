@@ -26,7 +26,10 @@ const EditUser = () => {
         isTwoFactorEnabled: false,
         phone: 0,
         lang: "en",
-        checkMail: false
+        checkMail: false,
+        ranking: 0,
+        crowns: 0
+ 
     });
     const [changePassword, setChangePassword] = useState({
         currentPassword: "",
