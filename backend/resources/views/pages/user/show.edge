@@ -1,0 +1,83 @@
+@layout.app()
+@slot('meta')
+<meta name="description" content="{{ t('_.User Edit Form') }}">
+@endslot
+@slot('main')
+<div class="flex justify-center mt-4">
+    <form method="POST" action="/users/{{ user.id }}?_method=DELETE" class="mb-4">
+        {{ csrfField() }}
+        <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600" onclick='return confirm("{{ t('_.Are you sure to delete') }} {{ user.name }}?")'>{{ t('_.Delete User') }}</button>
+    </form>
+</div>
+<div class="flex min-h-screen justify-center p-4">
+
+    <form method="POST" action="/users/{{ user.id }}?_method=PUT" class="w-full max-w-6xl">
+        {{ csrfField() }}
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="shadow-md rounded-lg p-6 bg-white">
+                <h3 class="text-lg font-bold mb-4">{{ t('_.Personal Info') }}</h3>
+                <div class="mb-4">
+                    <label for="name" class="block font-medium">{{ t('_.Name:') }}</label>
+                    <input type="text" id="name" name="name" value="{{ user.name }}" class="border rounded p-1 w-full">
+                </div>
+                <div class="mb-4">
+                    <label for="surname" class="block font-medium">{{ t('_.Surname:') }}</label>
+                    <input type="text" id="surname" name="surname" value="{{ user.surname }}" class="border rounded p-1 w-full">
+                </div>
+                <div class="mb-4">
+                    <label for="nickname" class="block font-medium">{{ t('_.Nickname:') }}</label>
+                    <input type="text" id="nickname" name="nickname" value="{{ user.nickname }}" class="border rounded p-1 w-full">
+                </div>
+            </div>
+
+            <div class="shadow-md rounded-lg p-6 bg-white">
+                <h3 class="text-lg font-bold mb-4">{{ t('_.Contact Info') }}</h3>
+                <div class="mb-4">
+                    <label for="email" class="block font-medium">{{ t('_.Email:') }}</label>
+                    <input type="email" id="email" name="email" value="{{ user.email }}" class="border rounded p-1 w-full">
+                </div>
+                <div class="mb-4">
+                    <label for="phone" class="block font-medium">{{ t('_.Phone:') }}</label>
+                    <input type="text" id="phone" name="phone" value="{{ user.phone }}" class="border rounded p-1 w-full">
+                </div>
+                <div class="mb-4">
+                    <label for="checkMail" class="block font-medium">{{ t('_.Email Verified:') }}</label>
+                    <select id="checkMail" name="checkMail" class="border rounded p-1 w-full">
+                        <option value="1" {{ user.checkMail ? 'selected' : '' }}>{{ t('_.Yes') }}</option>
+                        <option value="0" {{ !user.checkMail ? 'selected' : '' }}>{{ t('_.No') }}</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="shadow-md rounded-lg p-6 bg-white">
+                <h3 class="text-lg font-bold mb-4">{{ t('_.Additional Info') }}</h3>
+                <div class="mb-4">
+                    <label for="crowns" class="block font-medium">{{ t('_.Crowns:') }}</label>
+                    <input type="number" id="crowns" name="crowns" value="{{ user.crowns }}" class="border rounded p-1 w-full">
+                </div>
+                <div class="mb-4">
+                    <label for="ranking" class="block font-medium">{{ t('_.Ranking:') }}</label>
+                    <input type="number" id="ranking" name="ranking" value="{{ user.ranking }}" class="border rounded p-1 w-full">
+                </div>
+                <div class="mb-4">
+                    <label for="isPartner" class="block font-medium">{{ t('_.Partner:') }}</label>
+                    <select id="isPartner" name="isPartner" class="border rounded p-1 w-full">
+                        <option value="1" {{ user.isPartner ? 'selected' : '' }}>{{ t('_.Yes') }}</option>
+                        <option value="0" {{ !user.isPartner ? 'selected' : '' }}>{{ t('_.No') }}</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label for="lang" class="block font-medium">{{ t('_.Language:') }}</label>
+                    <input type="text" id="lang" name="lang" value="{{ user.lang }}" class="border rounded p-1 w-full">
+                </div>
+            </div>
+        </div>
+
+        <div class="flex justify-around mt-6">
+            <button type="reset" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">{{ t('_.Reset') }}</button>
+            <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">{{ t('_.Save') }}</button>
+        </div>
+    </form>
+</div>
+@endslot
+@end

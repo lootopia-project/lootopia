@@ -26,6 +26,10 @@ export default class DetectUserLocaleMiddleware {
    * Feel free to use different mechanism for finding user language.
    */
   protected getRequestLocale(ctx: HttpContext) {
+    const cookieLang = ctx.request.cookie('lang')
+    if (cookieLang && i18nManager.supportedLocales().includes(cookieLang)) {
+      return cookieLang
+    }
     const userLanguages = ctx.request.languages()
     return i18nManager.getSupportedLocaleFor(userLanguages)
   }
@@ -58,8 +62,8 @@ export default class DetectUserLocaleMiddleware {
      * edge templates.
      */
     if ('view' in ctx) {
-      ctx.view.share({ i18n: ctx.i18n })
-    }
+      ctx.view.share({ i18n: ctx.i18n,supportedLocales: i18nManager.supportedLocales() })
+    }   
 
     return next()
   }

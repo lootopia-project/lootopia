@@ -9,6 +9,7 @@
 
 import router from '@adonisjs/core/services/router'
 import { middleware } from '#start/kernel'
+//frontend controllers
 const DoubleAuthsController = () => import('#controllers/double_auths_controller')
 const AuthController = () => import('#controllers/auth_controller')
 const HuntingsController = () => import('#controllers/huntings_controller')
@@ -19,8 +20,16 @@ const ItemsController = () => import('#controllers/items_controller')
 const LogHistoriesController = () => import('#controllers/log_histories_controller')
 const OrdersController = () => import('#controllers/orders_controller')
 const SpotsController = () => import('#controllers/spots_controller')
-const AdminAuthsController = () => import('#controllers/admin_auths_controller')
 
+//backend controllers
+const AdminAuthsController = () => import('#controllers/admin/auth_controller')
+const AdminUsersController = () => import('#controllers/admin/users_controller')
+const AdminItemsController = () => import('#controllers/admin/items_controller')
+const AdminHuntingsController = () => import('#controllers/admin/huntings_controller')
+const I18NsController = () => import('#controllers/admin/i_18_ns_controller')
+
+
+//frontend routes
 router.post('/login', [AuthController, 'login'])
 router.post('/register', [AuthController, 'register'])
 router.post('/users/checkDoubleAuth', [DoubleAuthsController, 'checkDoubleAuth'])
@@ -78,6 +87,9 @@ router
     }),
   ])
 
+
+
+//backend routes
 router.get('/', async ({ view, auth, response }) => {
   const check = await auth.check()
   if (check) {
@@ -87,6 +99,7 @@ router.get('/', async ({ view, auth, response }) => {
 })
 router.post('/admin/login', [AdminAuthsController, 'login'])
 router.get('/admin/logout', [AdminAuthsController, 'logout'])
+router.post('i18n',[I18NsController, 'index'])
 router
   .group(() => {
     router.get('/home', async ({ view, auth }) => {
@@ -94,6 +107,9 @@ router
         auth: auth,
       })
     })
+    router.resource('/users', AdminUsersController)
+    router.resource('/items', AdminItemsController)
+    router.resource('/huntings', AdminHuntingsController)
   })
   .use([
     middleware.auth({

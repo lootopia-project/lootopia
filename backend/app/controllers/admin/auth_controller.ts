@@ -1,6 +1,6 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import Admin from '#models/admin'
-export default class AdminAuthsController {
+export default class AuthController {
   public async login({ request, auth, response, view }: HttpContext) {
     const { email, password } = request.only(['email', 'password'])
     const admin = await Admin.verifyCredentials(email, password)

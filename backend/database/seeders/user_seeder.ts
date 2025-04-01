@@ -1,5 +1,6 @@
 import { BaseSeeder } from '@adonisjs/lucid/seeders'
 import User from '#models/user'
+import { UserFactory } from '#database/factories/user_factory'
 export default class extends BaseSeeder {
   async run() {
     await User.createMany([
@@ -39,6 +40,31 @@ export default class extends BaseSeeder {
         img: 'https://lootopia.blob.core.windows.net/lootopia-photos/user.png',
         ranking: 1,
       },
+      {
+        email: 'john.doe@example.com',
+        password: 'fakePass123',
+        nickname: 'johndoe',
+        name: 'John',
+        surname: 'Doe',
+        isPartner: false,
+        crowns: 500,
+        phone: '5551234567',
+        img: 'https://example.com/default-user.png',
+        ranking: 2,
+      },
+      {
+        email: 'jane.smith@example.com',
+        password: 'fakePass456',
+        nickname: 'janesmith',
+        name: 'Jane',
+        surname: 'Smith',
+        isPartner: false,
+        crowns: 750,
+        phone: '5557654321',
+        img: 'https://example.com/default-user.png',
+        ranking: 3,
+      },
     ])
+    await UserFactory.createMany(100)
   }
 }
