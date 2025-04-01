@@ -1,0 +1,58 @@
+@layout.app({ title: t("Create Item") })
+@slot('meta')
+<meta name="description" content="Page of items">
+@endslot
+@slot('main')
+
+<form action="{{route('/items')}}" method="POST" class="w-full max-w-lg mx-auto mt-10">
+    {{ csrfField() }}
+    <div class="w-lg">
+        <div class="shadow-md rounded-lg p-6 bg-white">
+            <h3 class="text-lg font-bold mb-4">{{ t('_.Info') }}</h3>
+            <div class="mb-4">
+                <label for="name" class="block font-medium">{{ t('_.Name:') }}</label>
+                <input type="text" id="name" name="name" class="border rounded p-1 w-full">
+            </div>
+            <div class="mb-4">
+                <label for="description" class="block font-medium">{{ t('_.Description') }}:</label>
+                <textarea type="text" id="description" name="description" class="border rounded p-1 w-full">
+                    
+                </textarea>
+            </div>
+            <div class="mb-4">
+                <label for="price" class="block font-medium">{{ t('_.Price') }}:</label>
+                <input type="text" id="price" name="price"
+                    class="border rounded p-1 w-full">
+            </div>
+            <div class="mb-4">
+                <label for="shop" class="block font-medium">{{ t('_.Enable') }}:</label>
+                <select id="shop" name="shop" class="border rounded p-1 w-full">
+                    <option value="1">{{ t('_.Yes') }}</option>
+                    <option value="0">{{ t('_.No') }}</option>
+                </select>
+            </div>
+            <div class="mb-4">
+                <label for="rarityId" class="block font-medium">{{ t('_.Rarity') }}:</label>
+                <select id="rarityId" name="rarityId" class="border rounded p-1 w-full">
+                    @each(rarity in rarities)
+                    <option value="{{ rarity.id }}">{{ rarity.name }}</option>
+                    @end
+                </select>
+            </div>
+            <div class="mb-4">
+                <label for="typeItemId" class="block font-medium">{{ t('_.Type') }}:</label>
+                <select id="typeItemId" name="typeItemId" class="border rounded p-1 w-full">
+                    @each(type in types)
+                    <option value="{{ type.id }}">{{ type.name }}
+                    </option>
+                    @end
+                </select>
+            </div>
+        </div>
+    <div class="flex justify-center mt-6">
+        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">{{t('_.Create Item')}}</button>
+    </div>
+</form>
+
+@endslot
+@end

@@ -92,5 +92,19 @@
     "enterEmail": "Enter your email",
     "password": "Password",
     "enterPassword": "Enter your password",
-    "button": "Login"
+    "button": "Login",
+    "Description": "Description",
+    "Create Item": "Create Item",
+    "Item Edit Form": "Item Edit Form",
+    "Delete Item": "Delete Item",
+    "Info": "Informations",
+    "Price": "Price",
+    "Rarity": "Rarity",
+    "Enable": "Enable",
+    "Type": "Type",
+    "Login": "Login",
+    "List of items": "List of items",
+    "Edit item": "Edit item",
+    "List of users": "List of users",
+    "Edit user": "Edit user"
 }

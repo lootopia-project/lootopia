@@ -3,7 +3,7 @@ import type { HttpContext } from '@adonisjs/core/http'
 
 export default class LogHistoriesController {
   async getLogHistories({ response, auth }: HttpContext) {
-    const user = auth.user
+    const user = auth.use('api').user
     if (!user) {
       return response.unauthorized({ message: 'Unauthorized' })
     }

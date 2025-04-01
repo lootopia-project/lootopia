@@ -71,11 +71,6 @@ export default class UsersController {
   }
 
   /**
-   * Edit individual record
-   */
-  async edit({ params }: HttpContext) {}
-
-  /**
    * Handle form submission for the edit action
    */
   async update({ params, request, response }: HttpContext) {

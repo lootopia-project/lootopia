@@ -1,0 +1,72 @@
+@layout.app({ title: t("Edit item")+item.name })
+@slot('meta')
+<meta name="description" content="{{ t('_.Item Edit Form') }}">
+@endslot
+@slot('main')
+<div class="flex justify-center mt-4">
+    <form method="POST" action="/items/{{ item.id }}?_method=DELETE" class="mb-4">
+        {{ csrfField() }}
+        <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+            onclick='return confirm("{{ t(' _.Are you sure to delete') }} {{ item.name }}?")'>
+            {{ t('_.Delete Item') }}
+        </button>
+    </form>
+</div>
+<div class="flex min-h-screen justify-center p-4">
+
+    <form method="POST" action="/items/{{ item.id }}?_method=PUT">
+        {{ csrfField() }}
+        <div class="w-lg">
+            <div class="shadow-md rounded-lg p-6 bg-white">
+                <h3 class="text-lg font-bold mb-4">{{ t('_.Info') }}</h3>
+                <div class="mb-4">
+                    <label for="name" class="block font-medium">{{ t('_.Name:') }}</label>
+                    <input type="text" id="name" name="name" value="{{ item.name }}" class="border rounded p-1 w-full">
+                </div>
+                <div class="mb-4">
+                    <label for="description" class="block font-medium">{{ t('_.Description') }}:</label>
+                    <textarea type="text" id="description" name="description" class="border rounded p-1 w-full">
+                        {{ item.description }}
+                    </textarea>
+                </div>
+                <div class="mb-4">
+                    <label for="price" class="block font-medium">{{ t('_.Price') }}:</label>
+                    <input type="text" id="price" name="price" value="{{ item.price }}"
+                        class="border rounded p-1 w-full">
+                </div>
+                <div class="mb-4">
+                    <label for="shop" class="block font-medium">{{ t('_.Enable') }}:</label>
+                    <select id="shop" name="shop" class="border rounded p-1 w-full">
+                        <option value="1" {{ item.shop ? 'selected' : '' }}>{{ t('_.Yes') }}</option>
+                        <option value="0" {{ !item.shop ? 'selected' : '' }}>{{ t('_.No') }}</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label for="rarityId" class="block font-medium">{{ t('_.Rarity') }}:</label>
+                    <select id="rarityId" name="rarityId" class="border rounded p-1 w-full">
+                        @each(rarity in rarities)
+                        <option value="{{ rarity.id }}" {{ rarity.id==item.rarityId ? 'selected' : '' }}>{{ rarity.name
+                            }}</option>
+                        @end
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label for="typeItemId" class="block font-medium">{{ t('_.Type') }}:</label>
+                    <select id="typeItemId" name="typeItemId" class="border rounded p-1 w-full">
+                        @each(type in types)
+                        <option value="{{ type.id }}" {{ type.id==item.typeItemId ? 'selected' : '' }}>{{ type.name }}
+                        </option>
+                        @end
+                    </select>
+                </div>
+            </div>
+            <div class="flex justify-around mt-6">
+                <button type="reset" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">{{ t('_.Reset')
+                    }}</button>
+                <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">{{
+                    t('_.Save') }}</button>
+            </div>
+    </form>
+</div>
+@endslot
+@end

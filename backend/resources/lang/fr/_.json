@@ -93,5 +93,19 @@
     "password": "Mot de passe",
     "enterPassword": "Entrez votre mot de passe",
     "button": "Se connecter",
-    "forgot": "Mot de passe oublié ?"
+    "forgot": "Mot de passe oublié ?",
+    "Description": "Description",
+    "Create Item": "Créer un item",
+    "Item Edit Form": "Formulaire d'édition d'item",
+    "Delete Item": "Supprimer l'item",
+    "Info": "Informations",
+    "Price": "Prix",
+    "Rarity": "Rareté",
+    "Enable": "Activer",
+    "Type": "Type",
+    "Login": "Connexion",
+    "List of items": "Liste des items",
+    "Edit item": "Éditer l'item",
+    "List of users": "Liste des utilisateurs",
+    "Edit user": "Éditer l'utilisateur"
 }

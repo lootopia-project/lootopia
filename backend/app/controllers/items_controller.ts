@@ -77,7 +77,7 @@ export default class ItemsController {
   }
 
   async buyItem({ request, response, auth }: HttpContext) {
-    const user = auth.user
+    const user = auth.use('api').user
     if (!user) {
       return response.unauthorized({ message: 'Unauthorized' })
     }
@@ -206,11 +206,12 @@ export default class ItemsController {
   }
 
   async getListItemUser({ response, auth }: HttpContext) {
-    if (!auth.user) {
+    const user = auth.use('api').user
+    if (!user) {
       return response.unauthorized({ message: 'Unauthorized' })
     }
     const items = await UsersHuntingItem.query()
-      .where('user_id', auth.user.id)
+      .where('user_id', user.id)
       .andWhere('shop', false)
       .andWhere('history', false)
       .preload('item', (query) => {
@@ -227,7 +228,7 @@ export default class ItemsController {
       img: item.item.img,
       price: item.price,
       rarity: item.item.rarity?.name || 'Unknown',
-      user: auth.user ? auth.user.nickname : 'Unknown',
+      user: auth.user ? user.nickname : 'Unknown',
       fromShop: false,
     }))
 
@@ -235,7 +236,7 @@ export default class ItemsController {
   }
   async addItemToShop({ request, response, auth }: HttpContext) {
     const { item } = request.only(['item'])
-    const user = auth.user
+    const user = auth.use('api').user
     if (!user) {
       return response.unauthorized({ message: 'Unauthorized' })
     }
@@ -254,7 +255,7 @@ export default class ItemsController {
   }
 
   async exchangeItemUsers({ auth, request, response }: HttpContext) {
-    const user = auth.user
+    const user = auth.use('api').user
 
     if (!user) {
       return response.json({
@@ -359,7 +360,7 @@ export default class ItemsController {
   }
 
   async getItemsMessageUser({ auth, response }: HttpContext) {
-    const user = auth.user
+    const user = auth.use('api').user
 
     if (!user) {
       return response.json({
