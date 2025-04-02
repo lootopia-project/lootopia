@@ -7,7 +7,7 @@ export default class extends BaseSeeder {
   public async run() {
     const items = await Item.all()
 
-    const records = Array.from({ length: 20 }, () => {
+    const recordsUser = Array.from({ length: 20 }, () => {
       const item = faker.helpers.arrayElement(items)
       return {
         history: false,
@@ -18,7 +18,21 @@ export default class extends BaseSeeder {
         price: item.price,
       }
     })
+    
+    await UsersHuntingItem.createMany(recordsUser)
 
-    await UsersHuntingItem.createMany(records)
+    const recordsHunting = Array.from({ length: 20 }, () => {
+      const item = faker.helpers.arrayElement(items)
+      return {
+        history: false,
+        huntingId: faker.number.int({ min: 1, max: 10 }),
+        itemId: item.id,
+        userId: null,
+        shop: false,
+        price: item.price,
+      }
+    })
+    await UsersHuntingItem.createMany(recordsHunting)
+
   }
 }

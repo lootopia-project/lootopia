@@ -1,0 +1,141 @@
+@layout.app({ title: t("Edit hunting") + hunting.name })
+
+@slot('meta')
+  <meta name="description" content="{{ t('_.Hunting Edit Form') }}">
+@endslot
+
+@slot('main')
+
+<div class="flex justify-center mt-4">
+    <form method="POST" action="/huntings/{{ hunting.id }}?_method=DELETE" class="mb-4">
+        {{ csrfField() }}
+        <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+            onclick='return confirm("{{ t(" _.Are you sure to delete") }} {{ hunting.title }}?")'>
+            {{ t('_.Delete Hunting') }}
+        </button>
+    </form>
+</div>
+
+<div class="flex justify-center mb-4 gap-6 p-6">
+    <div class="w-1/2">
+        <form method="POST" action="/huntings/{{ hunting.id }}?_method=PUT">
+            {{ csrfField() }}
+            <div class="shadow-md rounded-lg p-6 bg-white">
+                <div class="w-full border-b-black border-b-2 mb-4 flex justify-between">
+                    <h3 class="text-lg font-bold">{{ t('_.Info') }}</h3>
+                        <button type="reset" class="bg-gray-500 text-white px-4 py-2 mb-3 rounded hover:bg-gray-600">
+                            {{ t('_.Reset') }}
+                        </button>
+                        <button type="submit" class="bg-green-500 text-white px-4 py-2 mb-3 rounded hover:bg-green-600">
+                            {{ t('_.Save') }}
+                        </button>
+                </div>
+                <div class="max-h-96 overflow-y-scroll">
+                <div class="mb-4">
+                    <label for="title" class="block font-medium">{{ t('_.Name') }}:</label>
+                    <input type="text" id="title" name="title" value="{{ hunting.title }}"
+                        class="border rounded p-1 w-full" />
+                </div>
+                <div class="mb-4">
+                    <label for="description" class="block font-medium">{{ t('_.Description') }}:</label>
+                    <input type="text" id="description" name="description" value="{{ hunting.description }}"
+                        class="border rounded p-1 w-full" />
+                </div>
+                <div class="mb-4">
+                    <label for="minUser" class="block font-medium">{{ t('_.Min of user') }}:</label>
+                    <input type="number" min="0" id="minUser" name="minUser" value="{{ hunting.minUser }}"
+                        class="border rounded p-1 w-full" />
+                </div>
+                <div class="mb-4">
+                    <label for="maxUser" class="block font-medium">{{ t('_.Max of user') }}:</label>
+                    <input type="number" min="0" id="maxUser" name="maxUser" value="{{ hunting.maxUser }}"
+                        class="border rounded p-1 w-full" />
+                </div>
+                <div class="mb-4">
+                    <label for="endDate" class="block font-medium">{{ t('_.End date') }}:</label>
+                    <input type="date" min="0" id="endDate" name="endDate" value="{{ hunting.endDate.toSQLDate() }}"
+                        class="border rounded p-1 w-full" />
+                </div>
+
+                <div class="mb-4">
+                    <label for="price" class="block font-medium">{{ t('_.Price') }}</label>
+                    <input type="text" id="price" name="price" value="{{ hunting.price }}"
+                        class="border rounded p-1 w-full" />
+                </div>
+
+                <div class="mb-4">
+                    <label for="private" class="block font-medium">{{ t('_.Private') }}</label>
+                    <select id="private" name="private" class="border rounded p-1 w-full">
+                        <option value="1" {{ hunting.private ? 'selected' : '' }}>{{ t('_.Yes') }}</option>
+                        <option value="0" {{ !hunting.private ? 'selected' : '' }}>{{ t('_.No') }}</option>
+                    </select>
+                </div>
+
+                <div class="mb-4">
+                    <label for="status" class="block font-medium">{{ t('_.Status') }}</label>
+                    <select id="status" name="status" class="border rounded p-1 w-full">
+                        <option value="1" {{ hunting.status ? 'selected' : '' }}>{{ t('_.Enabled') }}</option>
+                        <option value="0" {{ !hunting.status ? 'selected' : '' }}>{{ t('_.Disabled') }}</option>
+                    </select>
+                </div>
+
+                <div class="mb-4">
+                    <label for="worldId" class="block font-medium">{{ t('_.World') }}</label>
+                    <select id="worldId" name="worldId" class="border rounded p-1 w-full">
+                        @each(world in worlds)
+                        <option value="{{ world.id }}" {{ world.id==hunting.worldId ? 'selected' : '' }}>{{ world.name
+                            }}</option>
+                        @end
+                    </select>
+                </div>
+
+                <div class="mb-4">
+                    <label for="userId" class="block font-medium">{{ t('_.Users') }}</label>
+                    <select id="userId" name="userId" class="border rounded p-1 w-full">
+                        @each(user in users)
+                        <option value="{{ user.id }}" {{ user.id==hunting.userId ? 'selected' : '' }}>{{ user.nickname
+                            }}</option>
+                        @end
+                    </select>
+                </div>
+            </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="w-1/2">
+        <div class="shadow-md rounded-lg p-6 bg-white h-full">
+            <div class="w-full border-b-black border-b-2 mb-4 flex justify-between">
+                <h3 class="text-lg font-bold">{{ t('_.Items') }}</h3>
+                <form method="POST" action="/huntings/{{ hunting.id }}/items" class="">
+                    {{ csrfField() }}
+                        <select id="itemId" name="itemId" class="border rounded p-1">
+                            @each(item in items)
+                            <option value="{{ item.id }}">{{ item.name }}</option>
+                            @end
+                        </select>
+                    <button type="submit"
+                        class="bg-green-500 text-white px-4 mb-3 py-2 rounded hover:bg-green-600">{{ t('_.Add')}}</button>
+                </form>
+            </div>
+            <div class="max-h-96 overflow-y-scroll">
+            @each(item in hunting.item)
+            <div class="mb-4 flex justify-between items-center" id="item-{{ item.id }}">
+                <span>{{ item.item.name }}</span>
+                <form method="POST" action="/huntings/{{ hunting.id }}/items/{{ item.id }}?_method=DELETE">
+                    {{ csrfField() }}
+                    <button type="submit" class="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600"
+                        onclick='return confirm("{{ t("_.Are you sure to delete") }} {{ item.item.name }}?")'>
+                        {{ t('_.Delete') }}
+                    </button>
+                </form>
+            </div>
+            @end
+        </div>
+        </div>
+    </div>
+</div>
+@vite(['resources/js/hunting_item_listing.js'])
+
+@endslot
+@end

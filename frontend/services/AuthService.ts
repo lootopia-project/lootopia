@@ -67,7 +67,6 @@ const logoutUser = async () : Promise<RETURN> =>{
 const checkIsLogin = async () : Promise<RETURN> =>{
   try {
     const config = await getConfig()
-    console.log("config",config);
     
     const response = await axios.post<RETURN>(`${API_URL}/checkIsLogin`, {}, config)
 
