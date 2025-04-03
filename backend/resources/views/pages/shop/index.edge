@@ -1,0 +1,45 @@
+@layout.app("Crown - Index")
+@slot('meta')
+<meta name="description" content="Page of login">
+@endslot
+@slot('main')
+<div class="container mx-auto px-4 sm:px-8">
+    <div class="py-8 flex justify-between">
+        <h2 class="text-2xl font-semibold leading-tight">{{ t('List of Shop Crowns') }}</h2>
+        <a href="/shopCrowns/create" class="btn btn-primary rounded bg-gray-500 p-2">{{ t('Create new crown') }}</a>
+    </div>
+    <div class="overflow-hidden rounded-lg shadow-xs">
+        <div class="overflow-x-auto">
+            <table class="w-full whitespace-no-wrap text-center">
+                <thead>
+                    <tr class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b bg-gray-50">
+                        <th class="px-4 py-3">#</th>
+                        <th class="px-4 py-3">{{ t('Name') }}</th>
+                        <th class="px-4 py-3">{{ t('Price') }}</th>
+                        <th class="px-4 py-3">{{ t('Number of Crowns') }}</th>
+                        <th class="px-4 py-3">{{ t('Actions') }}</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    @each(crown in shopCrowns)
+                        <tr class="text-gray-700 ">
+                            <td class="px-4 py-3 text-sm font-medium">{{ crown.id }}</td>
+                            <td class="px-4 py-3 text-sm">{{ crown.name }}</td>
+                            <td class="px-4 py-3 text-sm">{{ crown.price }}</td>
+                            <td class="px-4 py-3 text-sm">{{ crown.numberOfCrowns }}</td>
+                            <td class="px-4 py-3 text-sm">
+
+                                <form action="/shopCrowns/{{ crown.id }}?_method=DELETE" method="POST" style="display:inline;">
+                                    {{ csrfField() }}
+                                    <button type="submit" class="text-red-600 hover:text-red-900">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    @end
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+@endslot
+@end

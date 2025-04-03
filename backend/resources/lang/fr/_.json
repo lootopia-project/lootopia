@@ -131,5 +131,7 @@
     "Status": "Statut",
     "Actions": "Actions",
     "List of type items": "Liste des types d'items",
-    "Create new type item": "Créer un nouvel item"
+    "Create new type item": "Créer un nouvel item",
+    "Number of Crowns": "Nombre de couronnes",
+    "Create new crown": "Créer une nouvelle couronne"
 }

@@ -88,8 +88,6 @@ router
     }),
   ])
 
-
-
 //backend routes
 router.get('/', async ({ view, auth, response }) => {
   const check = await auth.check()
