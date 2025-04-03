@@ -127,5 +127,8 @@
     "Min of user": "Min of users",
     "Max of user": "Max of users",
     "End date": "End date",
-    "Status": "Status"
+    "Status": "Status",
+    "Actions": "Actions",
+    "List of type items": "List of type items",
+    "Create new type item": "Create new type item"
 }

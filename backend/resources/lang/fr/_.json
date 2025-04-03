@@ -128,5 +128,8 @@
     "Min of user": "Min d'utilisateurs",
     "Max of user": "Max d'utilisateurs",
     "End date": "Date de fin",
-    "Status": "Statut"
+    "Status": "Statut",
+    "Actions": "Actions",
+    "List of type items": "Liste des types d'items",
+    "Create new type item": "Créer un nouvel item"
 }

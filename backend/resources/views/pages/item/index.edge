@@ -8,6 +8,8 @@
         class="flex justify-center p-2 text-white rounded-lg bg-green-500 text-lg font-bold">{{t('_.Create Item')}}</a>
     <input type="text" id="search" placeholder="Search by name or description"
         class="ml-4 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+    <a href="{{route('/typeItems')}}"
+        class="ml-4 p-2 text-white rounded-lg bg-blue-500 text-lg font-bold">{{t('_.List of type items')}}</a>
 </div>
 @if (items.length == 0)
 <div class="bg-white shadow-md rounded-lg p-6 m-4 h-fit">

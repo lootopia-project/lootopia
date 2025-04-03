@@ -1,0 +1,24 @@
+@layout.app({ title: typeItem.name })
+@slot('meta')
+<meta name="description" content="Page of items">
+@endslot
+@slot('main')
+
+<div class="mt-4 flex justify-center flex-col items-center">
+    <div class="flex justify-around flex-col items-center mb-4">
+        <h1 class="text-2xl font-bold">Type Item: {{ typeItem.name }}</h1>
+        <a href="/typeItems" class="btn btn-primary rounded bg-gray-500 p-2">Back to Types</a>
+    </div>
+
+    <form action="/typeItems/{{ typeItem.id }}?_method=PUT" method="POST" class="bg-white p-6 rounded w-1/2 m-0 shadow-md">
+        <div class="mb-4">
+            <label for="name" class="block text-gray-700 text-sm font-bold mb-2">Name:</label>
+            <input type="text" name="name" id="name" value="{{ typeItem.name }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+        </div>
+        {{ csrfField() }}
+        <button type="submit" class="btn btn-primary cursor-pointer bg-green-500 text-white p-2 rounded">Update Type Item</button>
+    </form>
+</div>
+
+@endslot
+@end

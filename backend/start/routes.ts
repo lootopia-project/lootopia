@@ -27,7 +27,8 @@ const AdminUsersController = () => import('#controllers/admin/users_controller')
 const AdminItemsController = () => import('#controllers/admin/items_controller')
 const AdminHuntingsController = () => import('#controllers/admin/huntings_controller')
 const I18NsController = () => import('#controllers/admin/i_18_ns_controller')
-
+const AdminShopCrownsController = () => import('#controllers/admin/shop_crowns_controller')
+const AdminTypeItemsController = () => import('#controllers/admin/type_items_controller')
 
 //frontend routes
 router.post('/login', [AuthController, 'login'])
@@ -110,6 +111,8 @@ router
     router.resource('/users', AdminUsersController)
     router.resource('/items', AdminItemsController)
     router.resource('/huntings', AdminHuntingsController)
+    router.resource('/shopCrowns', AdminShopCrownsController)
+    router.resource('/typeItems', AdminTypeItemsController)
     router.post('/huntings/:id/items', [AdminHuntingsController, 'addItem'])
     router.delete('/huntings/:huntingId/items/:itemId', [AdminHuntingsController, 'removeItem'])
   })
