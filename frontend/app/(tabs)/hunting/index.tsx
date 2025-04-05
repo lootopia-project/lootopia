@@ -13,6 +13,7 @@ import { Picker } from '@react-native-picker/picker'
 import { getPublicHuntings } from '@/services/HuntingService'
 import { Hunting } from '@/type/feature/hunting/Hunting'
 import { useLanguage } from "@/hooks/providers/LanguageProvider";
+import { Link } from 'expo-router'
 
 export default function PublicHuntings() {
   const [publicHuntings, setPublicHuntings] = useState<Hunting[]>([])
@@ -243,6 +244,17 @@ export default function PublicHuntings() {
                       >
                         {i18n.t("Status")}: {hunt.status ? 'Active' : 'Inactive'}
                       </Text>
+                      <Link
+                        href={{
+                          pathname: '/hunting/huntingDetails', 
+                          params: { hunt: JSON.stringify(hunt) }, 
+                        }}
+                        asChild
+                      >
+                        <TouchableOpacity style={{ marginTop: 10 }}>
+                          <Text style={{ color: '#007bff' }}>Voir détails</Text>
+                        </TouchableOpacity>
+                      </Link>
                       <TouchableOpacity
                         style={{
                           backgroundColor: '#000',

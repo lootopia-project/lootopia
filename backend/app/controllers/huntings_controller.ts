@@ -39,13 +39,59 @@ export default class HuntingsController {
     const i18n = i18nManager.locale(user.lang)
 
     try {
-      const huntings = await Hunting.query().where('private', false).orderBy('id', 'desc')
+      const huntings = await Hunting.query()
+        .orderBy('id', 'desc')
+        .withCount('whitelist')
+        .preload('items', (query) => {
+          query
+            .select(['id', 'name', 'description', 'img', 'price', 'rarityId'])
+            .preload('rarity', (rarityQuery: any) => {
+              rarityQuery.select(['id', 'name'])
+            })
+        })
+        .preload('map', (mapQuery) => {
+          mapQuery
+            .select([
+              'id',
+              'name',
+              'skin',
+              'zone',
+              'scale_min',
+              'scale_max',
+              'huntingId',
+              'cacheId',
+            ])
+            .preload('cache')
+            .preload('spotMap')
+        })
+      const formatted = await Promise.all(
+        huntings.map(async (hunting) => {
+          const data = {
+            ...hunting.serialize(),
+            participantCount: Number(hunting.$extras.whitelist_count),
+          } as any
 
+          if (hunting.userId === auth.user!.id) {
+            const participants = await hunting
+              .related('usersHunting')
+              .query()
+              .preload('user', (query) => {
+                query.select(['id', 'nickname'])
+              })
+
+            data.participants = participants.map((p) => ({
+              id: p.user.id,
+              nickname: p.user.nickname,
+            }))
+          }
+
+          return data
+        })
+      )
       return response.json({
         message: i18n.t('_.Public Huntings List Succuess'),
-
         success: true,
-        huntings,
+        huntings: formatted,
       })
     } catch (error) {
       console.error('Error getting public huntings:', error)
