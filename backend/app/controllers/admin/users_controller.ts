@@ -6,36 +6,35 @@ export default class UsersController {
   /**
    * Display a list of resource
    */
-  async index({view,request}: HttpContext) {
-
+  async index({ view, request }: HttpContext) {
     const page = request.input('page', 1)
     const search = request.input('search', '')
     const limit = 8
-    const users = await db.from("users")
-      .whereRaw("LOWER(name) like ?", [`%${search}%`])
-      .orWhereRaw("LOWER(surname) like ?", [`%${search}%`])
-      .orWhereRaw("LOWER(nickname) like ?", [`%${search}%`])
-      .orWhereRaw("LOWER(email) like ?", [`%${search}%`])
-      .orWhereRaw("LOWER(phone) like ?", [`%${search}%`])
+    const users = await db
+      .from('users')
+      .whereRaw('LOWER(name) like ?', [`%${search}%`])
+      .orWhereRaw('LOWER(surname) like ?', [`%${search}%`])
+      .orWhereRaw('LOWER(nickname) like ?', [`%${search}%`])
+      .orWhereRaw('LOWER(email) like ?', [`%${search}%`])
+      .orWhereRaw('LOWER(phone) like ?', [`%${search}%`])
       .paginate(page, limit)
     users.baseUrl('/users')
     return view.render('pages/user/index', {
       users: users,
     })
-
   }
 
   /**
    * Display form to create a new record
    */
-  async create({view}: HttpContext) {
+  async create({ view }: HttpContext) {
     return view.render('pages/user/create')
   }
 
   /**
    * Handle form submission for the create action
    */
-  async store({ request,response }: HttpContext) {
+  async store({ request, response }: HttpContext) {
     const user = new User()
     user.email = request.input('email')
     user.name = request.input('name')
@@ -47,7 +46,7 @@ export default class UsersController {
     user.ranking = request.input('ranking')
     user.isPartner = request.input('isPartner')
     user.lang = request.input('lang')
-    user.password = "12345678"
+    user.password = '12345678'
     try {
       await user.save()
     } catch (error) {

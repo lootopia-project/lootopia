@@ -17,7 +17,6 @@ export const UserFactory = factory
       ranking: faker.number.int({ min: 0, max: 100 }),
       lang: 'en',
       provider: '',
-      
     }
   })
   .build()

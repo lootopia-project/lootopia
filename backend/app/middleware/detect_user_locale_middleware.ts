@@ -62,8 +62,8 @@ export default class DetectUserLocaleMiddleware {
      * edge templates.
      */
     if ('view' in ctx) {
-      ctx.view.share({ i18n: ctx.i18n,supportedLocales: i18nManager.supportedLocales() })
-    }   
+      ctx.view.share({ i18n: ctx.i18n, supportedLocales: i18nManager.supportedLocales() })
+    }
 
     return next()
   }

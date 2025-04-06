@@ -10,13 +10,14 @@ export default class HuntingsController {
   /**
    * Display a list of resource
    */
-  async index({request, view}: HttpContext) {
+  async index({ request, view }: HttpContext) {
     const page = request.input('page', 1)
     const search = request.input('search', '')
     const limit = 8
-    const huntings = await db.from("huntings")
-      .whereRaw("LOWER(title) like ?", [`%${search}%`])
-      .orWhereRaw("LOWER(description) like ?", [`%${search}%`])
+    const huntings = await db
+      .from('huntings')
+      .whereRaw('LOWER(title) like ?', [`%${search}%`])
+      .orWhereRaw('LOWER(description) like ?', [`%${search}%`])
       .paginate(page, limit)
     huntings.baseUrl('/huntings')
     return view.render('pages/hunting/index', {
@@ -27,7 +28,7 @@ export default class HuntingsController {
   /**
    * Display form to create a new record
    */
-  async create({response, view}: HttpContext) {
+  async create({ response, view }: HttpContext) {
     const user = await User.all()
     const world = await World.all()
     const item = await Item.all()
@@ -41,7 +42,7 @@ export default class HuntingsController {
   /**
    * Handle form submission for the create action
    */
-  async store({ request,response }: HttpContext) {
+  async store({ request, response }: HttpContext) {
     const data = request.only([
       'title',
       'description',
@@ -52,9 +53,9 @@ export default class HuntingsController {
       'private',
       'status',
       'worldId',
-      'userId'
+      'userId',
     ])
-    if (data.price < 0 || isNaN(data.price)) {
+    if (data.price < 0 || data.price.isNaN) {
       return response.redirect('back')
     }
     const hunting = await Hunting.create({
@@ -69,34 +70,32 @@ export default class HuntingsController {
       worldId: data.worldId,
       userId: data.userId,
       searchDelay: '00:00:00',
-      background:"https://example.com/bg10.jpg",
-      textColor:"#FFFFFF",
-      headerImg:"https://lootopia.blob.core.windows.net/lootopia-photos/FFJFCIJECEAEGCE.jpeg",
+      background: 'https://example.com/bg10.jpg',
+      textColor: '#FFFFFF',
+      headerImg: 'https://lootopia.blob.core.windows.net/lootopia-photos/FFJFCIJECEAEGCE.jpeg',
     })
-    response.redirect('/huntings/' + hunting.id+"/#hunting-form")
-  
-  } 
+    response.redirect('/huntings/' + hunting.id + '/#hunting-form')
+  }
 
   /**
    * Show individual record
    */
   async show({ params, view }: HttpContext) {
     const hunting = await Hunting.query()
-    .preload('user')
-    .preload('item', 
-      (query) => {
+      .preload('user')
+      .preload('item', (query) => {
         query.preload('item').where('hunting_id', params.id)
       })
-    .preload('world')
-    .preload('usersHunting', 
-      (query) => {
+      .preload('world')
+      .preload('usersHunting', (query) => {
         query.preload('user')
       })
-    .where('id', params.id).firstOrFail()
-    
+      .where('id', params.id)
+      .firstOrFail()
+
     const user = await User.all()
     const world = await World.all()
-    const item = await Item.all()   
+    const item = await Item.all()
 
     return view.render('pages/hunting/show', {
       hunting: hunting,
@@ -109,7 +108,7 @@ export default class HuntingsController {
   /**
    * Handle form submission for the edit action
    */
-  async update({ params, request,response }: HttpContext) {
+  async update({ params, request, response }: HttpContext) {
     const hunting = await Hunting.findOrFail(params.id)
     const data = request.only([
       'title',
@@ -121,11 +120,11 @@ export default class HuntingsController {
       'private',
       'status',
       'worldId',
-      'userId'
+      'userId',
     ])
     hunting.merge(data)
     await hunting.save()
-    return response.redirect('/huntings/' + hunting.id+"/#hunting-form")
+    return response.redirect('/huntings/' + hunting.id + '/#hunting-form')
   }
 
   /**
@@ -138,10 +137,10 @@ export default class HuntingsController {
   }
 
   /*
-  * Add item to hunting
-  */
+   * Add item to hunting
+   */
   async addItem({ params, request, response }: HttpContext) {
-    const { itemId	} = request.only(['itemId'])
+    const { itemId } = request.only(['itemId'])
     const hunting = await Hunting.findOrFail(params.id)
     const item = await Item.findOrFail(itemId)
     await UsersHuntingItem.create({
@@ -150,14 +149,14 @@ export default class HuntingsController {
       itemId: item.id,
       userId: null,
       price: item.price,
-      shop: false
+      shop: false,
     })
-    return response.redirect('/huntings/' + hunting.id+"/#hunting-item-form")
+    return response.redirect('/huntings/' + hunting.id + '/#hunting-item-form')
   }
 
   /*
-  * Remove item from hunting
-  */
+   * Remove item from hunting
+   */
   async removeItem({ params, response }: HttpContext) {
     const hunting = await Hunting.findOrFail(params.huntingId)
     const item = await UsersHuntingItem.findOrFail(params.itemId)
@@ -166,31 +165,31 @@ export default class HuntingsController {
   }
 
   /*
-  * Add user to hunting
-  */
+   * Add user to hunting
+   */
   async addUser({ params, request, response }: HttpContext) {
     const { userId } = request.only(['userId'])
     const hunting = await Hunting.findOrFail(params.id)
     const user = await User.findOrFail(userId)
-    if (user.id == hunting.userId) {
-      return response.redirect('/huntings/' + hunting.id+"/#hunting-user-form")      
+    if (user.id === hunting.userId) {
+      return response.redirect('/huntings/' + hunting.id + '/#hunting-user-form')
     }
     await UsersHunting.create({
       huntingId: hunting.id,
       userId: user.id,
-      opinion: "",
+      opinion: '',
       score: 0,
     })
-    return response.redirect('/huntings/' + hunting.id+"/#hunting-user-form")
+    return response.redirect('/huntings/' + hunting.id + '/#hunting-user-form')
   }
 
   /*
-  * Remove user from hunting
-  */
+   * Remove user from hunting
+   */
   async removeUser({ params, response }: HttpContext) {
     const hunting = await Hunting.findOrFail(params.huntingId)
-    const hunting_user = await UsersHunting.findOrFail(params.userId)
-    await hunting_user.delete()
-    return response.redirect('/huntings/' + hunting.id+"/#hunting-user-form")
+    const HUNTING_USER = await UsersHunting.findOrFail(params.userId)
+    await HUNTING_USER.delete()
+    return response.redirect('/huntings/' + hunting.id + '/#hunting-user-form')
   }
 }

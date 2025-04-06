@@ -13,7 +13,7 @@ export default class PaymentsController {
     if (order === null) {
       return response.badRequest('No pending order found')
     }
-    const amount = 10//Example amount in cents
+    const amount = 10 //Example amount in cents
     const paymentService = new PaymentService()
     const user = auth.use('api').user
     if (user === undefined) {

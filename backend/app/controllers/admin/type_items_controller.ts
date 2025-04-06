@@ -5,7 +5,7 @@ export default class TypeItemsController {
   /**
    * Display a list of resource
    */
-  async index({view}: HttpContext) {
+  async index({ view }: HttpContext) {
     const typeItems = await TypeItem.all()
 
     return view.render('pages/item/type/index', {
@@ -16,7 +16,7 @@ export default class TypeItemsController {
   /**
    * Display form to create a new record
    */
-  async create({view}: HttpContext) {
+  async create({ view }: HttpContext) {
     return view.render('pages/item/type/create')
   }
 
@@ -24,7 +24,7 @@ export default class TypeItemsController {
    * Handle form submission for the create action
    */
   async store({ request, response }: HttpContext) {
-    const {name} = request.only(['name'])
+    const { name } = request.only(['name'])
     const typeItem = new TypeItem()
     typeItem.name = name
     await typeItem.save()

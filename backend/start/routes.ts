@@ -98,7 +98,7 @@ router.get('/', async ({ view, auth, response }) => {
 })
 router.post('/admin/login', [AdminAuthsController, 'login'])
 router.get('/admin/logout', [AdminAuthsController, 'logout'])
-router.post('i18n',[I18NsController, 'index'])
+router.post('i18n', [I18NsController, 'index'])
 router
   .group(() => {
     router.get('/home', async ({ view, auth }) => {

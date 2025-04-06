@@ -7,13 +7,14 @@ export default class ItemsController {
   /**
    * Display a list of resource
    */
-  async index({request,view}: HttpContext) {
+  async index({ request, view }: HttpContext) {
     const page = request.input('page', 1)
     const search = request.input('search', '')
     const limit = 8
-    const items = await db.from("items")
-      .whereRaw("LOWER(name) like ?", [`%${search}%`])
-      .orWhereRaw("LOWER(description) like ?", [`%${search}%`])
+    const items = await db
+      .from('items')
+      .whereRaw('LOWER(name) like ?', [`%${search}%`])
+      .orWhereRaw('LOWER(description) like ?', [`%${search}%`])
       .paginate(page, limit)
     items.baseUrl('/items')
     return view.render('pages/item/index', {
@@ -24,7 +25,7 @@ export default class ItemsController {
   /**
    * Display form to create a new record
    */
-  async create({view}: HttpContext) {
+  async create({ view }: HttpContext) {
     const rarities = await Rarity.all()
     const types = await TypeItem.all()
     return view.render('pages/item/create', {
@@ -37,8 +38,8 @@ export default class ItemsController {
    * Handle form submission for the create action
    */
   async store({ request, response }: HttpContext) {
-    const data = request.only(['name', 'description', 'price', 'rarityId', 'typeItemId','shop'])
-    if (data.price < 0 || isNaN(data.price)) {
+    const data = request.only(['name', 'description', 'price', 'rarityId', 'typeItemId', 'shop'])
+    if (data.price < 0 || data.price.isNaN) {
       return response.redirect('back')
     }
     const item = new Item()
@@ -56,9 +57,9 @@ export default class ItemsController {
   /**
    * Show individual record
    */
-  async show({ params,view }: HttpContext) {   
+  async show({ params, view }: HttpContext) {
     const item = await Item.query().preload('rarity').preload('type').where('id', params.id).first()
-    
+
     const rarities = await Rarity.all()
     const types = await TypeItem.all()
     return view.render('pages/item/show', {
@@ -71,12 +72,11 @@ export default class ItemsController {
   /**
    * Handle form submission for the edit action
    */
-  async update({ params, request,response }: HttpContext) {
+  async update({ params, request, response }: HttpContext) {
     const item = await Item.findOrFail(params.id)
-    const data = request.only(['name', 'description', 'price', 'rarityId', 'typeItemId','shop'])
-    if (data.price < 0 || isNaN(data.price)) {
+    const data = request.only(['name', 'description', 'price', 'rarityId', 'typeItemId', 'shop'])
+    if (data.price < 0 || data.price.isNaN) {
       return response.redirect('back')
-      
     }
     item.name = data.name
     item.description = data.description
@@ -91,7 +91,7 @@ export default class ItemsController {
   /**
    * Delete record
    */
-  async destroy({ params,response }: HttpContext) {
+  async destroy({ params, response }: HttpContext) {
     const item = await Item.findOrFail(params.id)
     await item.delete()
     return response.redirect('/items')

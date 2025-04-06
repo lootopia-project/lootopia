@@ -18,7 +18,7 @@ export default class extends BaseSeeder {
         price: item.price,
       }
     })
-    
+
     await UsersHuntingItem.createMany(recordsUser)
 
     const recordsHunting = Array.from({ length: 20 }, () => {
@@ -33,6 +33,5 @@ export default class extends BaseSeeder {
       }
     })
     await UsersHuntingItem.createMany(recordsHunting)
-
   }
 }

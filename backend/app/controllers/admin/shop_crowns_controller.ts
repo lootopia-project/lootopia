@@ -4,7 +4,7 @@ export default class ShopCrownsController {
   /**
    * Display a list of resource
    */
-  async index({view}: HttpContext) {
+  async index({ view }: HttpContext) {
     const shopCrowns = await ShopCrown.all()
     return view.render('pages/shop/index', {
       shopCrowns: shopCrowns,
@@ -13,21 +13,20 @@ export default class ShopCrownsController {
   /**
    * Show individual record
    */
-  async show({ params }: HttpContext) {
-  }
+  async show({ params }: HttpContext) {}
   /**
    * Display form to create a new record
    */
-  async create({view}: HttpContext) {
+  async create({ view }: HttpContext) {
     return view.render('pages/shop/create')
   }
 
   /**
    * Handle form submission for the create action
    */
-  async store({ request,response }: HttpContext) {
+  async store({ request, response }: HttpContext) {
     const data = request.only(['name', 'price', 'number_of_crown'])
-    if (data.price < 0 || isNaN(data.price)) {
+    if (data.price < 0 || data.price.isNaN) {
       return response.redirect('/shopCrowns/create')
     }
     const shopCrown = new ShopCrown()
