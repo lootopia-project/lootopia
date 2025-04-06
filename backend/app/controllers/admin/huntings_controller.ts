@@ -5,6 +5,7 @@ import User from '#models/user'
 import World from '#models/world'
 import Item from '#models/item'
 import UsersHuntingItem from '#models/users_huntings_item'
+import UsersHunting from '#models/users_hunting'
 export default class HuntingsController {
   /**
    * Display a list of resource
@@ -72,7 +73,7 @@ export default class HuntingsController {
       textColor:"#FFFFFF",
       headerImg:"https://lootopia.blob.core.windows.net/lootopia-photos/FFJFCIJECEAEGCE.jpeg",
     })
-    response.redirect('/huntings/' + hunting.id)
+    response.redirect('/huntings/' + hunting.id+"/#hunting-form")
   
   } 
 
@@ -124,7 +125,7 @@ export default class HuntingsController {
     ])
     hunting.merge(data)
     await hunting.save()
-    return response.redirect('/huntings/' + hunting.id)
+    return response.redirect('/huntings/' + hunting.id+"/#hunting-form")
   }
 
   /**
@@ -151,7 +152,7 @@ export default class HuntingsController {
       price: item.price,
       shop: false
     })
-    return response.redirect('/huntings/' + hunting.id)
+    return response.redirect('/huntings/' + hunting.id+"/#hunting-item-form")
   }
 
   /*
@@ -162,5 +163,34 @@ export default class HuntingsController {
     const item = await UsersHuntingItem.findOrFail(params.itemId)
     await item.delete()
     return response.redirect('/huntings/' + hunting.id)
+  }
+
+  /*
+  * Add user to hunting
+  */
+  async addUser({ params, request, response }: HttpContext) {
+    const { userId } = request.only(['userId'])
+    const hunting = await Hunting.findOrFail(params.id)
+    const user = await User.findOrFail(userId)
+    if (user.id == hunting.userId) {
+      return response.redirect('/huntings/' + hunting.id+"/#hunting-user-form")      
+    }
+    await UsersHunting.create({
+      huntingId: hunting.id,
+      userId: user.id,
+      opinion: "",
+      score: 0,
+    })
+    return response.redirect('/huntings/' + hunting.id+"/#hunting-user-form")
+  }
+
+  /*
+  * Remove user from hunting
+  */
+  async removeUser({ params, response }: HttpContext) {
+    const hunting = await Hunting.findOrFail(params.huntingId)
+    const hunting_user = await UsersHunting.findOrFail(params.userId)
+    await hunting_user.delete()
+    return response.redirect('/huntings/' + hunting.id+"/#hunting-user-form")
   }
 }

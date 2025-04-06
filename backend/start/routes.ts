@@ -113,6 +113,8 @@ router
     router.resource('/typeItems', AdminTypeItemsController)
     router.post('/huntings/:id/items', [AdminHuntingsController, 'addItem'])
     router.delete('/huntings/:huntingId/items/:itemId', [AdminHuntingsController, 'removeItem'])
+    router.post('/huntings/:id/users', [AdminHuntingsController, 'addUser'])
+    router.delete('/huntings/:huntingId/users/:userId', [AdminHuntingsController, 'removeUser'])
   })
   .use([
     middleware.auth({

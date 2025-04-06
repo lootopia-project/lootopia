@@ -16,8 +16,8 @@
     </form>
 </div>
 
-<div class="flex justify-center mb-4 gap-6 p-6">
-    <div class="w-1/2">
+<div class="p-6 flex flex-col lg:flex-row gap-6">
+    <div class="w-full lg:w-1/3" id="hunting-form">
         <form method="POST" action="/huntings/{{ hunting.id }}?_method=PUT">
             {{ csrfField() }}
             <div class="shadow-md rounded-lg p-6 bg-white">
@@ -90,7 +90,7 @@
                 </div>
 
                 <div class="mb-4">
-                    <label for="userId" class="block font-medium">{{ t('_.Users') }}</label>
+                    <label for="userId" class="block font-medium">{{ t('_.Organizer') }}</label>
                     <select id="userId" name="userId" class="border rounded p-1 w-full">
                         @each(user in users)
                         <option value="{{ user.id }}" {{ user.id==hunting.userId ? 'selected' : '' }}>{{ user.nickname
@@ -103,7 +103,7 @@
         </form>
     </div>
 
-    <div class="w-1/2">
+    <div class="w-full lg:w-1/3" id="hunting-item-form">
         <div class="shadow-md rounded-lg p-6 bg-white h-full">
             <div class="w-full border-b-black border-b-2 mb-4 flex justify-between">
                 <h3 class="text-lg font-bold">{{ t('_.Items') }}</h3>
@@ -126,6 +126,41 @@
                     {{ csrfField() }}
                     <button type="submit" class="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600"
                         onclick='return confirm("{{ t("_.Are you sure to delete") }} {{ item.item.name }}?")'>
+                        {{ t('_.Delete') }}
+                    </button>
+                </form>
+            </div>
+            @end
+        </div>
+        </div>
+    </div>
+    <div class="w-full lg:w-1/3" id="hunting-user-form">
+        <div class="shadow-md rounded-lg p-6 bg-white h-full">
+            <div class="w-full border-b-black border-b-2 mb-4 flex justify-between">
+                <h3 class="text-lg font-bold">{{ t('_.Users') }}</h3>
+                <form method="POST" action="/huntings/{{ hunting.id }}/users" class="">
+                    {{ csrfField() }}
+                        <select id="userId" name="userId" class="border rounded p-1">
+                            @each(user in users)
+                                @if(user.id != hunting.userId)
+                                    @if(!hunting.usersHunting.find(u => u.userId == user.id))
+                                        <option value="{{ user.id }}">{{ user.nickname }}</option>
+                                    @end
+                                @end
+                            @end
+                        </select>
+                    <button type="submit"
+                        class="bg-green-500 text-white px-4 mb-3 py-2 rounded hover:bg-green-600">{{ t('_.Add')}}</button>
+                </form>
+            </div>
+            <div class="max-h-96 overflow-y-scroll">
+            @each(user in hunting.usersHunting)
+            <div class="mb-4 flex justify-between items-center" id="user-{{ user.id }}">
+                <span>{{ user.user.nickname }}</span>
+                <form method="POST" action="/huntings/{{ hunting.id }}/users/{{ user.id }}?_method=DELETE">
+                    {{ csrfField() }}
+                    <button type="submit" class="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600"
+                        onclick='return confirm("{{ t("_.Are you sure to delete") }} {{ user.user.nickname }}?")'>
                         {{ t('_.Delete') }}
                     </button>
                 </form>
