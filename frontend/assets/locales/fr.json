@@ -190,6 +190,10 @@
     "✅Accepted": "✅Accepté",
     "❌Refused": "❌Refusé",
     "Loading conversations": "Chargement des conversations",
-    "Search users": "Rechercher des utilisateurs"
-
+    "Search users": "Rechercher des utilisateurs",
+    "Inactive": "Inactive",
+    "Active": "Active",
+    "Participants": "Participants",
+    "Maps": "Cartes",
+    "Zone": "Zone"
 }

@@ -58,11 +58,15 @@ export default class HuntingsController {
               'zone',
               'scale_min',
               'scale_max',
-              'huntingId',
-              'cacheId',
+              'hunting_id',
+              'cache_id',
             ])
             .preload('cache')
-            .preload('spotMap')
+            .preload('spotMap', (spotMapQuery) => {
+              spotMapQuery.preload('spot', (spotQuery) => {
+                spotQuery.select(['id', 'lat', 'long', 'description', 'type_id'])
+              })
+            })
         })
       const formatted = await Promise.all(
         huntings.map(async (hunting) => {
@@ -88,6 +92,8 @@ export default class HuntingsController {
           return data
         })
       )
+
+      console.log('Formatted huntings:', formatted)
       return response.json({
         message: i18n.t('_.Public Huntings List Succuess'),
         success: true,
