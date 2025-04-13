@@ -1,0 +1,42 @@
+@layout.app({ title: t("List of huntings") })
+@slot('meta')
+<meta name="description" content="Page of huntings">
+@endslot
+@slot('main')
+<div class="flex justify-center px-4 my-4">
+    <a href="{{route('/huntings/create')}}"
+        class="flex justify-center p-2 text-white rounded-lg bg-green-500 text-lg font-bold">{{t('_.Create Hunting')}}</a>
+    <input type="text" id="search" placeholder="Search by name or description"
+        class="ml-4 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+</div>
+@if (huntings.length == 0)
+<div class="bg-white shadow-md rounded-lg p-6 m-4 h-fit">
+    <h2 class="text-xl font-bold mb-2">{{t('_.No huntings found')}}</h2>
+    <p class="text-gray-700">{{t('_.Please create a hunting')}}.</p>
+</div>
+@endif
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+    @each(hunting in huntings)
+    <div class="bg-white flex-row justify-around shadow-md rounded-lg p-6 m-4 h-fit">
+        <h2 class="text-xl font-bold mb-2">{{ hunting.title }}</h2>
+        <p class="text-gray-700">{{t('_.Description')}}: {{ hunting.description }}</p>
+        <p class="text-gray-700">{{t('_.Price')}}: {{ hunting.price }}</p>
+        <a class="flex justify-center p-2 text-white rounded-lg bg-gray-500 text-lg font-bold"
+            href="/huntings/{{hunting.id}}">{{t('_.show')}}</a>
+    </div>
+    @end
+
+</div>
+<div class="flex justify-center gap-2 mt-4">
+    @each(anchor in huntings.getUrlsForRange(1, huntings.lastPage))
+    <a href="{{ anchor.url }}"
+        class="px-3 py-1 rounded border text-sm font-medium 
+               hover:bg-blue-100 hover:text-blue-700 transition 
+               {{ anchor.isActive ? 'bg-blue-500 text-white cursor-default pointer-events-none' : 'bg-white text-gray-700' }}">
+        {{ anchor.page }}
+    </a>
+    @endeach
+</div>
+@vite('resources/js/App.js')
+@endslot
+@end

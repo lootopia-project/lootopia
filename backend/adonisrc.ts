@@ -40,6 +40,9 @@ export default defineConfig({
     () => import('@adonisjs/core/providers/edge_provider'),
     () => import('@adonisjs/i18n/i18n_provider'),
     () => import('@vbusatta/adonis-stripe/provider'),
+    () => import('@adonisjs/session/session_provider'),
+    () => import('@adonisjs/shield/shield_provider'),
+    () => import('@adonisjs/vite/vite_provider'),
   ],
 
   /*
@@ -81,5 +84,13 @@ export default defineConfig({
       pattern: 'resources/lang/**/*.{json,yaml,yml}',
       reloadServer: false,
     },
+    {
+      pattern: 'public/**',
+      reloadServer: false,
+    },
   ],
+  hooks: {
+    onBuildStarting: [() => import('@adonisjs/vite/build_hook')],
+  },
+  assetsBundler: false,
 })

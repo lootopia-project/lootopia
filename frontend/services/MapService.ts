@@ -1,18 +1,13 @@
 import axios from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import MapParams from '@/type/feature/map/params';
+import {getConfig} from "@/services/csrfService";
+
 const API_URL = process.env.EXPO_PUBLIC_API_URL as string;
 
 
 const getSpot = async (id:number) :Promise<MapParams> => {
-  const token = await AsyncStorage.getItem('token');
-  const config = {
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": token ? `${token}` : '',
-    },
-    withCredentials: true
-  };
+  const config = await getConfig()
+
   try {
     const response = await axios.post(`${API_URL}/getSpot`,{id:id}, config);
     return response.data;
@@ -23,14 +18,8 @@ const getSpot = async (id:number) :Promise<MapParams> => {
 };
 
 const pushSpot = async (spot: MapParams) :Promise<void> => {
-  const token = await AsyncStorage.getItem('token');
-  const config = {
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": token ? `${token}` : '',
-    },
-    withCredentials: true
-  };
+  const config = await getConfig()
+
   try {
     await axios.post(`${API_URL}/pushSpot`,spot, config);
   } catch (error) {

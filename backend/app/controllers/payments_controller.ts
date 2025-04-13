@@ -13,12 +13,13 @@ export default class PaymentsController {
     if (order === null) {
       return response.badRequest('No pending order found')
     }
-    const amount = order.finalPrice
+    const amount = 10 //Example amount in cents
     const paymentService = new PaymentService()
-    if (auth.user === undefined) {
+    const user = auth.use('api').user
+    if (user === undefined) {
       return response.unauthorized('You must be logged in to make a payment')
     }
-    const paymentIntent = await paymentService.createPaymentIntent(amount, auth.user)
+    const paymentIntent = await paymentService.createPaymentIntent(amount, user)
     return response.ok({
       paymentIntent: paymentIntent.paymentIntent.client_secret,
       ephemeralKey: paymentIntent.ephemeralKey.secret,
@@ -32,16 +33,16 @@ export default class PaymentsController {
     const amountStripe = amount * 100
     const numberCrown = await ShopCrown.query().where('price', amount).first()
     const paymentService = new PaymentService()
-    const user = auth.user
+    const user = auth.use('api').user
     if (!user) {
       return response.unauthorized('You must be logged in to make a payment')
     }
     const i18n = i18nManager.locale(user.lang)
-    const paymentIntent = await paymentService.createPaymentIntent(amountStripe, auth.user)
+    const paymentIntent = await paymentService.createPaymentIntent(amountStripe, user)
     user.crowns += numberCrown?.numberOfCrowns || 0
     await user.save()
     await LogHistory.create({
-      userId: auth.user.id,
+      userId: user.id,
       log: i18n.t('_.You bought {numberCrown} crowns', {
         numberCrown: numberCrown?.numberOfCrowns,
       }),

@@ -9,6 +9,7 @@
 
 import router from '@adonisjs/core/services/router'
 import { middleware } from '#start/kernel'
+//frontend controllers
 const DoubleAuthsController = () => import('#controllers/double_auths_controller')
 const AuthController = () => import('#controllers/auth_controller')
 const HuntingsController = () => import('#controllers/huntings_controller')
@@ -20,6 +21,16 @@ const LogHistoriesController = () => import('#controllers/log_histories_controll
 const OrdersController = () => import('#controllers/orders_controller')
 const SpotsController = () => import('#controllers/spots_controller')
 
+//backend controllers
+const AdminAuthsController = () => import('#controllers/admin/auth_controller')
+const AdminUsersController = () => import('#controllers/admin/users_controller')
+const AdminItemsController = () => import('#controllers/admin/items_controller')
+const AdminHuntingsController = () => import('#controllers/admin/huntings_controller')
+const I18NsController = () => import('#controllers/admin/i_18_ns_controller')
+const AdminShopCrownsController = () => import('#controllers/admin/shop_crowns_controller')
+const AdminTypeItemsController = () => import('#controllers/admin/type_items_controller')
+
+//frontend routes
 router.post('/login', [AuthController, 'login'])
 router.post('/register', [AuthController, 'register'])
 router.post('/users/checkDoubleAuth', [DoubleAuthsController, 'checkDoubleAuth'])
@@ -28,6 +39,11 @@ router.post('/users/CheckMailToken', [UsersController, 'CheckMailToken'])
 router.post('/users/loginOrRegisterGoogle', [AuthController, 'loginOrRegisterGoogle'])
 router.post('/forgot-password', [AuthController, 'forgotPassword'])
 router.post('/reset-password', [AuthController, 'resetPassword'])
+router.post('/csrf-token', async ({ request, response }) => {
+  return response.json({
+    csrfToken: request.csrfToken,
+  })
+})
 router
   .post('stripe/webhook', [PaymentsController, 'handleWebhook'])
   .use(middleware.verifyStripeWebhook())
@@ -69,5 +85,39 @@ router
   .use([
     middleware.auth({
       guards: ['api'],
+    }),
+  ])
+
+//backend routes
+router.get('/', async ({ view, auth, response }) => {
+  const check = await auth.check()
+  if (check) {
+    return response.redirect('/home')
+  }
+  return view.render('pages/login')
+})
+router.post('/admin/login', [AdminAuthsController, 'login'])
+router.get('/admin/logout', [AdminAuthsController, 'logout'])
+router.post('i18n', [I18NsController, 'index'])
+router
+  .group(() => {
+    router.get('/home', async ({ view, auth }) => {
+      return view.render('pages/index', {
+        auth: auth,
+      })
+    })
+    router.resource('/users', AdminUsersController)
+    router.resource('/items', AdminItemsController)
+    router.resource('/huntings', AdminHuntingsController)
+    router.resource('/shopCrowns', AdminShopCrownsController)
+    router.resource('/typeItems', AdminTypeItemsController)
+    router.post('/huntings/:id/items', [AdminHuntingsController, 'addItem'])
+    router.delete('/huntings/:huntingId/items/:itemId', [AdminHuntingsController, 'removeItem'])
+    router.post('/huntings/:id/users', [AdminHuntingsController, 'addUser'])
+    router.delete('/huntings/:huntingId/users/:userId', [AdminHuntingsController, 'removeUser'])
+  })
+  .use([
+    middleware.auth({
+      guards: ['web'],
     }),
   ])

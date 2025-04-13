@@ -18,5 +18,6 @@ export default class extends BaseSeeder {
     await this.seed(await import('#database/seeders/map_seeder'))
     await this.seed(await import('#database/seeders/spot_map_seeder'))
     await this.seed(await import('#database/seeders/users_huntings_item_seeder'))
+    await this.seed(await import('#database/seeders/admin_seeder'))
   }
 }

@@ -5,7 +5,7 @@ import Order from '#models/order'
 export default class OrdersController {
   async getOrderDetailWithId({ response, auth, params }: HttpContext) {
     const orderId = params.id
-    const user = auth.user
+    const user = auth.use('api').user
     if (!user) {
       return response.unauthorized({ message: 'Unauthorized' })
     }
