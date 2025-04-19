@@ -1,0 +1,44 @@
+@let(attributes = $props
+.merge({
+class: ['navbar']
+})
+.toAttrs()
+)
+<nav class="bg-gray-800">
+  <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+    <div class="relative flex h-16 items-center justify-between">
+      <div class="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
+        <div class="hidden sm:ml-6 sm:block">
+          <div class="flex space-x-4">
+            @if(auth.isAuthenticated)
+            <a href="{{route('/users')}}"
+              class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Users</a>
+            <a href="{{route('/items')}}"
+              class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Items</a>
+            <a href="{{route('/huntings')}}"
+              class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Huntings</a>
+              <a href="{{route('/shopCrowns')}}"
+              class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Shop crown</a>
+            @end
+          </div>
+        </div>
+      </div>
+      <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+        <form action="{{route('/i18n')}}" method="POST" class="mr-4">
+          {{csrfField()}}
+          <select name="lang" class="border p-2 w-full text-white" onchange="this.form.submit()">
+            @each(locale in supportedLocales)
+            <option value="{{ locale }}" {{ i18n.locale===locale ? 'selected' : '' }}>
+              {{ locale.toUpperCase() }}
+            </option>
+            @endeach
+          </select>
+        </form>
+        @if(auth.isAuthenticated)
+        <a href="{{route('/admin/logout')}}"
+          class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">{{t('_.logout')}}</a>
+        @end
+      </div>
+    </div>
+  </div>
+</nav>

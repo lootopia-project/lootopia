@@ -6,7 +6,7 @@ import i18nManager from '@adonisjs/i18n/services/main'
 
 export default class HuntingsController {
   public async getAllHuntings({ auth, response }: HttpContext) {
-    const user = auth.user
+    const user = auth.use('api').user
     if (!user) {
       return response.unauthorized({ message: 'User not authenticated', success: false })
     }
@@ -31,7 +31,7 @@ export default class HuntingsController {
   }
 
   public async getPublicHuntings({ auth, response }: HttpContext) {
-    const user = auth.user
+    const user = auth.use('api').user
     if (!user) {
       return response.unauthorized({ message: 'User not authenticated', success: false })
     }
@@ -109,7 +109,7 @@ export default class HuntingsController {
   }
 
   async getHuntingsParticpatedOrOrganized({ auth, response }: HttpContext) {
-    const user = auth.user
+    const user = auth.use('api').user
     if (!user) {
       return response.unauthorized({ message: 'Utilisateur non authentifié' })
     }

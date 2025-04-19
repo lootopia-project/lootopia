@@ -1,17 +1,16 @@
-import { get, getDatabase, onValue, push, ref, set, update } from "firebase/database";
+import { get, getDatabase, onValue, push, ref, set } from "firebase/database";
 import Messages from "@/type/feature/message/message";
 import Users from "@/type/feature/auth/users";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import AXIOS_ERROR from "@/type/request/axios_error";
-const nameNoeud = process.env.EXPO_PUBLIC_NAME_NOEUD_FIREBASE as string;
-const db = getDatabase();
-const API_URL = process.env.EXPO_PUBLIC_API_URL as string
 import { database } from "@/services/firebase"
 import LastMessage from "@/type/feature/message/LastMessage";
 import ItemUsers from "@/type/feature/message/itemUsers";
-
-
+import { getConfig } from "@/services/csrfService";
+const nameNoeud = process.env.EXPO_PUBLIC_NAME_NOEUD_FIREBASE as string;
+const db = getDatabase();
+const API_URL = process.env.EXPO_PUBLIC_API_URL as string
 
 export const getMessage = (discussionId: string, setMessages: (messages: Messages[]) => void) => {
 
@@ -160,15 +159,7 @@ export const createPrivateDiscussion = async (
 
 
 export const searchUsersMessage = async (search: string) => {
-
-  const token = await AsyncStorage.getItem("token");
-  const config = {
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: token ? token : "",
-    },
-    withCredentials: true,
-  };
+  const config = await getConfig();
 
   try {
     const response = await axios.get(`${API_URL}/users/searchUsers`, {
@@ -221,15 +212,7 @@ export const getLastPrivateMessages = (myEmail: string, setLastMessages: (messag
 
 
 export const getItemsMessageUser = async () => {
-
-  const token = await AsyncStorage.getItem("token");
-  const config = {
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: token ? token : "",
-    },
-    withCredentials: true,
-  };
+  const config = await getConfig();
 
   try {
     const response = await axios.get(`${API_URL}/items/getItemsMessageUser`, {

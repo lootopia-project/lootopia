@@ -16,7 +16,7 @@ export default class Item extends BaseModel {
   declare rarityId: number
 
   @column()
-  declare typeId: number
+  declare typeItemId: number
 
   @column()
   declare price: number

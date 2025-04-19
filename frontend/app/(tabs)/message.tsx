@@ -1,16 +1,11 @@
 import React, { useEffect, useState } from "react";
 import {
   Button,
-  FlatList,
-  Modal,
   Text,
   TextInput,
   TouchableOpacity,
   View,
-  Image,
 } from "react-native";
-import { getDatabase, set } from "firebase/database";
-import { fetchTreasureHunt } from "@/services/MessageHunting";
 import { FontAwesome } from "@expo/vector-icons";
 import { getHuntingsForMessages } from "@/services/HuntingService";
 import Users from "@/type/feature/auth/users";
@@ -69,7 +64,7 @@ const Message = () => {
       }
     };
     fetchData();
-  }, []);
+  }, [i18n, setErrorMessage, setErrorVisible]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -83,7 +78,7 @@ const Message = () => {
       }
     };
     fetchData();
-  }, [discussionId]);
+  }, [discussionId, activeTab, setErrorMessage, setErrorVisible, i18n]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -102,7 +97,7 @@ const Message = () => {
       }
     };
     fetchData();
-  }, [activeTab]);
+  }, [activeTab, usersConnected, setErrorMessage, setErrorVisible, i18n]);
 
   useEffect(() => {
     const fetchFilteredUsers = async () => {
@@ -114,7 +109,7 @@ const Message = () => {
       }
     };
     fetchFilteredUsers();
-  }, [searchQuery]);
+  }, [searchQuery, setFilteredUsers]);
 
   const handleSend = async () => {
     if (text.trim()) {

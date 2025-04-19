@@ -3,7 +3,6 @@ import {
   View,
   Text,
   TouchableOpacity,
-  FlatList,
   Modal,
   Button,
   StyleSheet,

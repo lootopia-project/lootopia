@@ -1,19 +1,14 @@
 import Return from "@/type/request/return";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import AXIOS_ERROR from "@/type/request/axios_error";
 import { requestFcmToken } from "./firebase";
+import {getConfig} from "@/services/csrfService";
+import QrCodeRequest from "@/type/feature/user/2fa/qr_code";
 const API_URL=process.env.EXPO_PUBLIC_API_URL as string
 
 export const doubleAuthEnable = async (): Promise<Return> => {
-    const token = await AsyncStorage.getItem('token');
-    const config = {
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": token ? `${token}` : '',
-        },
-        withCredentials: true
-    }
+    const config = await getConfig()
+
     try {
         const response=await axios.get(`${API_URL}/users/isTwoFactorEnabled`, config)
         return response.data
@@ -27,14 +22,8 @@ export const doubleAuthEnable = async (): Promise<Return> => {
 }
 
 export const toggleDoubleAuth = async (isTwoFactorEnabled:boolean): Promise<QrCodeRequest> => {
-    const token = await AsyncStorage.getItem('token');
-    const config = {
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": token ? `${token}` : '',
-        },
-        withCredentials: true
-    }
+    const config = await getConfig()
+
     try {
         const response=await axios.post(`${API_URL}/users/toggleDoubleAuth`, {isTwoFactorEnabled}, config)
         return response.data
@@ -48,14 +37,8 @@ export const toggleDoubleAuth = async (isTwoFactorEnabled:boolean): Promise<QrCo
 }
 
 export const validateTwoFactorCode = async (otpCode:string,email:string): Promise<Return> => {
-    const token = await AsyncStorage.getItem('token');
-    const config = {
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": token ? `${token}` : '',
-        },
-        withCredentials: true
-    }
+    const config = await getConfig()
+
     try {
         const response=await axios.post(`${API_URL}/users/validateTwoFactorCode`, {otpCode}, config)
         return response.data
@@ -69,12 +52,8 @@ export const validateTwoFactorCode = async (otpCode:string,email:string): Promis
 }
 
 export const CheckDoubleAuth = async (otpCode:string,email:string): Promise<Return> => {
-    const config = {
-        headers: {
-            "Content-Type": "application/json",
-        },
-        withCredentials: true
-    }
+    const config = await getConfig()
+
     const fcmToken = await requestFcmToken();
     
     if (!fcmToken) {
@@ -105,13 +84,7 @@ export const CheckDoubleAuth = async (otpCode:string,email:string): Promise<Retu
 
 
 export const CheckRecoveryCode = async (recoveryCode:string,email:string): Promise<Return> => {
-    const config = {
-        headers: {
-            "Content-Type": "application/json",
-        },
-        withCredentials: true
-    }
-
+    const config = await getConfig()
     const fcmToken = await requestFcmToken();
     
     if (!fcmToken) {
@@ -140,14 +113,8 @@ export const CheckRecoveryCode = async (recoveryCode:string,email:string): Promi
 }
 
 export const RecoveryCode = async () => {
-    const token = await AsyncStorage.getItem('token');
-    const config = {
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": token ? `${token}` : '',
-        },
-        withCredentials: true
-    }
+    const config = await getConfig()
+
     try {
         const response=await axios.get<string[]>(`${API_URL}/users/recoveryCode`, config)
 

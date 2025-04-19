@@ -11,7 +11,7 @@ const AZURE_CONTAINER_PROFIL_IMAGE = env.get('AZURE_CONTAINER_PROFIL_IMAGE') || 
 
 export default class UsersController {
   async getInfoUser({ auth, response }: HttpContext) {
-    const user = auth.user
+    const user = auth.use('api').user
     if (user) {
       return response.json({
         id: user.id,
@@ -34,7 +34,7 @@ export default class UsersController {
   }
 
   async updateInfoUser({ response, auth, request }: HttpContext) {
-    const user = auth.user
+    const user = auth.use('api').user
     if (user) {
       const i18n = i18nManager.locale(user.lang)
       const {
@@ -90,7 +90,7 @@ export default class UsersController {
     }
   }
   async updatePassword({ response, auth, request }: HttpContext) {
-    const user = auth.user
+    const user = auth.use('api').user
     if (!user) {
       return response.json({
         success: false,
@@ -116,7 +116,7 @@ export default class UsersController {
     }
   }
   async CheckMail({ response, auth }: HttpContext) {
-    const user = auth.user
+    const user = auth.use('api').user
     if (user) {
       const i18n = i18nManager.locale(user.lang)
       MailService.sendMail('checkMail', user)

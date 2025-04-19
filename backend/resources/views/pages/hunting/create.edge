@@ -1,0 +1,91 @@
+@layout.app({ title: t("Create Hunting") })
+@slot('meta')
+<meta name="description" content="Page of huntings">
+@endslot
+@slot('main')
+
+<form action="{{route('/huntings')}}" method="POST" class="w-full max-w-lg mx-auto mt-10">
+    {{ csrfField() }}
+    <div class="w-lg">
+        <div class="shadow-md rounded-lg p-6 bg-white">
+            <div class="w-full border-b-black border-b-2 mb-4">
+                <h3 class="text-lg font-bold mb-4">{{ t('_.Info') }}</h3>
+            </div>
+            <div class="mb-4">
+                <label for="title" class="block font-medium">{{ t('_.Name:') }}</label>
+                <input type="text" id="title" name="title" required class="border rounded p-1 w-full" />
+            </div>
+            <div class="mb-4">
+                <label for="description" class="block font-medium">{{ t('_.Description') }}:</label>
+                <input type="text" id="description" name="description"
+                    class="border rounded p-1 w-full" />
+            </div>
+            <div class="mb-4">
+                <label for="minUser" class="block font-medium">{{ t('_.Min of user') }}:</label>
+                <input type="number" min="0" id="minUser" name="minUser"
+                    class="border rounded p-1 w-full" />
+            </div>
+            <div class="mb-4">
+                <label for="maxUser" class="block font-medium">{{ t('_.Max of user') }}:</label>
+                <input type="number" min="0" id="maxUser" name="maxUser"
+                    class="border rounded p-1 w-full" />
+            </div>
+            <div class="mb-4">
+                <label for="endDate" class="block font-medium">{{ t('_.End date') }}:</label>
+                <input type="date" min="0" id="endDate" name="endDate"
+                    class="border rounded p-1 w-full" />
+            </div>
+            <div class="mb-4">
+                <label for="price" class="block font-medium">{{ t('_.Price') }}</label>
+                <input type="text" id="price" name="price" required class="border rounded p-1 w-full" />
+            </div>
+
+            <div class="mb-4">
+                <label for="private" class="block font-medium">{{ t('_.Private') }}</label>
+                <select id="private" name="private" required class="border rounded p-1 w-full">
+                    <option value="1">{{ t('_.Yes') }}</option>
+                    <option value="0">{{ t('_.No') }}</option>
+                </select>
+            </div>
+
+            <div class="mb-4">
+                <label for="status" class="block font-medium">{{ t('_.Status') }}</label>
+                <select id="status" name="status" required class="border rounded p-1 w-full">
+                    <option value="1">{{ t('_.Enabled') }}</option>
+                    <option value="0">{{ t('_.Disabled') }}</option>
+                </select>
+            </div>
+
+            <div class="mb-4">
+                <label for="worldId" class="block font-medium">{{ t('_.World') }}</label>
+                <select id="worldId" required name="worldId" class="border rounded p-1 w-full">
+                    @each(world in worlds)
+                    <option value="{{ world.id }}">{{ world.name
+                        }}</option>
+                    @end
+                </select>
+            </div>
+
+            <div class="mb-4">
+                <label for="userId" class="block font-medium">{{ t('_.Users') }}</label>
+                <select id="userId" required name="userId" class="border rounded p-1 w-full">
+                    @each(user in users)
+                    <option value="{{ user.id }}">{{ user.nickname
+                        }}</option>
+                    @end
+                </select>
+            </div>
+            <div class="flex justify-around mt-6">
+                <button type="reset" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
+                    {{ t('_.Reset') }}
+                </button>
+                <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+                    {{ t('_.Save') }}
+                </button>
+            </div>
+        </div>
+    </div>
+</form>
+
+@endslot
+@end

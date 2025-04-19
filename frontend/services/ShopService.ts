@@ -6,19 +6,12 @@ import ShopCrown from "@/type/feature/shop/shop_crown"
 import Return from "@/type/request/return";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from 'axios';
+import {getConfig} from "@/services/csrfService";
 
 const API_URL=process.env.EXPO_PUBLIC_API_URL as string
 
 const getShopCrown = async (): Promise<ShopCrown[]> => {
-    const token = await AsyncStorage.getItem('token');
-    const config = {
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": token ? `${token}` : '',
-        },
-        withCredentials: true
-    }
-
+    const config = await getConfig()
     try {
         const response = await axios.get(`${API_URL}/shop/getShopCrowns`, config)
         return response.data as ShopCrown[]
@@ -28,15 +21,7 @@ const getShopCrown = async (): Promise<ShopCrown[]> => {
 }
 
 const getListItem = async (): Promise<Item[]> => {
-    const token = await AsyncStorage.getItem('token');
-    const config = {
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": token ? `${token}` : '',
-        },
-        withCredentials: true
-    }
-
+    const config = await getConfig()
     try {
         const response = await axios.get(`${API_URL}/shop/getListItem`, config)
         return response.data as Item[]
@@ -46,14 +31,7 @@ const getListItem = async (): Promise<Item[]> => {
 }
 
 const buyItem = async (ListItem:Item[]): Promise<Return> => {
-    const token = await AsyncStorage.getItem('token');
-    const config = {
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": token ? `${token}` : '',
-        },
-        withCredentials: true
-    }
+    const config = await getConfig()
     try {
        const response= await axios.post(`${API_URL}/shop/buyItem`, {ListItem}, config)
          return response.data
@@ -63,15 +41,7 @@ const buyItem = async (ListItem:Item[]): Promise<Return> => {
 }
 
 const getLogHistories = async (): Promise<LogHistory[]> => {
-    const token = await AsyncStorage.getItem('token');
-    const config = {
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": token ? `${token}` : '',
-        },
-        withCredentials: true
-    }
-
+    const config = await getConfig()
     try {
         const response = await axios.get(`${API_URL}/shop/getLogHistories`, config)
         return response.data as LogHistory[]
@@ -81,15 +51,7 @@ const getLogHistories = async (): Promise<LogHistory[]> => {
 }
 
 const getOrderDetail = async (orderId: number): Promise<OrderDetail> => {
-    const token = await AsyncStorage.getItem('token');
-    const config = {
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": token ? `${token}` : '',
-        },
-        withCredentials: true
-    }
-
+    const config = await getConfig()
     try {
         const response = await axios.get(`${API_URL}/shop/getOrderDetailWithId/${orderId}`, config);
         return response.data as OrderDetail
@@ -99,40 +61,19 @@ const getOrderDetail = async (orderId: number): Promise<OrderDetail> => {
 }
 
 const getListItemUser = async (): Promise<Item[]> => {
-    const token = await AsyncStorage.getItem('token');
-    const config = {
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": token ? `${token}` : '',
-        },
-        withCredentials: true
-    }
+    const config = await getConfig()
     const response = await axios.get(`${API_URL}/shop/getListItemUser`, config)
     return response.data as Item[]
 }
 
 const addItemToShop = async (item: Item): Promise<Return> => {
-    const token = await AsyncStorage.getItem('token');
-    const config = {
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": token ? `${token}` : '',
-        },
-        withCredentials: true
-    }
+    const config = await getConfig()
     const response = await axios.post(`${API_URL}/shop/addItemToShop`, { item:item }, config)
     return response.data as Return
 }
 
 const getAllItem = async (): Promise<ItemUsers[]> => {
-    const token = await AsyncStorage.getItem('token');
-    const config = {
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": token ? `${token}` : '',
-        },
-        withCredentials: true
-    }
+    const config = await getConfig();
     const response = await axios.get(`${API_URL}/items/getAllItem`, config)
     return response.data as ItemUsers[]
 }

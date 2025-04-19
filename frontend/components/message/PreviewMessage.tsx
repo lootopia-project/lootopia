@@ -2,7 +2,7 @@ import { useLanguage } from "@/hooks/providers/LanguageProvider";
 import Users from "@/type/feature/auth/users";
 import LastMessage from "@/type/feature/message/LastMessage";
 import { FontAwesome } from "@expo/vector-icons";
-import React, { useState } from "react";
+import React from "react";
 import {
   TouchableOpacity,
   View,
@@ -41,7 +41,6 @@ const PreviewMessage: React.FC<PreviewMessageProps> = ({
   handleConversationClick,
 }) => {
   const { i18n } = useLanguage();
-  const [selectedUser, setSelectedUser] = useState<Users | null>(null);
 
   const filteredMessages = lastMessages.filter((msg) =>
     activeTab === "group" ? msg.type === "group" : msg.type === "private"
