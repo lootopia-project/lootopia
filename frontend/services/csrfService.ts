@@ -43,12 +43,20 @@ const getCsrfToken = async () => {
 const getConfig = async () => {
   const token = await AsyncStorage.getItem('token')
   const csrf = await getCsrfToken()
-
+  const xsrfToken = document.cookie
+  .split('; ')
+  .find(row => row.startsWith('XSRF-TOKEN='))
+  ?.split('=')[1]
+  console.log('xsrfToken', xsrfToken);
+  console.log(document.cookie
+    .split('; '));
+  
   return {
     headers: {
       "Content-Type": "application/json",
       "Authorization": token ? `${token}` : '',
-      'x-csrf-token': csrf,
+      'X-XSRF-TOKEN': decodeURIComponent(xsrfToken || ''),
+      // 'X-CSRF-Token': csrf,
     },
     withCredentials: true,
   }
