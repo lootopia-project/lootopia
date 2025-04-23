@@ -4,7 +4,7 @@ export default class extends BaseSeeder {
   async run() {
     await Map.createMany([
       {
-        huntingId: 1,
+        huntingId: 10,
         name: 'Map 1',
         skin: 'default',
         zone: 'zone 1',
