@@ -30,6 +30,8 @@ const getCsrfToken = async () => {
       token,
       expiresAt: Date.now() + EXPIRATION_MS
     }
+    console.log(response);
+    
 
     await AsyncStorage.setItem('csrf_token', JSON.stringify(tokenData))
     return token
@@ -43,6 +45,8 @@ const getCsrfToken = async () => {
 const getConfig = async () => {
   const token = await AsyncStorage.getItem('token')
   const csrf = await getCsrfToken()
+  console.log(document.cookie);
+  
   const xsrfToken = document.cookie
   .split('; ')
   .find(row => row.startsWith('XSRF-TOKEN='))
@@ -56,7 +60,7 @@ const getConfig = async () => {
       "Content-Type": "application/json",
       "Authorization": token ? `${token}` : '',
       'X-XSRF-TOKEN': decodeURIComponent(xsrfToken || ''),
-      // 'X-CSRF-Token': csrf,
+      'X-CSRF-Token': csrf,
     },
     withCredentials: true,
   }
