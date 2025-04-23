@@ -1,154 +1,79 @@
 import React from 'react'
-import { useLocalSearchParams } from 'expo-router'
-import { ScrollView, View, Text, Image, FlatList } from 'react-native'
+import { ScrollView, View, Text, Image, FlatList, TouchableOpacity } from 'react-native'
 import MapScreen from '@/components/map/index/map.web'
 import { useLanguage } from '@/hooks/providers/LanguageProvider'
+import { Item } from '@/type/feature/hunting/Item'
+import { MapType } from '@/type/feature/hunting/MapType'
+import { Participant } from '@/type/feature/hunting/Participant'
 
-type Rarity = { id: number; name: string }
+// Type pour les marqueurs de la carte
+type Marker = { position: [number, number]; label: string }
 
-type Item = {
-  id: number
-  name: string
-  description: string
-  img: string
-  price: number
-  rarity: Rarity
-}
-
-type MapType = {
-  id: number
-  name: string
-  skin: string
-  zone: string
-  scaleMin: number
-  scaleMax: number
-  huntingId: number
-  cacheId: number | null
-  cache: any
-  spotMap: Array<{
+type Props = {
+  hunt: {
     id: number
-    spotId: number
-    mapId: number
-    spot: {
-      id: number
-      lat: string
-      long: string
-      description: string
-      typeId: number
-    }
-  }>
-}
-
-type Participant = {
-  id: number
-  nickname: string
-}
-
-type HuntingExtended = {
-  id: number
-  title: string
-  description: string
-  price: string | number
-  minUser: number
-  maxUser: number
-  private: boolean
-  endDate: string
-  searchDelay: string
-  status: boolean
-  background: string
-  textColor: string
-  headerImg: string
-  userId: number
-  worldId: number
-  items?: Item[]
-  map?: MapType[]
-  participantCount?: number
-  participants?: Participant[]
-}
-
-export default function Page() {
-  const { hunt } = useLocalSearchParams()
-  const { i18n } = useLanguage()
-
-  if (!hunt) return <Text>Chasse introuvable</Text>
-
-  let parsedHunt: HuntingExtended
-
-  try {
-    parsedHunt = JSON.parse(hunt as string)
-  } catch (error) {
-    return <Text>Erreur de parsing des données</Text>
+    title: string
+    description: string
+    price: string | number
+    minUser: number
+    maxUser: number
+    private: boolean
+    endDate: string
+    searchDelay: string
+    status: boolean
+    background: string
+    textColor: string
+    headerImg: string
+    userId: number
+    worldId: number
+    items?: Item[]
+    map?: MapType[]
+    participantCount?: number
+    participants?: Participant[]
   }
+  onClose: () => void
+}
 
-  // Pour simplifier, on considère ici que l'utilisateur est organisateur
+export default function HuntingDetails({ hunt, onClose }: Props) {
+  const { i18n } = useLanguage()
   const isOrganizer = true
 
-  // Si la chasse contient au moins une map, on extrait les données de la première map
   const renderMap = () => {
-    const mapData = parsedHunt.map![0]
-    // Extraction des marqueurs : on sélectionne ceux avec typeId === 1
-    const markers = mapData.spotMap
-      .filter((sm) => Number(sm.spot.typeId) === 1)
-      .map((sm) => ({
-        position: [Number(sm.spot.lat), Number(sm.spot.long)],
-        label: sm.spot.description,
-      }))
+    if (!hunt.map || hunt.map.length === 0) return null
+    const mapData = hunt.map[0]
 
-    // Extraction du carré : on recherche chacun des coins par typeId
-    const square = {
-      topLeft:
-        mapData.spotMap.find((sm) => Number(sm.spot.typeId) === 2)?.spot
-          ? [
-              Number(
-                mapData.spotMap.find((sm) => Number(sm.spot.typeId) === 2)!.spot.lat
-              ),
-              Number(
-                mapData.spotMap.find((sm) => Number(sm.spot.typeId) === 2)!.spot.long
-              ),
-            ]
-          : [],
-      topRight:
-        mapData.spotMap.find((sm) => Number(sm.spot.typeId) === 3)?.spot
-          ? [
-              Number(
-                mapData.spotMap.find((sm) => Number(sm.spot.typeId) === 3)!.spot.lat
-              ),
-              Number(
-                mapData.spotMap.find((sm) => Number(sm.spot.typeId) === 3)!.spot.long
-              ),
-            ]
-          : [],
-      bottomLeft:
-        mapData.spotMap.find((sm) => Number(sm.spot.typeId) === 4)?.spot
-          ? [
-              Number(
-                mapData.spotMap.find((sm) => Number(sm.spot.typeId) === 4)!.spot.lat
-              ),
-              Number(
-                mapData.spotMap.find((sm) => Number(sm.spot.typeId) === 4)!.spot.long
-              ),
-            ]
-          : [],
-      bottomRight:
-        mapData.spotMap.find((sm) => Number(sm.spot.typeId) === 5)?.spot
-          ? [
-              Number(
-                mapData.spotMap.find((sm) => Number(sm.spot.typeId) === 5)!.spot.lat
-              ),
-              Number(
-                mapData.spotMap.find((sm) => Number(sm.spot.typeId) === 5)!.spot.long
-              ),
-            ]
-          : [],
+    const markers: Marker[] = mapData.spotMap
+      .filter((sm) => Number(sm.spot.typeId) === 1)
+      .map((sm) => {
+        const lat = Number(sm.spot.lat)
+        const long = Number(sm.spot.long)
+        return { position: [lat, long], label: sm.spot.description }
+      })
+
+    const getSpotPosition = (typeId: number): [number, number] => {
+      const spot = mapData.spotMap.find((sm) => Number(sm.spot.typeId) === typeId)?.spot
+      if (spot) {
+        return [Number(spot.lat), Number(spot.long)]
+      }
+      return [0, 0]
     }
 
-    // Le centre de la carte provient du spot de typeId 6 (s'il existe)
+    const square = {
+      topLeft: getSpotPosition(2),
+      topRight: getSpotPosition(3),
+      bottomLeft: getSpotPosition(4),
+      bottomRight: getSpotPosition(5),
+    }
+
+    let center: [number, number]
     const centerSpot = mapData.spotMap.find((sm) => Number(sm.spot.typeId) === 6)?.spot
-    const center = centerSpot
-      ? [Number(centerSpot.lat), Number(centerSpot.long)]
-      : markers.length > 0
-      ? markers[0].position
-      : [0, 0]
+    if (centerSpot) {
+      center = [Number(centerSpot.lat), Number(centerSpot.long)]
+    } else if (markers.length > 0) {
+      center = markers[0].position
+    } else {
+      center = [0, 0]
+    }
 
     return (
       <View style={{ marginTop: 20, height: 400 }}>
@@ -176,127 +101,57 @@ export default function Page() {
 
   return (
     <ScrollView style={{ flex: 1, backgroundColor: '#fff', padding: 16 }}>
+      <TouchableOpacity onPress={onClose} style={{ marginBottom: 10 }}>
+        <Text>← {i18n.t('Back')}</Text>
+      </TouchableOpacity>
+
       <Image
-        source={{ uri: parsedHunt.headerImg }}
+        source={{ uri: hunt.headerImg }}
         style={{ width: '100%', height: 200, borderRadius: 8, marginBottom: 16 }}
-        resizeMode="cover"
+        resizeMode="contain"
       />
 
       <Text
-        style={{
-          fontSize: 24,
-          fontWeight: '700',
-          marginBottom: 8,
-          fontFamily: 'BerkshireSwash-Regular',
-          textAlign: 'center',
-        }}
+        style={{ fontSize: 24, fontWeight: '700', marginBottom: 8, textAlign: 'center' }}
       >
-        {parsedHunt.title}
+        {hunt.title}
       </Text>
-      <Text
-        style={{
-          fontSize: 14,
-          marginBottom: 12,
-          color: '#333',
-          fontFamily: 'BerkshireSwash-Regular',
-          textAlign: 'center',
-        }}
-      >
-        {parsedHunt.description}
+      <Text style={{ fontSize: 14, marginBottom: 12, color: '#333', textAlign: 'center' }}>
+        {hunt.description}
       </Text>
 
-      <Text
-        style={{
-          fontSize: 14,
-          marginBottom: 6,
-          color: '#555',
-          fontFamily: 'BerkshireSwash-Regular',
-          textAlign: 'center',
-        }}
-      >
-        {i18n.t('Price')}: {parsedHunt.price} 💰
+      <Text style={{ fontSize: 14, marginBottom: 6, textAlign: 'center' }}>
+        {i18n.t('Price')}: {hunt.price} 💰
       </Text>
-      <Text
-        style={{
-          fontSize: 14,
-          marginBottom: 6,
-          color: '#555',
-          fontFamily: 'BerkshireSwash-Regular',
-          textAlign: 'center',
-        }}
-      >
-        Min: {parsedHunt.minUser} | Max: {parsedHunt.maxUser}
+      <Text style={{ fontSize: 14, marginBottom: 6, textAlign: 'center' }}>
+        Min: {hunt.minUser} | Max: {hunt.maxUser}
       </Text>
-      <Text
-        style={{
-          fontSize: 14,
-          marginBottom: 6,
-          color: '#555',
-          fontFamily: 'BerkshireSwash-Regular',
-          textAlign: 'center',
-        }}
-      >
-        {i18n.t('Participants')}: {parsedHunt.participantCount ?? 0} / {parsedHunt.maxUser}
+      <Text style={{ fontSize: 14, marginBottom: 6, textAlign: 'center' }}>
+        {i18n.t('Participants')}: {hunt.participantCount ?? 0} / {hunt.maxUser}
       </Text>
-      <Text
-        style={{
-          fontSize: 14,
-          marginBottom: 6,
-          color: '#555',
-          fontFamily: 'BerkshireSwash-Regular',
-          textAlign: 'center',
-        }}
-      >
-        {i18n.t('End')}: {new Date(parsedHunt.endDate).toLocaleDateString()}
+      <Text style={{ fontSize: 14, marginBottom: 6, textAlign: 'center' }}>
+        {i18n.t('End')}: {new Date(hunt.endDate).toLocaleDateString()}
       </Text>
-      <Text
-        style={{
-          fontSize: 14,
-          marginBottom: 12,
-          color: '#555',
-          fontFamily: 'BerkshireSwash-Regular',
-          textAlign: 'center',
-        }}
-      >
-        {i18n.t('Status')}: {parsedHunt.status ? i18n.t('Active') : i18n.t('Inactive')}
+      <Text style={{ fontSize: 14, marginBottom: 12, textAlign: 'center' }}>
+        {i18n.t('Status')}: {hunt.status ? i18n.t('Active') : i18n.t('Inactive')}
       </Text>
 
-      {/* Items */}
-      {parsedHunt.items?.length ? (
-        <View style={{ marginTop: 20, width: '100%', alignItems: 'center' }}>
-          <Text
-            style={{
-              fontSize: 18,
-              marginBottom: 10,
-              fontWeight: '700',
-              fontFamily: 'BerkshireSwash-Regular',
-              textAlign: 'center',
-            }}
-          >
+      {hunt.items?.length ? (
+        <View style={{ marginTop: 20, alignItems: 'center' }}>
+          <Text style={{ fontSize: 18, marginBottom: 10, fontWeight: '700', textAlign: 'center' }}>
             {i18n.t('Items')}:
           </Text>
           <FlatList
             horizontal
-            data={parsedHunt.items}
+            data={hunt.items}
             keyExtractor={(item) => item.id.toString()}
             contentContainerStyle={{ paddingVertical: 10, alignItems: 'center' }}
             renderItem={({ item }) => (
-              <View
-                style={{
-                  width: 140,
-                  backgroundColor: '#f5f5f5',
-                  borderRadius: 8,
-                  padding: 10,
-                  alignItems: 'center',
-                  marginRight: 12,
-                }}
-              >
-                <Image source={{ uri: item.img }} style={{ width: 80, height: 80, borderRadius: 6, marginBottom: 6 }} />
-                <Text style={{ fontSize: 14, fontWeight: '600', fontFamily: 'BerkshireSwash-Regular', textAlign: 'center' }}>
-                  {item.name}
-                </Text>
-                <Text style={{ fontSize: 12, fontFamily: 'BerkshireSwash-Regular', color: '#666' }}>💰 {item.price}</Text>
-                <Text style={{ fontSize: 12, fontFamily: 'BerkshireSwash-Regular', color: '#666' }}>⭐ {item.rarity.name}</Text>
+              <View style={{ width: 140, backgroundColor: '#f5f5f5', borderRadius: 8, padding: 10, alignItems: 'center', marginRight: 12 }}>
+                <Image source={{ uri: item.img }} style={{ width: 80, height: 80, borderRadius: 6, marginBottom: 6 }} resizeMode="contain" />
+                <Text style={{ fontSize: 14, fontWeight: '600', textAlign: 'center' }}>{item.name}</Text>
+                <Text style={{ fontSize: 12, color: '#666' }}>💰 {item.price}</Text>
+                <Text style={{ fontSize: 12, color: '#666' }}>⭐ {item.rarity.name}</Text>
               </View>
             )}
             showsHorizontalScrollIndicator={false}
@@ -305,38 +160,21 @@ export default function Page() {
       ) : null}
 
       {/* Map */}
-      {parsedHunt.map?.length ? renderMap() : null}
+      {hunt.map?.length ? renderMap() : null}
 
       {/* Participants */}
-      {isOrganizer && parsedHunt.participants?.length > 0 && (
+      {isOrganizer && hunt.participants?.length ? (
         <View style={{ marginTop: 20, alignItems: 'center' }}>
-          <Text
-            style={{
-              fontSize: 18,
-              marginBottom: 10,
-              fontWeight: '700',
-              fontFamily: 'BerkshireSwash-Regular',
-              textAlign: 'center',
-            }}
-          >
+          <Text style={{ fontSize: 18, marginBottom: 10, fontWeight: '700', textAlign: 'center' }}>
             {i18n.t('Participants')}:
           </Text>
-          {parsedHunt.participants.map((user) => (
-            <Text
-              key={user.id}
-              style={{
-                fontSize: 14,
-                marginBottom: 4,
-                color: '#333',
-                fontFamily: 'BerkshireSwash-Regular',
-                textAlign: 'center',
-              }}
-            >
+          {hunt.participants.map((user) => (
+            <Text key={user.id} style={{ fontSize: 14, marginBottom: 4, textAlign: 'center' }}>
               🧍 {user.nickname}
             </Text>
           ))}
         </View>
-      )}
+      ) : null}
     </ScrollView>
   )
 }
