@@ -189,5 +189,10 @@
     "Waiting for a response": "Waiting for a response",
     "No date": "No date",
     "Loading conversations": "Loading conversations",
-    "Search users": "Search users"
+    "Search users": "Search users",
+    "Inactive": "Inactive",
+    "Active": "Active",
+    "Participants": "Participants",
+    "Maps": "Maps",
+    "Zone": "Zone"
   }
