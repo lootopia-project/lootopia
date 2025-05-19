@@ -7,7 +7,6 @@ import Whitelist from '#models/whitelist'
 import UsersHunting from '#models/users_hunting'
 import Map from '#models/map'
 import UsersHuntingItem from '#models/users_huntings_item'
-import Item from '#models/item'
 
 export default class Hunting extends BaseModel {
   @column({ isPrimary: true })
@@ -72,9 +71,4 @@ export default class Hunting extends BaseModel {
 
   @hasMany(() => Map)
   declare map: HasMany<typeof Map>
-
-  @hasMany(() => Item, {
-    foreignKey: 'huntingId',
-  })
-  declare items: HasMany<typeof Item>
 }

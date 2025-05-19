@@ -13,7 +13,6 @@ export default class extends BaseSeeder {
         rarityId: 1,
         typeItemId: 1,
         shop: true,
-        huntingId: 10
       },
       {
         id: 2,
@@ -24,7 +23,6 @@ export default class extends BaseSeeder {
         rarityId: 2,
         typeItemId: 3,
         shop: true,
-        huntingId: 10
       },
       {
         id: 3,
@@ -35,7 +33,6 @@ export default class extends BaseSeeder {
         rarityId: 3,
         typeItemId: 3,
         shop: true,
-        huntingId: 10
       },
       {
         id: 4,
@@ -46,7 +43,6 @@ export default class extends BaseSeeder {
         rarityId: 4,
         typeItemId: 2,
         shop: true,
-        huntingId: 10
       },
       {
         id: 5,
@@ -57,7 +53,6 @@ export default class extends BaseSeeder {
         rarityId: 3,
         typeItemId: 2,
         shop: true,
-        huntingId: 10
       },
       {
         id: 6,

@@ -1,7 +1,6 @@
 import { HttpContext } from '@adonisjs/core/http'
 import Hunting from '#models/hunting'
 import { getLastMessagesForHunts } from '#services/firebase_service'
-import UsersHunting from '#models/users_hunting'
 import i18nManager from '@adonisjs/i18n/services/main'
 
 export default class HuntingsController {
@@ -31,26 +30,27 @@ export default class HuntingsController {
   }
 
   public async getPublicHuntings({ auth, response }: HttpContext) {
-    const user = auth.use('api').user
-    if (!user) {
-      return response.unauthorized({ message: 'User not authenticated', success: false })
-    }
-
+    const user = auth.use('api').user!
     const i18n = i18nManager.locale(user.lang)
 
     try {
       const huntings = await Hunting.query()
         .orderBy('id', 'desc')
         .withCount('whitelist')
-        .preload('items', (query) => {
-          query
-            .select(['id', 'name', 'description', 'img', 'price', 'rarityId'])
-            .preload('rarity', (rarityQuery: any) => {
-              rarityQuery.select(['id', 'name'])
-            })
+        .preload('item', (q) => {
+          q.select(['id', 'userId', 'itemId', 'huntingId', 'history', 'shop', 'price']).preload(
+            'item',
+            (itemQ) => {
+              itemQ
+                .select(['id', 'name', 'description', 'img', 'price', 'rarityId'])
+                .preload('rarity', (rarityQ) => {
+                  rarityQ.select(['id', 'name'])
+                })
+            }
+          )
         })
-        .preload('map', (mapQuery) => {
-          mapQuery
+        .preload('map', (mapQ) => {
+          mapQ
             .select([
               'id',
               'name',
@@ -62,38 +62,33 @@ export default class HuntingsController {
               'cache_id',
             ])
             .preload('cache')
-            .preload('spotMap', (spotMapQuery) => {
-              spotMapQuery.preload('spot', (spotQuery) => {
-                spotQuery.select(['id', 'lat', 'long', 'description', 'type_id'])
+            .preload('spotMap', (spotMapQ) => {
+              spotMapQ.preload('spot', (spotQ) => {
+                spotQ.select(['id', 'lat', 'long', 'description', 'type_id'])
               })
             })
         })
-      const formatted = await Promise.all(
-        huntings.map(async (hunting) => {
-          const data = {
-            ...hunting.serialize(),
-            participantCount: Number(hunting.$extras.whitelist_count),
-          } as any
 
-          if (hunting.userId === auth.user!.id) {
-            const participants = await hunting
-              .related('usersHunting')
-              .query()
-              .preload('user', (query) => {
-                query.select(['id', 'nickname'])
-              })
+      const formatted = huntings.map((hunting) => {
+        const base = {
+          ...hunting.serialize(),
+          participantCount: Number(hunting.$extras.whitelist_count),
+        } as any
 
-            data.participants = participants.map((p) => ({
-              id: p.user.id,
-              nickname: p.user.nickname,
-            }))
-          }
+        base.items = hunting.item.map((pivot) => ({
+          id: pivot.id,
+          name: pivot.item.name,
+          description: pivot.item.description,
+          img: pivot.item.img,
+          price: pivot.price,
+          rarity: pivot.item.rarity,
+          history: pivot.history,
+          shop: pivot.shop,
+        }))
 
-          return data
-        })
-      )
+        return base
+      })
 
-      console.log('Formatted huntings:', formatted)
       return response.json({
         message: i18n.t('_.Public Huntings List Succuess'),
         success: true,
