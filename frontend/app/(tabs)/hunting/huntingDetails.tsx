@@ -1,4 +1,3 @@
-// app/(tabs)/hunting/huntingDetails.tsx
 import React from 'react'
 import {
   ScrollView,
@@ -17,72 +16,66 @@ export default function HuntingDetails({ hunt, onClose }: HuntingDetailsProps) {
   const isOrganizer = hunt.isOrganizer
 
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: '#fff', padding: 16 }}>
-      <TouchableOpacity onPress={onClose} style={{ marginBottom: 10 }}>
+    <ScrollView className="flex-1 bg-white p-4">
+      <TouchableOpacity onPress={onClose} className="mb-2.5">
         <Text>← {i18n.t('Back')}</Text>
       </TouchableOpacity>
 
       <Image
         source={{ uri: hunt.headerImg }}
-        style={{ width: '100%', height: 200, borderRadius: 8, marginBottom: 16 }}
+        className="w-full h-[200px] rounded-lg mb-4"
         resizeMode="contain"
       />
 
-      <Text style={{ fontSize: 24, fontWeight: '700', marginBottom: 8, textAlign: 'center' }}>
+      <Text className="text-2xl font-bold mb-2 text-center">
         {hunt.title}
       </Text>
-      <Text style={{ fontSize: 14, marginBottom: 12, color: '#333', textAlign: 'center' }}>
+      <Text className="text-sm mb-3 text-gray-800 text-center">
         {hunt.description}
       </Text>
 
-      <Text style={{ fontSize: 14, marginBottom: 6, textAlign: 'center' }}>
+      <Text className="text-sm mb-1.5 text-center">
         {i18n.t('Price')}: {hunt.price} 💰
       </Text>
-      <Text style={{ fontSize: 14, marginBottom: 6, textAlign: 'center' }}>
+      <Text className="text-sm mb-1.5 text-center">
         Min: {hunt.minUser} | Max: {hunt.maxUser}
       </Text>
-      <Text style={{ fontSize: 14, marginBottom: 6, textAlign: 'center' }}>
+      <Text className="text-sm mb-1.5 text-center">
         {i18n.t('Participants')}: {hunt.participantCount ?? 0} / {hunt.maxUser}
       </Text>
-      <Text style={{ fontSize: 14, marginBottom: 6, textAlign: 'center' }}>
+      <Text className="text-sm mb-1.5 text-center">
         {i18n.t('End')}: {new Date(hunt.endDate).toLocaleDateString()}
       </Text>
-      <Text style={{ fontSize: 14, marginBottom: 12, textAlign: 'center' }}>
+      <Text className="text-sm mb-3 text-center">
         {i18n.t('Status')}: {hunt.status ? i18n.t('Active') : i18n.t('Inactive')}
       </Text>
 
-      {/* Items */}
       {hunt.items?.length ? (
-        <View style={{ marginTop: 20, alignItems: 'center' }}>
-          <Text style={{ fontSize: 18, marginBottom: 10, fontWeight: '700', textAlign: 'center' }}>
+        <View className="mt-5 items-center">
+          <Text className="text-lg mb-2.5 font-bold text-center">
             {i18n.t('Items')}:
           </Text>
           <FlatList
             horizontal
             data={hunt.items}
             keyExtractor={(item) => item.id.toString()}
-            contentContainerStyle={{ paddingVertical: 10, alignItems: 'center' }}
+            contentContainerClassName="py-2.5 items-center"
             renderItem={({ item }) => (
-              <View
-                style={{
-                  width: 140,
-                  backgroundColor: '#f5f5f5',
-                  borderRadius: 8,
-                  padding: 10,
-                  alignItems: 'center',
-                  marginRight: 12,
-                }}
-              >
+              <View className="w-[140px] bg-gray-200 rounded-lg p-2.5 items-center mr-3">
                 <Image
                   source={{ uri: item.img }}
-                  style={{ width: 80, height: 80, borderRadius: 6, marginBottom: 6 }}
+                  className="w-[80px] h-[80px] rounded-md mb-1.5"
                   resizeMode="contain"
                 />
-                <Text style={{ fontSize: 14, fontWeight: '600', textAlign: 'center' }}>
+                <Text className="text-sm font-semibold text-center">
                   {item.name}
                 </Text>
-                <Text style={{ fontSize: 12, color: '#666' }}>💰 {item.price}</Text>
-                <Text style={{ fontSize: 12, color: '#666' }}>⭐ {item.rarity.name}</Text>
+                <Text className="text-xs text-gray-600">
+                  💰 {item.price}
+                </Text>
+                <Text className="text-xs text-gray-600">
+                  ⭐ {item.rarity.name}
+                </Text>
               </View>
             )}
             showsHorizontalScrollIndicator={false}
@@ -90,35 +83,22 @@ export default function HuntingDetails({ hunt, onClose }: HuntingDetailsProps) {
         </View>
       ) : null}
 
-      {/* MapRead */}
       {hunt.map?.length ? (
-        <View style={{ marginTop: 20, height: 400 }}>
-          <Text
-            style={{
-              fontSize: 18,
-              marginBottom: 10,
-              fontWeight: '700',
-              fontFamily: 'BerkshireSwash-Regular',
-              textAlign: 'center',
-            }}
-          >
+        <View className="mt-5 h-[400px]">
+          <Text className="text-lg mb-2.5 font-bold text-center">
             {i18n.t('Maps')}:
           </Text>
           <MapRead mapId={hunt.map[0].id} />
         </View>
       ) : null}
 
-      {/* Participants */}
       {isOrganizer && hunt.participants?.length ? (
-        <View style={{ marginTop: 20, alignItems: 'center' }}>
-          <Text style={{ fontSize: 18, marginBottom: 10, fontWeight: '700', textAlign: 'center' }}>
+        <View className="mt-5 items-center">
+          <Text className="text-lg mb-2.5 font-bold text-center">
             {i18n.t('Participants')}:
           </Text>
           {hunt.participants.map((user) => (
-            <Text
-              key={user.id}
-              style={{ fontSize: 14, marginBottom: 4, textAlign: 'center' }}
-            >
+            <Text key={user.id} className="text-sm mb-1 text-center">
               🧍 {user.nickname}
             </Text>
           ))}
