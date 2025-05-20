@@ -2,6 +2,7 @@ import { HttpContext } from '@adonisjs/core/http'
 import Hunting from '#models/hunting'
 import { getLastMessagesForHunts } from '#services/firebase_service'
 import i18nManager from '@adonisjs/i18n/services/main'
+import UsersHunting from '#models/users_hunting'
 
 export default class HuntingsController {
   public async getAllHuntings({ auth, response }: HttpContext) {
@@ -73,6 +74,7 @@ export default class HuntingsController {
         const base = {
           ...hunting.serialize(),
           participantCount: Number(hunting.$extras.whitelist_count),
+          isOrganizer: hunting.userId === user.id,
         } as any
 
         base.items = hunting.item.map((pivot) => ({
