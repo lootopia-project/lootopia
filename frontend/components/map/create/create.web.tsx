@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef} from 'react';
 import { MapContainer, TileLayer, Marker, Popup, Polygon, useMapEvents } from 'react-leaflet';
-import  {Map as LeafletMap} from 'leaflet';
+import  L,{Map as LeafletMap} from 'leaflet';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import 'leaflet/dist/leaflet.css';
 import MarkerData from '@/type/feature/map/MarkerData';
@@ -54,6 +54,20 @@ const DrawingMap: React.FC = () => {
         saveData();
     }, [markers, rectanglePoints, center, zoom, i18n, setErrorMessage, setErrorVisible]);
 
+    function makeLabelIcon(text: string) {
+        return L.divIcon({
+            className: 'my-label-icon',
+            html: `<span style="
+            background: rgba(30, 136, 229, 0.8);
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 12px;
+            white-space: nowrap;
+            ">${text}</span>`,
+            iconAnchor: [0, 0],
+        })
+    }
     function MapClickHandler() {
         useMapEvents({
             click(e) {
@@ -218,7 +232,7 @@ const DrawingMap: React.FC = () => {
                 </div>
             </div>
             {markers.map((marker, index) => (
-                <Marker key={index} position={marker.position}>
+                <Marker key={index} position={marker.position} icon={makeLabelIcon(marker.label)} >
                     <Popup>{marker.label}</Popup>
                 </Marker>
             ))}

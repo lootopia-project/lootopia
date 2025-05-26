@@ -97,7 +97,7 @@ const MFA = () => {
     
 
     return (
-        <View className="flex flex-col items-center justify-center p-6">
+        <View className="flex flex-col mb-32 items-center justify-center p-6">
             <Text className="text-xl font-bold mb-4">{i18n.t('Multi-Factor Authentication')}</Text>
             <View className="flex flex-row items-center space-x-4 mb-4">
                 <Text className="text-lg">{isTwoFactorEnabled ? "2FA Activé" : "2FA Désactivé"}</Text>
