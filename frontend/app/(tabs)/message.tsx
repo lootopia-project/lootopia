@@ -188,7 +188,7 @@ const Message = () => {
           handleConversationClick={handleConversationClick}
         />
       ) : (
-        <View className="flex-1 bg-gray-100 p-4">
+        <View className="flex-1 bg-gray-100 p-4 mb-16">
           <View className="flex-row items-center justify-between mb-4">
             <TouchableOpacity onPress={handleBackClick} className="w-1/4 items-start">
               <FontAwesome name="arrow-left" size={20} color="black" />

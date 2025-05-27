@@ -8,26 +8,30 @@ const Footer = () => {
   const isMobile = width < 768;
   const { isAuthenticated } = useAuth();
 
+  if (isMobile || !isAuthenticated) {
+    return null;
+  }
+
   return (
-    !isMobile
-    &&
-    isAuthenticated
-    &&
     <View style={styles.navContainer}>
-      {/* bouton chasse */}
+      {/* Accueil (exemple) */}
       <TouchableOpacity style={styles.navItem}>
-        {/* <Link href={""} style={styles.icon}>🏠</Link> */}
+        <Link href="/" style={styles.icon}>🏠</Link>
       </TouchableOpacity>
-      {/* bouton organisateur */}
+
+      {/* Chasses */}
       <TouchableOpacity style={styles.navItem}>
-        <Link href={"/hunting"} style={styles.icon}>🗺️</Link>
+        <Link href="/hunting" style={styles.icon}>🗺️</Link>
       </TouchableOpacity>
+
+      {/* Messages */}
       <TouchableOpacity style={styles.navItem}>
-        <Link href={"/message"} style={styles.icon}>✉️</Link>
+        <Link href="/message" style={styles.icon}>✉️</Link>
       </TouchableOpacity>
-      {/* bouton support & aide */}
+
+      {/* Support & Aide */}
       <TouchableOpacity style={styles.navItem}>
-        {/* <Link href={""} style={styles.icon}>💬</Link> */}
+        <Link href="/support" style={styles.icon}>💬</Link>
       </TouchableOpacity>
     </View>
   );
@@ -35,24 +39,26 @@ const Footer = () => {
 
 const styles = StyleSheet.create({
   navContainer: {
-    position: 'relative',
+    position: "absolute",
     bottom: 0,
     left: 0,
     right: 0,
-    height: 50,
-    backgroundColor: '#90EE90',
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    zIndex: 9999
+    height: 60,
+    backgroundColor: "#2E7D32",
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignItems: "center",
+    zIndex: 9999,
   },
   navItem: {
-    padding: 10
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
   },
   icon: {
     fontSize: 24,
-    color: '#000'
-  }
+    color: "#FFFFFF",
+  },
 });
 
 export default Footer;

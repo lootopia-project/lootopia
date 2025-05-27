@@ -13,19 +13,6 @@ const FormEditUser: React.FC<FormEditUserProps> = ({ infoEditUser, handleChange,
     }
     return (
         <View className="p-8 w-full max-w-3xl flex flex-col items-center text-center">
-            <TouchableOpacity onPress={handleFileChange} className="flex justify-center items-center mt-4">
-                <View style={{ width: 100, height: 100, backgroundColor: '#E5E7EB', borderRadius: 50, overflow: 'hidden', alignItems: 'center', justifyContent: 'center' }}>
-                    {infoEditUser.img ? (
-                        <Image
-                            style={{ width: 200, height: 200, resizeMode: "contain", marginTop: 20 }}
-                            source={{ uri: infoEditUser.img }}
-                        />
-                
-                    ) : (
-                        <Text className="text-gray-500">{i18n.t("Upload Image")}</Text>
-                    )}
-                </View>
-            </TouchableOpacity>
             <View className="grid grid-cols-2 sm:grid-cols-1 gap-6 w-full mt-6">
             <TouchableOpacity>
                 <Text className="mb-1 font-semibold flex flex-row items-center">
