@@ -54,8 +54,10 @@ router
       HuntingsController,
       'getHuntingsParticpatedOrOrganized',
     ])
+
     router.get('/huntings/getAllHuntings', [HuntingsController, 'getAllHuntings'])
     router.get('/huntings/getPublicHuntings', [HuntingsController, 'getPublicHuntings'])
+    router.post('/huntings/createHunting', [HuntingsController, 'createHunting'])
     router.post('/checkIsLogin', [AuthController, 'checkIsLogin'])
     router.get('/users/getInfoUser', [UsersController, 'getInfoUser'])
     router.post('/users/updateInfoUser', [UsersController, 'updateInfoUser'])
@@ -116,6 +118,7 @@ router
     router.post('/huntings/:id/users', [AdminHuntingsController, 'addUser'])
     router.delete('/huntings/:huntingId/users/:userId', [AdminHuntingsController, 'removeUser'])
   })
+  .prefix('/admin')
   .use([
     middleware.auth({
       guards: ['web'],

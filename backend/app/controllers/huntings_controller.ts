@@ -3,6 +3,7 @@ import Hunting from '#models/hunting'
 import { getLastMessagesForHunts } from '#services/firebase_service'
 import i18nManager from '@adonisjs/i18n/services/main'
 import UsersHunting from '#models/users_hunting'
+import { DateTime } from 'luxon'
 
 export default class HuntingsController {
   public async getAllHuntings({ auth, response }: HttpContext) {
@@ -157,5 +158,71 @@ export default class HuntingsController {
         message: i18n.t('_.Error getting huntings'),
       })
     }
+  }
+
+  async createHunting({ request, auth, response }: HttpContext) {
+    const user = auth.use('api').user
+    if (!user) return response.unauthorized()
+
+    const {
+      title,
+      description,
+      minUser,
+      maxUser,
+      price,
+      background,
+      textColor,
+      headerImg,
+      private: isPrivate,
+      endDate,
+      searchDelay,
+      status,
+      worldId,
+    } = request.only([
+      'title',
+      'description',
+      'minUser',
+      'maxUser',
+      'price',
+      'background',
+      'textColor',
+      'headerImg',
+      'private',
+      'endDate',
+      'searchDelay',
+      'status',
+      'worldId',
+    ])
+
+    const errors: Record<string, string> = {}
+    if (!title?.trim()) errors.title = 'Titre requis'
+    if (!description?.trim()) errors.description = 'Description requise'
+    if (minUser === undefined || minUser < 1) errors.minUser = 'minUser ≥ 1'
+    if (maxUser !== undefined && maxUser < minUser) errors.maxUser = 'maxUser ≥ minUser'
+    if (typeof status !== 'boolean') errors.status = 'status booléen'
+    if (typeof isPrivate !== 'boolean') errors.private = 'private booléen'
+    if (typeof worldId !== 'number') errors.worldId = 'worldId numérique'
+
+    if (Object.keys(errors).length)
+      return response.badRequest({ message: 'Validation échouée', errors })
+
+    const hunt = await Hunting.create({
+      title: title.trim(),
+      description: description.trim(),
+      minUser,
+      maxUser: maxUser || 0,
+      price: price ?? 0,
+      background: background || '',
+      textColor: textColor || '#000000',
+      headerImg: headerImg || 'https://lootopia.blob.core.windows.net/lootopia-photos/user.png',
+      private: isPrivate,
+      endDate: endDate ? DateTime.fromJSDate(new Date(endDate)) : DateTime.now().plus({ days: 30 }),
+      searchDelay,
+      status,
+      userId: user.id,
+      worldId,
+    })
+
+    return response.created({ message: 'Chasse créée', hunt })
   }
 }

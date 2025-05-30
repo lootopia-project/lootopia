@@ -10,12 +10,15 @@ import {
   ScrollView,
 } from 'react-native'
 import { Picker } from '@react-native-picker/picker'
+import { useNavigation } from '@react-navigation/native'
 import { getPublicHuntings } from '@/services/HuntingService'
 import { Hunting } from '@/type/feature/hunting/Hunting'
 import { useLanguage } from '@/hooks/providers/LanguageProvider'
 import HuntingDetails from './huntingDetails'
+import { useRouter } from 'expo-router'
 
 export default function PublicHuntings() {
+  const router = useRouter()
   const [publicHuntings, setPublicHuntings] = useState<Hunting[]>([])
   const [loading, setLoading] = useState<boolean>(false)
   const [search, setSearch] = useState('')
@@ -24,6 +27,7 @@ export default function PublicHuntings() {
   const { i18n } = useLanguage()
   const [sortOption, setSortOption] = useState<string>('')
   const [selectedHunt, setSelectedHunt] = useState<Hunting | null>(null)
+  const navigation = useNavigation<any>()
 
   useEffect(() => {
     const fetchPublicHuntings = async () => {
@@ -78,14 +82,52 @@ export default function PublicHuntings() {
         style={{ flex: 1, justifyContent: 'center' }}
         resizeMode="cover"
       >
-        <View style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.2)' }} />
+        <View style={{
+          position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
+          backgroundColor: 'rgba(0,0,0,0.2)'
+        }} />
+
         <View style={{ flex: 1, paddingTop: 20, paddingHorizontal: 16 }}>
-          <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#fff', alignSelf: 'center', marginBottom: 16, fontFamily: 'BerkshireSwash-Regular' }}>
-            {i18n.t('Join public hunt')}
-          </Text>
+          {/* Titre + bouton créer */}
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+            <Text style={{
+              fontSize: 24, fontWeight: 'bold', color: '#fff',
+              fontFamily: 'BerkshireSwash-Regular'
+            }}>
+              {i18n.t('Join public hunt')}
+            </Text>
+
+            <TouchableOpacity
+              onPress={() => router.push('/hunting/createHunting')}
+              style={{
+                backgroundColor: '#28a745',
+                paddingVertical: 6,
+                paddingHorizontal: 12,
+                borderRadius: 6
+              }}
+            >
+              <Text style={{
+                color: '#fff',
+                fontWeight: 'bold',
+                fontFamily: 'BerkshireSwash-Regular'
+              }}>
+                {i18n.t('Create Hunt')}
+              </Text>
+            </TouchableOpacity>
+          </View>
+
+          {/* Recherche + filtre */}
           <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 16 }}>
             <TextInput
-              style={{ flex: 1, backgroundColor: '#fff', borderRadius: 8, marginRight: 8, paddingHorizontal: 10, paddingVertical: 8, fontFamily: 'BerkshireSwash-Regular' }}
+              style={{
+                flex: 1,
+                backgroundColor: '#fff',
+                borderRadius: 8,
+                marginRight: 8,
+                paddingHorizontal: 10,
+                paddingVertical: 8,
+                fontFamily: 'BerkshireSwash-Regular'
+              }}
               placeholder="Rechercher ..."
               placeholderTextColor="#555"
               value={search}
@@ -94,7 +136,12 @@ export default function PublicHuntings() {
             <Picker
               selectedValue={sortOption}
               onValueChange={val => { setSortOption(val); setPage(1) }}
-              style={{ width: 150, backgroundColor: '#fff', borderRadius: 8, fontFamily: 'BerkshireSwash-Regular' }}
+              style={{
+                width: 150,
+                backgroundColor: '#fff',
+                borderRadius: 8,
+                fontFamily: 'BerkshireSwash-Regular'
+              }}
             >
               <Picker.Item label="Filtrer" value="" />
               <Picker.Item label={`${i18n.t('Price')} ↑`} value="price_asc" />
@@ -111,25 +158,88 @@ export default function PublicHuntings() {
               <ScrollView contentContainerStyle={{ flexGrow: 1, paddingBottom: 20 }}>
                 <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' }}>
                   {pageHuntings.map(hunt => (
-                    <View key={hunt.id} style={{ width: '32%', backgroundColor: '#fff', borderRadius: 8, marginBottom: 16, padding: 10, minHeight: 220 }}>
-                      <Image source={{ uri: hunt.headerImg }} style={{ width: '100%', height: 150, borderRadius: 6, marginBottom: 8 }} />
-                      <Text style={{ fontSize: 14, fontWeight: 'bold', marginBottom: 4, fontFamily: 'BerkshireSwash-Regular' }}>{hunt.title}</Text>
-                      <Text style={{ fontSize: 12, color: '#333', marginBottom: 4, fontFamily: 'BerkshireSwash-Regular' }}>{hunt.description}</Text>
-                      <Text style={{ fontSize: 12, color: '#333', marginBottom: 4, fontFamily: 'BerkshireSwash-Regular' }}>{i18n.t('Price')}: {hunt.price}</Text>
-                      <Text style={{ fontSize: 12, color: '#333', marginBottom: 4, fontFamily: 'BerkshireSwash-Regular' }}>Max: {hunt.maxUser}</Text>
-                      <Text style={{ fontSize: 12, color: '#333', marginBottom: 8, fontFamily: 'BerkshireSwash-Regular' }}>{i18n.t('End')}: {new Date(hunt.endDate).toLocaleDateString()}</Text>
-                      <Text style={{ fontSize: 12, color: '#333', marginBottom: 8, fontFamily: 'BerkshireSwash-Regular' }}>{i18n.t('Status')}: {hunt.status ? 'Active' : 'Inactive'}</Text>
+                    <View key={hunt.id} style={{
+                      width: '32%',
+                      backgroundColor: '#fff',
+                      borderRadius: 8,
+                      marginBottom: 16,
+                      padding: 10,
+                      minHeight: 220
+                    }}>
+                      <Image source={{ uri: hunt.headerImg }} style={{
+                        width: '100%',
+                        height: 150,
+                        borderRadius: 6,
+                        marginBottom: 8
+                      }} />
+                      <Text style={{
+                        fontSize: 14,
+                        fontWeight: 'bold',
+                        marginBottom: 4,
+                        fontFamily: 'BerkshireSwash-Regular'
+                      }}>{hunt.title}</Text>
+                      <Text style={{
+                        fontSize: 12,
+                        color: '#333',
+                        marginBottom: 4,
+                        fontFamily: 'BerkshireSwash-Regular'
+                      }}>{hunt.description}</Text>
+                      <Text style={{
+                        fontSize: 12,
+                        color: '#333',
+                        marginBottom: 4,
+                        fontFamily: 'BerkshireSwash-Regular'
+                      }}>{i18n.t('Price')}: {hunt.price}</Text>
+                      <Text style={{
+                        fontSize: 12,
+                        color: '#333',
+                        marginBottom: 4,
+                        fontFamily: 'BerkshireSwash-Regular'
+                      }}>Max: {hunt.maxUser}</Text>
+                      <Text style={{
+                        fontSize: 12,
+                        color: '#333',
+                        marginBottom: 8,
+                        fontFamily: 'BerkshireSwash-Regular'
+                      }}>{i18n.t('End')}: {new Date(hunt.endDate).toLocaleDateString()}</Text>
+                      <Text style={{
+                        fontSize: 12,
+                        color: '#333',
+                        marginBottom: 8,
+                        fontFamily: 'BerkshireSwash-Regular'
+                      }}>{i18n.t('Status')}: {hunt.status ? 'Active' : 'Inactive'}</Text>
                       <TouchableOpacity
                         onPress={() => setSelectedHunt(hunt)}
-                        style={{ backgroundColor: '#90EE90', paddingVertical: 6, borderRadius: 6, alignItems: 'center', marginBottom: 2 }}
+                        style={{
+                          backgroundColor: '#90EE90',
+                          paddingVertical: 6,
+                          borderRadius: 6,
+                          alignItems: 'center',
+                          marginBottom: 2
+                        }}
                       >
-                        <Text style={{ color: '#fff', fontWeight: 'bold', fontSize: 12, fontFamily: 'BerkshireSwash-Regular' }}>{i18n.t('View Details')}</Text>
+                        <Text style={{
+                          color: '#fff',
+                          fontWeight: 'bold',
+                          fontSize: 12,
+                          fontFamily: 'BerkshireSwash-Regular'
+                        }}>{i18n.t('View Details')}</Text>
                       </TouchableOpacity>
                       <TouchableOpacity
                         onPress={() => console.log('Rejoindre chasse ID:', hunt.id)}
-                        style={{ backgroundColor: '#000', paddingVertical: 6, borderRadius: 6, alignItems: 'center' }}
+                        style={{
+                          backgroundColor: '#000',
+                          paddingVertical: 6,
+                          borderRadius: 6,
+                          alignItems: 'center'
+                        }}
                       >
-                        <Text style={{ color: '#fff', fontWeight: 'bold', fontSize: 12, fontFamily: 'BerkshireSwash-Regular' }}>{i18n.t('Join')}</Text>
+                        <Text style={{
+                          color: '#fff',
+                          fontWeight: 'bold',
+                          fontSize: 12,
+                          fontFamily: 'BerkshireSwash-Regular'
+                        }}>{i18n.t('Join')}</Text>
                       </TouchableOpacity>
                     </View>
                   ))}
@@ -137,13 +247,36 @@ export default function PublicHuntings() {
               </ScrollView>
 
               {totalPages > 1 && (
-                <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginBottom: 10 }}>
-                  <TouchableOpacity onPress={() => setPage(p => p - 1)} disabled={page === 1} style={{ padding: 10, marginHorizontal: 5 }}>
-                    <Text style={{ color: page === 1 ? '#999' : '#fff', fontFamily: 'BerkshireSwash-Regular' }}>{i18n.t('Previous')}</Text>
+                <View style={{
+                  flexDirection: 'row',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginBottom: 10
+                }}>
+                  <TouchableOpacity
+                    onPress={() => setPage(p => p - 1)}
+                    disabled={page === 1}
+                    style={{ padding: 10, marginHorizontal: 5 }}
+                  >
+                    <Text style={{
+                      color: page === 1 ? '#999' : '#fff',
+                      fontFamily: 'BerkshireSwash-Regular'
+                    }}>{i18n.t('Previous')}</Text>
                   </TouchableOpacity>
-                  <Text style={{ color: '#fff', marginHorizontal: 8, fontFamily: 'BerkshireSwash-Regular' }}>{page} / {totalPages}</Text>
-                  <TouchableOpacity onPress={() => setPage(p => p + 1)} disabled={page === totalPages} style={{ padding: 10, marginHorizontal: 5 }}>
-                    <Text style={{ color: page === totalPages ? '#999' : '#fff', fontFamily: 'BerkshireSwash-Regular' }}>{i18n.t('Next')}</Text>
+                  <Text style={{
+                    color: '#fff',
+                    marginHorizontal: 8,
+                    fontFamily: 'BerkshireSwash-Regular'
+                  }}>{page} / {totalPages}</Text>
+                  <TouchableOpacity
+                    onPress={() => setPage(p => p + 1)}
+                    disabled={page === totalPages}
+                    style={{ padding: 10, marginHorizontal: 5 }}
+                  >
+                    <Text style={{
+                      color: page === totalPages ? '#999' : '#fff',
+                      fontFamily: 'BerkshireSwash-Regular'
+                    }}>{i18n.t('Next')}</Text>
                   </TouchableOpacity>
                 </View>
               )}

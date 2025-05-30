@@ -2,7 +2,7 @@ import Hunting from "@/type/feature/hunting/Hunting";
 import axios from "axios";
 import AXIOS_ERROR from "@/type/request/axios_error";
 import LastMessageHunting from "@/type/feature/message/LastMessageHunting";
-import {getConfig} from "@/services/csrfService";
+import { getConfig } from "@/services/csrfService";
 
 const API_URL = process.env.EXPO_PUBLIC_API_URL as string
 
@@ -66,6 +66,31 @@ export const getHuntingsForMessages = async (): Promise<LastMessageHunting> => {
     try {
         const response = await axios.get<LastMessageHunting>(`${API_URL}/huntings/getAllForMessage`, config)
         return response.data as LastMessageHunting
+    } catch (err: unknown) {
+        if ((err as AXIOS_ERROR).message) {
+            throw new Error("Error connecting")
+        } else {
+            throw new Error("Error connecting to server")
+        }
+    }
+}
+
+export const createHunting = async (
+    hunting: Omit<Hunting, "id" | "user">
+): Promise<Hunting> => {
+    const config = await getConfig()
+
+    try {
+        const response = await axios.post<{
+            message: string
+            success: boolean
+            hunt: Hunting
+        }>(
+            `${API_URL}/huntings/createHunting`,
+            hunting,
+            config
+        )
+        return response.data.hunt
     } catch (err: unknown) {
         if ((err as AXIOS_ERROR).message) {
             throw new Error("Error connecting")
